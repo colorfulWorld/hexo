@@ -1,6 +1,6 @@
 {
-  "name": "Weather",
-  "short_name": "Weather",
+  "name": "colorfulPwa",
+  "short_name": "colorfulPwa",
   "icons": [{
     "src": "../favicon.png",
       "sizes": "128x128",
