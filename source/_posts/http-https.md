@@ -1,21 +1,86 @@
 ---
-title: http-https
+title: https
+comments: true
 ---
-### 什么是HTTPS网站
-https 可以理解为HTTP+TLS，TLS是传输层加密协议，是HTTPS安全的核心，其前身是SSL。
+https 可以理解为HTTP+TLS，TLS是传输层加密协议，是HTTPS安全的核心，其前身是SSL。TLS主要有五部分:应用数据层协议，握手协议，报警协议，加密消息确认协议，心跳协议。TLS协议本身又是由record协议传输的。
 
 ### 为什么要实现HTTPS？
 为保护用户隐私和网络安全。通过数据加密、校验数据完整性和身份认证三种机制来保障安全。
 
+### 全站HTTPS 必须解决的问题
+---
+**性能**
 
-### HSTS
-##### HTTPS 网站通常的做法是对HTTP的访问服务器端做302 跳转，跳转到HTTPS。但是这个302跳转存在两个问题:
-1.  使用不安全的HTTP协议进行通信。
-2.  增加一个Round-Trip Time。
+* HTTPS需要多次握手，因此网络耗时变长，用户从HTTP跳转到HTTPS需要一些时间。但是如果使用SPDY，HTTPS的速度甚至比HTTP快。HTTPS对速度的影响主要来自两方面:
+    1. 协议交换所增加的网络RTT。
+    2. 加解密相关的计算耗时。
+* HTTPS要做RSA校验，这会影响到设备性能。
+* 所有CDN节点要支持HTTPS，而且需要有极其复杂的解决方案来面对DDoS的挑战。
+
+** 其次，兼容性及周边:**
+* 页面中所有嵌入的资源（图片、附件、js、视频等）都要改为HTTPS的，否者就会报警。
+
+<!-- more -->
+
+### 基于协议和配置的优化
+
+1.HTTPS 访问速度优化
+2.Tcp fast open
+
+#### HTTPS:
+网站通常的做法是对HTTP的访问服务器端做302 跳转，跳转到HTTPS。但是这个302跳转存在两个问题:
+1.使用不安全的HTTP协议进行通信。
+2.增加一个Round-Trip Time。
 
 而HSTS 是HTTP Strict Transport Security 的缩写，作用是强制客户端（如浏览器）使用HTTPS与服务器创建链接。其实HSTS的最大作用是防止302HTTP劫持（中间人）HSTS的缺点是浏览器支持率不高，另外配置HTST后HTTPS很难实时降级为HTTP。
 
 采用HSTS协议的网站将保证浏览器始终连接到该网站的HTTPS加密版本，不需要用户手动在URL地址栏中输入加密地址。该协议将帮助网站采用全局加密，用户看到的是该网站的安全版本。
 
-在https://xxx 的响应头中含有Strict-Transport-Security:max-age=31536000;includeSubDomains这就意味着2点：
-   1. 在一年的时间里（31536000秒）中，浏览器只要向XXX或者
+在https://xxx 的响应头中含有Strict-Transport-Security:max-age=31536000;includeSubDomains这就意味着两点：
+   1. 在一年的时间里（31536000秒）中，浏览器只要向XXX或者其子域名发送HTTP请求时，必须采用HTTPS来发起连接。比如用户在地址栏输入http://xxx 或者点击超链接，浏览器应当自动将http转写成https,然后直接向https://xxx/ 发起请求。
+   2. 在接下来的一年中，如果xxx服务器发送的TLS证书无效，用户不能忽略浏览器警告继续访问网站。
+
+##### 作用
+HTST 可以用来抵御SSL剥离攻击。攻击者在用户访问HTTP页面时替换所有https开头的连接为http。达到阻止HTTPS的目的。但是如果使用了HTST，一旦服务器发送了HSTS字段，用户将不再允许忽略警告。
+
+##### 不足
+用户首次访问网站是不受HSTS保护的。这是因为首次访问时，浏览器还未收到HSTS，所以仍有可能明文HTTP访问。HTST会在一段时间后失效（由max-age指定)。所以浏览器是否强制 HSTS取决于当前系统时间。部分操作系统经常通过网络时间协议更新系统时间。
+
+一旦浏览器接受到HSTS Header(假如有效期是1年），但是网站的证书出现问题，那么在有效都无法访问网站。
+
+#### Session resume 复用session
+1. 减少 CPU 消耗，因为不需要非对称秘钥交换的计算。
+2. 提升访问速度，不需要进行完全握手阶段二，节省了一个 RTT 和计算耗时。
+
+##### Session cache
+Session cache 的原理是使用 client hello 中的 session id 查询服务端的 session cache, 如果服务端有对应的缓存，则直接使用已有的 session 信息提前完成握手，称为简化握手。
+
+Session cache 有两个缺点：
+
+1.    需要消耗服务端内存来存储 session 内容。
+
+2.    目前的开源软件包括 nginx,apache 只支持单机多进程间共享缓存，不支持多机间分布式缓存，对于百度或者其他大型互联网公司而言，单机 session cache 几乎没有作用。
+
+Session cache 也有一个非常大的优点：
+
+1.   session id 是 TLS 协议的标准字段，市面上的浏览器全部都支持 session cache。
+
+百度通过对 TLS 握手协议及服务器端实现的优化，已经支持全局的 session cache，能够明显提升用户的访问速度，节省服务器计算资源。
+
+####  使用 SPDY 或者 HTTP2
+
+SPDY 是 google 推出的优化 HTTP 传输效率的协议（https://www.chromium.org/spdy） 它基本上沿用了 HTTP 协议的语义, 但是通过使用帧控制实现了多个特性，显著提升了 HTTP 协议的传输效率。SPDY 最大的特性就是多路复用，能将多个 HTTP 请求在同一个连接上一起发出去，不像目前的 HTTP 协议一样，只能串行地逐个发送请求。Pipeline 虽然支持多个请求一起发送，但是接收时依然得按照顺序接收，本质上无法解决并发的问题。
+
+HTTP2 是 IETF 2015 年 2 月份通过的 HTTP 下一代协议，它以 SPDY 为原型，经过两年多的讨论和完善最终确定。
+
+需要说明两点:
+
+1.    SPDY 和 HTTP2 目前的实现默认使用 HTTPS 协议。
+
+2.    SPDY 和 HTTP2 都支持现有的 HTTP 语义和 API，对 WEB 应用几乎是透明的。
+
+Google 宣布 chrome 浏览器 2016 年将放弃 SPDY 协议，全面支持 HTTP2，但是目前国内部分浏览器厂商进度非常慢，不仅不支持 HTTP2，连 SPDY 都没有支持过。
+
+百度服务端和百度手机浏览器现在都已经支持 SPDY3.1 协议。
+
+
