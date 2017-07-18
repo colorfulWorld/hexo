@@ -114,14 +114,16 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
 - on install 的优点是第二次访问就可以离线访问，缺点是需要缓存的URL在编译时插入到脚本中，增加代码量和降低可维护性。
 - on fetch 的优点是无需变更编译过程，也不会产生额外的流量，缺点是需要多一次访问才能离线访问。
 
-
-
-
-
-
-
 ## manifest.json
-pwa 添加至桌面的功能实现依赖于manifest.json。主流浏览器的情况有
+pwa 添加至桌面的功能实现依赖于manifest.json。
+
+#### 基本功能
+- name:string  应用名称，用于安装横幅、启动画面显示
+- short_name:string 应用短名称，用于主屏幕显示
+
+
+
+
 
 
 More info: [Deployment](https://hexo.io/docs/deployment.html)

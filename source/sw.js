@@ -1,5 +1,5 @@
 var dataCacheName = 'githubPage';
-var cache_name = 'githubPage-1';
+var cache_name = 'githubPage-2';
 var current_caches = {
     prefetch: 'prefetch-cache-v' + dataCacheName
 };
@@ -49,10 +49,11 @@ self.addEventListener('activate', function (e) {
 self.addEventListener('fetch', function (e) {
     console.log('[service worker] fetch', e.request.url);
     /*respondWith()方法旨在包裹代码，这些代码为来自受控页面的request生成的自定义的response。用来劫持我们的http响应*/
-    e.resondWith(
-        caches.match(e.request).then(function () {
+    e.respondWith(
+        caches.match(e.request).then(function (response) {
             //如果sw有自己的返回，就直接返回，减少一次http请求。
             if (response) {
+                console.log("response:" + response);
                 return response;
             }
 
