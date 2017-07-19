@@ -118,12 +118,55 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
 pwa 添加至桌面的功能实现依赖于manifest.json。
 
 #### 基本功能
-- name:string  应用名称，用于安装横幅、启动画面显示
-- short_name:string 应用短名称，用于主屏幕显示
+- name:{string} 应用名称，用于安装横幅、启动画面显示
+- short_name:{string} 应用短名称，用于主屏幕显示
+- icon:img 应用图标列表，其中包括:
+    - src:{string}  图标URL
+    - type:图标的mime 类型
+    - size:图标尺寸。当PWA添加到主屏幕时，浏览器会根据有效图标的size 字段进行选择，如果匹配到的图标路径错误，将会显示浏览器默认icon。
+- start_url:{string=} 应用启动地址
+- background_color:{color} css色值
+- display: {string} 显示类型
+    - fullScreen: 应用的显示界面将占满整个屏幕
+    - standalone: 浏览器相关UI（导航栏、工具栏等）将会被隐藏
+    - minimal-ui: 显示形式与standalone类似，浏览器相关UI会最小化为一个按钮，不同浏览器在实现上略有不同
+    - browser: 浏览器模式，与普通网页在浏览器中打开的显示一致
+- orientation: string 应用显示方向
+- theme_color: 主题颜色
+#### 设置作用域
+- 如果没有在manifest中设置scope，则默认的作用域为manifest.json所在的文件夹；
+- **start_url 必须在作用域范围之内**;
+- 如果start_url 为相对地址，其根路径收scope所影响;
+- 如果start_url 为绝对地址（以/开头）,则该地址将永远以/作为跟地址；
 
+#### 添加启动动画
 
+当PWA添加到主屏幕点击打开时，幕后执行了若干操作：
+1. 启动浏览器
+2. 启动显示页面的渲染器
+3. 加载资源
 
+在这个过程中，由于页面未加载完毕，因此屏幕将显示空白并且看似停滞。如果是从网络加载的页面资源，白屏过程将会变得更加明显。因此 PWA 提供了启动画面功能，用标题、颜色和图像组成的画面来替代白屏，提升用户体验。
 
+目前，如果修改了manifest.json 的应用的名称，已经添加到主屏幕的名称并不会改变，只有当用户重新添加到桌面时，更改后的名称
+才会显示出来。但是未来版本的chrome 支持自动更新。
 
+## 消息推送介绍
+在订阅消息之前，浏览器主要得到用户授权，同意后才能使用消息推送服务。
 
-More info: [Deployment](https://hexo.io/docs/deployment.html)
+1. 在订阅之前先获取用户授权，** 使用Notification.requestPermission。当用户允许或者拒绝授权之后，后续都不会重复询问。
+2. 如果不选择1，在正式订阅时，浏览器也会自动弹出。对于开发者而言不需要显示调用。
+
+#### 订阅消息的具体实现
+- 使用pushManager 添加订阅，浏览器向推送服务发送请求，轻重传递参数对象包含两个属性。
+    - userVisibleOnly,不允许静默的推出，所有推出都对用户可见，所以值为true
+    - applicationServerKey,服务器生成的公钥
+- 得到推送服务成功响应后，浏览器将推送服务返回的endpoint加入推送订阅对象，向服务器发送这个对象供其存储。
+
+#### 使用web-push 发送信息
+服务器端请求推送服务器，需要涉及加密，设置请求头等复杂操作。使用web-push可以解决大部分问题。
+- 使用web-push 生成一对公私钥，还记得 pushManager 订阅时需要用到的applicationServerKey吗，我们需要公钥publicKey传递到订阅脚本所在的页面中。。
+- 调用 setVapidDetails 为web-push设置生成的公私钥。
+- 之前订阅时浏览器已经将推送订阅对象发送到了服务端，此时从数据库中取出。
+- 调用sendNotification向推送服务发起调用请求，如果返回错误状态码，从数据库中删除保存的推送订阅对象。
+
