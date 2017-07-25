@@ -1,8 +1,5 @@
-var dataCacheName = 'githubPage';
-var cache_name = 'githubPage-2';
-var current_caches = {
-    prefetch: 'prefetch-cache-v' + dataCacheName
-};
+
+var cache_name = 'development';
 var filesToCache = [
     '/',
     '/archives/index.html',
@@ -24,6 +21,10 @@ self.addEventListener('install', function (e) {
             return cache.addAll(filesToCache);
         })
     );
+    if(cache_name ==='development'){
+        self.skipWaiting(); //重新加载后立即激活
+    }
+
 });
 /*这里我们新增了install 事件监听器，接着在事件上接了一个ExtendableEvent.waitUntil()方法
  这会确保service worker不会在waitUntil()里面的代码执行完毕之前安装完成*/
@@ -36,7 +37,7 @@ self.addEventListener('activate', function (e) {
     e.waitUntil(
         caches.keys().then(function (keyList) {
             return Promise.all(keyList.map(function (key) {
-                if (key !== cache_name && key !== dataCacheName) {
+                if (key !== cache_name) {
                     console.log('[serviceWorker] removing old cache', key);
                     return caches.delete(key);
                 }
@@ -53,7 +54,7 @@ self.addEventListener('fetch', function (e) {
         caches.match(e.request).then(function (response) {
             //如果sw有自己的返回，就直接返回，减少一次http请求。
             if (response) {
-                console.log("response:" + response);
+                console.log('[SW]:', '读取缓存',  e.request.method,  e.request.url);
                 return response;
             }
 
@@ -65,14 +66,18 @@ self.addEventListener('fetch', function (e) {
 
                 //请求失败，直接返回失败的结果
                 if (!httpRes || httpRes.status !== 200) {
+                    console.log("失败:");
+                    console.log(httpRes);
                     return httpRes;
                 }
-                //  请求成功，将请求缓存
-                var responseClone = httpRes.clone();
-                caches.open(cache_name).then(function (cache) {
-                    cache.put(e.request, responseClone);
-                });
-                return httpRes;
+                   else{
+                    var responseClone = httpRes.clone();
+                    caches.open(cache_name).then(function (cache) {
+                        console.log("请求缓存");
+                        cache.put(e.request, responseClone);
+                    });
+                    return httpRes;
+                }
             });
 
         })
@@ -82,78 +87,3 @@ self.addEventListener('fetch', function (e) {
 /*每次任何被service worker 控制的资源被请求到时，都会触发fetch事件，这些资源包括了指定的scope内的
  html 文档，和这些html文档内引用的其他任何资源（比如index.html发起了一个跨域的请求来嵌入一张图片，这个也会通过service worker*/
 /*我们可以在install 的时候进行静态资源缓存。也可以通过fetch事件回调来代理页面请求从而实现动态资源缓存*/
-
-function urlBase64ToUint8Array(base64String) {
-    var padding = '='.repeat((4 - base64String.length % 4) % 4);
-    var base64 = (base64String + padding)
-        .replace(/\-/g, '+')
-        .replace(/_/g, '/');
-    var rawData = window.atob(base64);
-    var outputArray = new Uint8Array(rawData.length);
-    for (let i = 0, max = rawData.length; i < max; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
-
-function subscribe(serviceWorkerReg) {
-    serviceWorkerReg.pushManager.subscribe({ //2.订阅
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array('<applicationServerKey>')
-    })
-        .then(function (subscription) {
-            //3.发送推送订阅对象到服务器，具体实现中发送请求到后端api
-            sendEndpointInSubscription(subscription);
-        })
-        .catch(function () {
-            if (Notification.permission == 'denied') {
-                //用户拒绝订阅请求
-                console.log("用户拒绝请求");
-            }
-        });
-}
-
-//取消订阅。在默写情况下，例如服务器请求推送服务，返回了推送服务时效错误，此时需要取消订阅。
-navigator.serviceWorker.ready.then(function (reg) {
-    reg.pushManager.getSubscription()
-        .then(function (subscription) {
-            subscription.unsubscribe()
-                .then(function (successful) {
-                    console.log("成功退订");
-                })
-                .catch(function () {
-                    console.log("退订失败");
-                });
-        });
-});
-
-function webPush() {
-    var webpush = require('web-push');
-    var vapidKeys = webpush.generateVAPIDKeys();//1.生成公钥
-    webpush.setVapidDetails(//2.设置公私钥
-        'mailto:sender@example.com',
-        vapidKeys.publicKey,
-        vapidKeys.privateKey
-    );
-    //3.从数据库中拿出之前保存的pushSubscription,具体实现省略
-    //4.向推送服务发起调用请求
-
-    webpush.sendNotification(pushSubscription, '推送消息内容')
-        .catch(function (err) {
-        if (err.statusCode===410){
-            console.log("从数据库中删除推送订阅对象");
-        }
-        });
-
-    //显示通知 service Worker 监听push事件，显示通知
-
-    self.addEventListener('push', function (e) {
-             if(e.data){
-                 var promiseChain = Promise.resolve(e.data.json())
-                     .then(data => self.registration.showNotification(data.title, {}));
-                 e.waitUntil(promiseChain);
-             }
-    });
-
-
-}

@@ -114,6 +114,15 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
 - on install 的优点是第二次访问就可以离线访问，缺点是需要缓存的URL在编译时插入到脚本中，增加代码量和降低可维护性。
 - on fetch 的优点是无需变更编译过程，也不会产生额外的流量，缺点是需要多一次访问才能离线访问。
 
+#### Service Worker 生命周期 （也许翻译的不好，尽量去看原文）
+- installing: 这一阶段标志着开始注册。它想要允许设置worker-specific 的资源,例如离线模式的caches.
+    - 用 **event.waitUntil()** 通过一个promise 去延长安装service worker阶段直到e.waitUntil()里的代码执行完毕。如果所有资源安装成功缓存则安装成功，否则安装失败，则无法激活service worker。
+    - 用 **self.skipWaiting()** self 是当前context 的 global 变量。强制当前处于waiting 状态的脚本进入activate状态。
+- installed:service worker 已经完成了它的安装，在等待其他service Workers 线程被关闭。
+- activating: 这时没有被其他workers 控制的客户端。这个阶段允许workers 去完成安装并且清理其他 worker以及关联缓存的就缓存资源，等待新的service worker线程被激活。
+- activated:现在可以处理方法事件。
+- message: service worker 运行于独立context 中，无法直接访问当前页面主线程的DOM信息，但是通过postMessageAPI ,可以实现他们之间的消息传递，这样主线程就可以接受service worker 的指令操作DOM。
+
 ## manifest.json
 pwa 添加至桌面的功能实现依赖于manifest.json。
 
@@ -133,7 +142,9 @@ pwa 添加至桌面的功能实现依赖于manifest.json。
     - browser: 浏览器模式，与普通网页在浏览器中打开的显示一致
 - orientation: string 应用显示方向
 - theme_color: 主题颜色
+
 #### 设置作用域
+
 - 如果没有在manifest中设置scope，则默认的作用域为manifest.json所在的文件夹；
 - **start_url 必须在作用域范围之内**;
 - 如果start_url 为相对地址，其根路径收scope所影响;
@@ -148,25 +159,34 @@ pwa 添加至桌面的功能实现依赖于manifest.json。
 
 在这个过程中，由于页面未加载完毕，因此屏幕将显示空白并且看似停滞。如果是从网络加载的页面资源，白屏过程将会变得更加明显。因此 PWA 提供了启动画面功能，用标题、颜色和图像组成的画面来替代白屏，提升用户体验。
 
-目前，如果修改了manifest.json 的应用的名称，已经添加到主屏幕的名称并不会改变，只有当用户重新添加到桌面时，更改后的名称
-才会显示出来。但是未来版本的chrome 支持自动更新。
+目前，如果修改了manifest.json 的应用的名称，已经添加到主屏幕的名称并不会改变，只有当用户重新添加到桌面时，更改后的名称才会显示出来。但是未来版本的chrome 支持自动更新。
 
 ## 消息推送介绍
 在订阅消息之前，浏览器主要得到用户授权，同意后才能使用消息推送服务。
 
 1. 在订阅之前先获取用户授权，** 使用Notification.requestPermission。当用户允许或者拒绝授权之后，后续都不会重复询问。
 2. 如果不选择1，在正式订阅时，浏览器也会自动弹出。对于开发者而言不需要显示调用。
-
+3. <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/notification">Notifications API</a> 的通知接口用于向用户配置和显示桌面通知。
+4. <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Push_API">push API</a> 允许web 应用程序接受从服务器推送到它们的消息的能力，无论WEB 应用程序是否在用户代理的前台，或者甚至当前加载。这样。开发人员就可以向选择启用的用户投放异步通知和更新，从而更及时的吸引新内容。
 #### 订阅消息的具体实现
 - 使用pushManager 添加订阅，浏览器向推送服务发送请求，轻重传递参数对象包含两个属性。
     - userVisibleOnly,不允许静默的推出，所有推出都对用户可见，所以值为true
     - applicationServerKey,服务器生成的公钥
 - 得到推送服务成功响应后，浏览器将推送服务返回的endpoint加入推送订阅对象，向服务器发送这个对象供其存储。
 
+消息推送的安全性:
+- 推送服务确保调用来自可靠的服务端。
+- 推送消息内容只有浏览器能够解密，就算是推送服务也不行
+
 #### 使用web-push 发送信息
 服务器端请求推送服务器，需要涉及加密，设置请求头等复杂操作。使用web-push可以解决大部分问题。
-- 使用web-push 生成一对公私钥，还记得 pushManager 订阅时需要用到的applicationServerKey吗，我们需要公钥publicKey传递到订阅脚本所在的页面中。。
+- 使用web-push 生成一对公私钥，还记得 pushM   anager 订阅时需要用到的applicationServerKey吗，我们需要公钥publicKey传递到订阅脚本所在的页面中。。
 - 调用 setVapidDetails 为web-push设置生成的公私钥。
 - 之前订阅时浏览器已经将推送订阅对象发送到了服务端，此时从数据库中取出。
 - 调用sendNotification向推送服务发起调用请求，如果返回错误状态码，从数据库中删除保存的推送订阅对象。
+- 所有推送服务都遵循同意的调用标准，**所有推送服务都遵循统一的调用标准，推送服务如果接到了服务器的调用请求，向设备推送消息，如果处于离线状态，消息将进入待发送队列，过期后队列清空，消息将被丢弃。**
+
+
+
+
 
