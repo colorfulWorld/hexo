@@ -1,8 +1,6 @@
 ---
 title: PWA-pushMessage
-date: 2017-07-26 10:54:15
-categories:
-tags:
+comments: true
 ---
 ## 消息推送介绍
 消息推送通知目前整体支持度并不高，在手机端更只有安卓chrome57支持。在订阅消息之前，浏览器主要得到用户授权，同意后才能使用消息推送服务。

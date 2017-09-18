@@ -1,8 +1,6 @@
 ---
 title: angular 基础
-date: 2017-07-31 12:08:10
-categories:
-tags:
+comments: true
 ---
 ## angular 与 vue 的区别
 - angular2全部采用TypeScript编写，TypeScript（编译工具），它为JS带来了类似于Java 和C# 的静态类型，
@@ -24,4 +22,3 @@ tags:
 
 ## @Component 
 @Component是Angular提供的装饰器函数，用来描述Compoent的元数据
-

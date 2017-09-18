@@ -30,6 +30,7 @@ title: PWA 离线缓存
 - 依赖Promise
 
 #### 注册
+```javascript
       if ('serviceWorker' in navigator) {
             navigator.serviceWorker
                 .register('./pwa/sw.js', {scope: '/pwa'})
@@ -47,12 +48,13 @@ title: PWA 离线缓存
                 });
 
         }
+        ```
 
 #### 安装
 
 install事件我们会绑定在service worker 文件中，在service worker 安装成功后，install事件被触发。**install事件一般是被用来填充你的浏览器的离线缓存能力。**为了达到这个目的，我们使用了service worker 新的标志性的存储**cache API** ——一个service worker上的全局对象，**它使我们可以存储网络响应发来的资源，并且根据他们的请求来生成key。**这个 API 和浏览器的标准的缓存工作原理很相似，但是是只对应你的站点的域的。它会一直持久存在，直到你告诉它不再存储，你拥有全部的控制权。
 
-
+```javascript
     self.addEventListener('install', function (e) {
         console.log('[ServiceWorker] Install');
         /*ExtendableEvent.waitUntil():
@@ -72,9 +74,10 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
     /*我们使用caches.open()方法创建了一个yu的新缓存，将会是我们站点资源的缓存的第一个版本。它返回了一个创建缓存的promise,
       当它resolved 的时候，我们接着会调用在创建的缓存上的一个方法addALL()，这个方法的参数是一个由一组相对于origin的URL组成的数组，
       这个数组就是你想缓存的资源的列表*/
+      ```
 
 #### 自定义请求响应
-
+``` javascript
     self.addEventListener('fetch', function (e) {
      console.log('[service worker] fetch',e.request.url);
     /*respondWith()方法旨在包裹代码，这些代码为来自受控页面的request生成的自定义的response。用来劫持我们的http响应*/
@@ -109,6 +112,7 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
     });
     /*每次任何被service worker 控制的资源被请求到时，都会触发fetch事件，这些资源包括了指定的scope内的
       html 文档，和这些html文档内引用的其他任何资源（比如index.html发起了一个跨域的请求来嵌入一张图片，这个也会通过service worker*/
+      ```
 
 我们可以在install 的时候进行静态资源缓存。也可以通过fetch事件回调来代理页面请求从而实现动态资源缓存:
 - on install 的优点是第二次访问就可以离线访问，缺点是需要缓存的URL在编译时插入到脚本中，增加代码量和降低可维护性。

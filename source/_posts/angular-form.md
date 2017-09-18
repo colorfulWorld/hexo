@@ -1,8 +1,6 @@
 ---
 title: angular form 表单
-date: 2017-08-16 12:08:10
-categories:
-tags:
+comments: true
 ---
 ## checkbox
 module：import {CheckboxControlValueAccessor} from '@abgular/forms';
