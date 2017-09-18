@@ -22,6 +22,6 @@ tags:
 - ng-dirty 表单处于脏数据状态
 -----------------------------
 
-## ng-controller 指令用于为你的应用添加控制器
-在控制器中，你可以编写代码，制作函数和变量，并使用scope 对象来访问
+## @Component 
+@Component是Angular提供的装饰器函数，用来描述Compoent的元数据
 
