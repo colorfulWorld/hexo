@@ -115,10 +115,12 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
       ```
 
 我们可以在install 的时候进行静态资源缓存。也可以通过fetch事件回调来代理页面请求从而实现动态资源缓存:
+
 - on install 的优点是第二次访问就可以离线访问，缺点是需要缓存的URL在编译时插入到脚本中，增加代码量和降低可维护性。
 - on fetch 的优点是无需变更编译过程，也不会产生额外的流量，缺点是需要多一次访问才能离线访问。
 
 #### Service Worker 生命周期 （也许翻译的不好，尽量去看原文）
+
 - installing: 这一阶段标志着开始注册。它想要允许设置worker-specific 的资源,例如离线模式的caches.
     - 用 **event.waitUntil()** 通过一个promise 去延长安装service worker阶段直到e.waitUntil()里的代码执行完毕。如果所有资源安装成功缓存则安装成功，否则安装失败，则无法激活service worker。
     - 用 **self.skipWaiting()** self 是当前context 的 global 变量。强制当前处于waiting 状态的脚本进入activate状态。

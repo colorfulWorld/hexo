@@ -6,6 +6,9 @@ comments: true
 - angular2全部采用TypeScript编写，TypeScript（编译工具），它为JS带来了类似于Java 和C# 的静态类型，
 - vue 的双向绑定基于ES5 的getter/setter 来实现的，而angular是由自己实现一套模板编译规则们需要进行“脏”检查，而vue不需要，因此vue在性能上更高效。
 - angular 中，当watcher 越来越多时会越来越慢，因为作用域的每一次变化
+
+<!--more-->
+
 ## angular 
 - 组件化，数据的单向中心。es6的语法。
 ##  react 
@@ -14,10 +17,6 @@ comments: true
 - 服务器端渲染，单页应用的缺陷是对于搜索引擎有很大的限制。react 的解决的方案是在服务器上预渲染应用然后发送到服务端，但是爬虫是依赖的服务端的响应而不是web的执行。
 - 目标是UI。
 - 本身是一个MVC 中的V。
-——————————————————————
-## 快速起步
-@Component 装饰器
-
 ----------------------------
 ## Angular 为表单内置了4种css样式
 
@@ -26,16 +25,16 @@ comments: true
 - ng-pristine 如果要使用原生的form，需要设置这个值
 - ng-dirty 表单处于脏数据状态
 -----------------------------
-
 ## @Component
-
 - @Component 是Angular 提供的装饰函数，用来描述Component的元数据
 - selector 指这个组件在HTML模板中的标签是什么
+- template是嵌入（inline）的HTML模板，如果使用单独文件可用templateUrl。
+- styles是嵌入（inline）的CSS样式，如果使用单独文件可用styleUrls。
 - providers 列出会在此模块中“注入”的服务(service)-依赖注入
 - bootstrap指明哪个组件为引导组件(比如AppComponent),当angular引导应用时，它会在Dom中渲染这个引导性组件，并把结果放进index.html的该组件的标签中。
 
 ## @NgModule
-
+@NgModule装饰器用来为模块定义元数据。declarations列出了应用中的顶层组件，在module里面声明的组件在module范围内都可以直接使用，也就是说在同一module里面的任何Component都可以在其模板文件中直接使用声明的组件，就想我们在AppComponent的模板末尾加上 <app-login></app-login> 一样。
 ```javascript
 import { HttpModule } from '@angular/http';
 
@@ -259,9 +258,4 @@ parentModule参数也就被赋值为空。
 ```
 这个模块的作用是将常用的模块打包起来，将常用的模块导入又导出，这样在其他模块中值需引入这个模块即可
 
----------------
-## 响应式编程
-响应式编程是一种面向数据流和变化传播的编程范式。这意味着可以在编程语言中很方便的表达静态或者动态的数据流，而相关的计算模型会自动将变化的值通过数据流进行传播
-
-- pluck操作符从一系列嵌套的属性中把值提取
 
