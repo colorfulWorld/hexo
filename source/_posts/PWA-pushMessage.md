@@ -1,5 +1,6 @@
 ---
 title: PWA-pushMessage
+categories: PWA
 comments: true
 ---
 ## 消息推送介绍

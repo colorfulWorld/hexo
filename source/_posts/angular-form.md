@@ -3,7 +3,8 @@ title: angular form 表单
 comments: true
 ---
 ## checkbox
-module：import {CheckboxControlValueAccessor} from '@abgular/forms';
+
+module：import &#123;CheckboxControlValueAccessor &#125; from '@abgular/forms';
 
 - input[type=checkbox][formCtontrolName]
 - input[type=checkbox][formControl]
@@ -11,8 +12,10 @@ module：import {CheckboxControlValueAccessor} from '@abgular/forms';
 
 用于写入值并在复选框输入元素上监听更改的访问器
 
+```html
 <input type="checkbox" name = "rememberLogin" ngModel>
-
+```
+<!--more-->
 ### 数据驱动
 响应式表单：原理是一开始就构建整个表单，表单的值通过特殊指令formControlName 
 

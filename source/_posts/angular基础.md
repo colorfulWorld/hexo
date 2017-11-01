@@ -35,6 +35,7 @@ comments: true
 
 ## @NgModule
 @NgModule装饰器用来为模块定义元数据。declarations列出了应用中的顶层组件，在module里面声明的组件在module范围内都可以直接使用，也就是说在同一module里面的任何Component都可以在其模板文件中直接使用声明的组件，就想我们在AppComponent的模板末尾加上 <app-login></app-login> 一样。
+
 ```javascript
 import { HttpModule } from '@angular/http';
 
@@ -236,6 +237,7 @@ parentModule参数也就被赋值为空。
 ----------------------
 ## 模块优化
  各个模块定义，发现我们不断地重复引入了CommonModule、FormsModule、MdlModule,这些组件常用，就可以建立一个ShareModule(src\app\shared\shared.module.ts)
+
 ```javascript
     import { NgModule } from '@angular/core';
     import { CommonModule } from '@angular/common';

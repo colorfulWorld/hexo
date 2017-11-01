@@ -14,23 +14,7 @@
                 })
         }
 
-        /* if ('serviceWorker' in navigator) {
-         navigator.serviceWorker
-         .register('./sw.js')
-         /!* 每次页面加载成功后，就会调用register()方法。浏览器会判断service Worker线程是否
-         已注册，并作出相应的处理*!/
-         /!* scope 方法是可选的，用于指定你想让service worker 控制内容的子目录。service worker 线程将接受
-         scope指定网域目录上所有事项的fetch事件。
-         scope的意义在于如果sw.js在/a/b/sw.js下，那么scope默认是/a/b,那么service worker 线程只能
-         捕捉到path为/a/b开头的（/a/b/page1,/a/b/page2,..)下的fetch事件*!/
-         .then(function (registration) {
-         console.log('Service Worker 注册成功，域名: ', registration.scope);
-         })
-         .catch(function (err) {
-         console.log('Service Worker 注册失败: ', err);
-         });
 
-         }*/
         function pushMessage() {
             if (('PushManager' in window)) {
                 let promiseChain = new Promise((resolve, reject) => {
@@ -54,9 +38,10 @@
 
 
         function execute() {
-           registerServiceWorker().then(registration =>{
-               re
-           })
+            registerServiceWorker().then(registration => {
+                re
+            })
         }
     });
+
 </script>
