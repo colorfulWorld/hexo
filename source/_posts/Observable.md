@@ -1,6 +1,9 @@
 ---
 title: Observable
+comments: true
 ---
+
+
 Observable只是一个普通函数，要想让他有所作为，就需要跟observer一起使用；而这个observer（后面我们会介绍）只是一个带有 next、error、complete 的简单对象而已。最后，还需要通过 subscribe 订阅来
 **启动** Observable；否则它是不会有任何反应；而订阅也会返回一个可用于取消操作（在RxJS里叫 unsubscribe）。
 
@@ -55,13 +58,14 @@ export class HomeComponent {
     });
 ```
 
-从语法角度来讲和 subscribe({ next, error, complete }) 是一样的。当Observable产生一个新值时，会通知 observer 的 next()，而当捕获失败可以调用 error()。
+从语法角度来讲和 subscribe(&#123; next, error, complete &#125;) 是一样的。当Observable产生一个新值时，会通知 observer 的 next()，而当捕获失败可以调用 error()。
 
 当Observable被订阅后，除非调用observer的 complete() 或 unsubscribe() 取消订阅两情况以外；会一直将值传递给 observer。
 
 Observable的生产的值允许经过一序列格式化或操作，最终得到一个有价值的数据给观察者，而这一切是由一序列链式operator来完成的，每一个operator都会产生一个新的Observable。而我们也称这一序列过程为：**流**。
 
 --------------------------------
+
 ## 二、operator
 Observable可以链式写法，这意味着我们可以这样：
 

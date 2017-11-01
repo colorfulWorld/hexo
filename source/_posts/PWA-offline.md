@@ -1,5 +1,6 @@
 ---
 title: PWA 离线缓存
+comments: true
 ---
 ## PWA (Progressive Web App) 特点
 1. installability(可安装性)，可被添加自主屏与全屏运行。
