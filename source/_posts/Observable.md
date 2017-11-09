@@ -1,8 +1,13 @@
 ---
 title: Observable
-comments: true
+categories: rx.js
 ---
 
+观察者模式又称发布订阅模式，在此种模式中，一个目标物件管理所有相依于它的观察者物件。并且在它本身的状态改变时主动发出通知。观察者模式（Observer）完美的将观察者和被观察的对象分离开。
+
+
+
+<!--more-->
 
 Observable只是一个普通函数，要想让他有所作为，就需要跟observer一起使用；而这个observer（后面我们会介绍）只是一个带有 next、error、complete 的简单对象而已。最后，还需要通过 subscribe 订阅来
 **启动** Observable；否则它是不会有任何反应；而订阅也会返回一个可用于取消操作（在RxJS里叫 unsubscribe）。
@@ -12,7 +17,7 @@ Observable只是一个普通函数，要想让他有所作为，就需要跟obse
 
 这两种模式是Observable的基础。
 
-<!--more-->
+
 
 ## 观察者模式
 一个目标对象管理所有相依于它的观察者对象，并且在它本身的状态改变时主动发出通知。它定义了一种一对多的关系，让多个观察者对象同时监听某一个主题对象，这个主题对象的状态发生变化时就会通知所有的观察者对象，使得它们能够自动更新自己。
@@ -58,14 +63,13 @@ export class HomeComponent {
     });
 ```
 
-从语法角度来讲和 subscribe(&#123; next, error, complete &#125;) 是一样的。当Observable产生一个新值时，会通知 observer 的 next()，而当捕获失败可以调用 error()。
+从语法角度来讲和 subscribe({ next, error, complete }) 是一样的。当Observable产生一个新值时，会通知 observer 的 next()，而当捕获失败可以调用 error()。
 
 当Observable被订阅后，除非调用observer的 complete() 或 unsubscribe() 取消订阅两情况以外；会一直将值传递给 observer。
 
 Observable的生产的值允许经过一序列格式化或操作，最终得到一个有价值的数据给观察者，而这一切是由一序列链式operator来完成的，每一个operator都会产生一个新的Observable。而我们也称这一序列过程为：**流**。
 
 --------------------------------
-
 ## 二、operator
 Observable可以链式写法，这意味着我们可以这样：
 
@@ -216,3 +220,5 @@ export class HomeComponent {
 - zip，取各来源数据流最后一个值合并为对象
 - combineLatest，取各来源数据流最后一个值合并为数组
 另，最好使用 $ 结尾的命名方式来表示Observable，例：input$。
+
+
