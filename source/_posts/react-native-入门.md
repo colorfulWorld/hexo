@@ -6,9 +6,9 @@ tags:
 react-native 入门基础笔记：
 使用 ：react-native init AwesomeProject 进行构建 react-native 项目
 
-————————————————————————————————————————————————————————————————————————
+<!--more-->
 
-## react-native  目录详解
+## react-native 目录详解
 
 里面有四个文件夹：
 
