@@ -1,6 +1,5 @@
 ---
 title: Object.defineProperty
-date: 2017-11-06 09:52:40
 categories: 数据劫持基石
 tags:
 ---

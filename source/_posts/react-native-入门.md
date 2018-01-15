@@ -1,7 +1,6 @@
 ---
 title: react-native 入门
-date: 2017-11-01 19:25:03
-categories:
+categories: react-native
 tags:
 ---
 react-native 入门基础笔记：
