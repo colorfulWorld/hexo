@@ -4,12 +4,12 @@ subtitle:
 description: colorfulWorld's blog
 author: colorfulWorld
 language: zh-Hans 
-timezone: Asia/GuangZhou
+timezone:
 
 # URL
 url: colorfulWorld.github.io
 root: /
-permalink: :year/:month/:day/:title/
+permalink: :year/:month/:day/:title/ 
 permalink_defaults:
 
 
