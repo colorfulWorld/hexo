@@ -2,11 +2,13 @@
 title: css 小技巧
 categories: css
 ---
+
 css 在开发中的填坑总结
 
 <!--more-->
 
-## 一、利用css 的content属性attr 抓取资料
+## 一、利用 css 的 content 属性 attr 抓取资料
+
 想要获取伪元素，可以用以下写法：
 
 ```html
@@ -16,15 +18,18 @@ div:hover:after{
 }
 ```
 
-## 二、利用：valid 和：invalid来做表单即使校验
-- :required 伪类指定具有required 属性的表单元素
-- :valid 伪类指定一个通过匹配正确的所要求的表单元素
-- :invalid 伪类指定一个不匹配指定要求的表单元素
+## 二、利用：valid 和：invalid 来做表单即使校验
+
+* :required 伪类指定具有 required 属性的表单元素
+* :valid 伪类指定一个通过匹配正确的所要求的表单元素
+* :invalid 伪类指定一个不匹配指定要求的表单元素
 
 ## 三、writing-mode
-使用writing-mode 这个 CSS 属性实现容器的文字从上往下排列。 writing-mode: vertical-rl;
+
+使用 writing-mode 这个 CSS 属性实现容器的文字从上往下排列。 writing-mode: vertical-rl;
 
 ## 四、实现鼠标悬浮内容自动撑开的过渡动画
+
 需要为一个列表添加个动画，容器的高度是不确定的，也就是高度为 auto，悬浮时候撑开内容有个过渡动画。而用 CSS3 实现的话，由于高度的不确定，而 transtion 是需要具体的数值，所以设置 height:auto 是无法实现效果的，可以通过 max-height 这个属性间接的实现这么个效果，css 样式是这样的：
 
 ```html
@@ -53,11 +58,12 @@ li:hover .bd {
 }
 ```
 
-## 五、移动端web页面支持弹性滚动
+## 五、移动端 web 页面支持弹性滚动
+
 -webkit-overflow-scrolling: touch;
 
-
 ## 六、美化浏览器自带的 radio ，checkbox 属性
+
 ```html
 <div class="radio-beauty-container">
     <label>
@@ -109,6 +115,7 @@ li:hover .bd {
 ```
 
 ## 七、改变 input 焦点光标的颜色
+
 ```html
 <input value="This field uses a default caret." />
 <input class="custom" value="I have a custom caret color!" />
@@ -124,13 +131,17 @@ input.custom {
 ```
 
 ## 八、rem 布局不再使用 JavaScript 设置
+
 现在移动端 css3 单位 vw ,wh 兼容性已经很不错了，在不需要兼容太低版本的安卓机情况下可以这样来：
+
 ```html
 html{
 font-size: 100vw / 750
 }
 ```
+
 ## 切角兄效果实现
-切角效果是时下非常流行的一种设计风格，并广泛运用于平面设计中，它最常见的形态就是把元素的一个或多个切成45°的切口，尤其是在最近几年，扁平化设计盖过拟物化设计后，这种切脚设计更为流行，例如下图就是通过切角实现的一个导航栏，在后面将详细论述起实现。
+
+切角效果是时下非常流行的一种设计风格，并广泛运用于平面设计中，它最常见的形态就是把元素的一个或多个切成 45° 的切口，尤其是在最近几年，扁平化设计盖过拟物化设计后，这种切脚设计更为流行，例如下图就是通过切角实现的一个导航栏，在后面将详细论述起实现。
 
 ![](https://camo.githubusercontent.com/b07ae76cf4ce21d62ef2a4ce97932d831e723c50/687474703a2f2f636f6e74656e742d6d616e6167656d656e742e62302e7570616979756e2e636f6d2f313437323739393439333539332e706e67)

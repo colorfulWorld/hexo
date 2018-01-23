@@ -23,8 +23,7 @@ categories: angular
 ## 组件
 
 * component 是整个应用的基础。
-* @Component() 装饰器 : 用来告知 angular 框架如何处理一个 TypeScript 类， @Component() 装饰器 包含多个属性，属性的值叫做
-  元数据，angular 会根据这些元数据进行渲染组件，并执行相应的逻辑。
+* @Component() 装饰器 : 用来告知 angular 框架如何处理一个 TypeScript 类， @Component() 装饰器 包含多个属性，属性的值叫做元数据，angular 会根据这些元数据进行渲染组件，并执行相应的逻辑。
 * Template 模板 ，通过组建自带的模板来定义组件的外观，模板以 html 存在，用来呈现控制器中的数据。
 * Controller 控制器 会被 @Component() 来装饰。用以处理模板中的数据。
 * 所有组件都必须使用 @Component() 装饰器进行注解。

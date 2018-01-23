@@ -18,7 +18,7 @@ module：import &#123;CheckboxControlValueAccessor &#125; from '@abgular/forms';
 ```
 <!--more-->
 ### 数据驱动
-响应式表单：原理是一开始就构建整个表单，表单的值通过特殊指令formControlName 
+响应式表单：原理是一开始就构建整个表单，表单的值通过特殊指令formControlName F
 
 - formGroup :用来追踪表单控件有效状态及值，可以理解为获取且可以操作整个表单的数据
 - formBuilder :表单数据构建工具[构建初始表单]

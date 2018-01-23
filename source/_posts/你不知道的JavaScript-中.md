@@ -35,9 +35,7 @@ typeof b //undefined
 typeof a //undefined
 ```
 
-undeclared 表示变量未被声明过，但是 javascript 却将 undefined 与 undeclared 混为一谈，我们试图访问 undeclared 变量时会报
-错 “is not defined”，并且 typeof 对 undefined 和 undeclared 变量都返回 “undefined”，所以可以通过使用 typeof 的安全机制（
-阻止报错）来检查 undeclared 变量
+undeclared 表示变量未被声明过，但是 javascript 却将 undefined 与 undeclared 混为一谈，我们试图访问 undeclared 变量时会报错 “is not defined”，并且 typeof 对 undefined 和 undeclared 变量都返回 “undefined”，所以可以通过使用 typeof 的安全机制（阻止报错）来检查 undeclared 变量
 
 ## 数组
 

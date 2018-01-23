@@ -2,36 +2,40 @@
 title: PWA 离线缓存
 categories: PWA
 ---
+
 ## PWA (Progressive Web App) 特点
-1. installability(可安装性)，可被添加自主屏与全屏运行。
-2. app shell:第一次渲染个壳，等异步数据来了在填充。
-3. offline(离线能力)：离线和弱网环境也能秒开，server worker给了web一个可以跑后台的线程，它可以搭配非常靠谱的cache Api做缓存、可以拦截所有Http请求并使用Fetch API进行response ，一个非常完备哦的proxy就这么诞生了
-4. re-engageable：推送通知的能力，依赖service Worker 与http push，不过默认支持的可是GCM
+
+1. installability( 可安装性 )，可被添加自主屏与全屏运行。
+2. app shell: 第一次渲染个壳，等异步数据来了在填充。
+3. offline( 离线能力 )：离线和弱网环境也能秒开，server worker 给了 web 一个可以跑后台的线程，它可以搭配非常靠谱的 cache Api 做缓存、可以拦截所有 Http 请求并使用 Fetch API 进行 response ，一个非常完备哦的 proxy 就这么诞生了
+4. re-engageable：推送通知的能力，依赖 service Worker 与 http push，不过默认支持的可是 GCM
 5. 推送是指服务器向服务工作线程提供信息的操作
 6. 通知是指服务工作线程或网页脚本向用户信息的操作。
 
 <!--more-->
 
 ## service Worker 有以下功能和特性
-- 一个独立的 worker 线程，独立于当前网页进程，有自己独立的 worker context。
-- 一旦被 install，就永远存在，除非被 uninstall
-- 需要的时候可以直接唤醒，不需要的时候自动睡眠（有效利用资源，此处有坑）
-- 可编程拦截代理请求和返回，缓存文件，缓存的文件可以被网页进程取到（包括网络离线状态）
-- 离线内容开发者可控
-- 能向客户端推送消息
-- 不能直接操作 DOM
-- 出于安全的考虑，必须在 HTTPS 环境下才能工作
-- 异步实现，内部大都是通过 Promise 实现
 
-#### service Worker前提条件
+* 一个独立的 worker 线程，独立于当前网页进程，有自己独立的 worker context。
+* 一旦被 install，就永远存在，除非被 uninstall
+* 需要的时候可以直接唤醒，不需要的时候自动睡眠（有效利用资源，此处有坑）
+* 可编程拦截代理请求和返回，缓存文件，缓存的文件可以被网页进程取到（包括网络离线状态）
+* 离线内容开发者可控
+* 能向客户端推送消息
+* 不能直接操作 DOM
+* 出于安全的考虑，必须在 HTTPS 环境下才能工作
+* 异步实现，内部大都是通过 Promise 实现
 
-- 要求HTTPS的环境
-- 缓存机制是依赖cache API 实现的
-- 依赖HTML5 fetchAPI
-- 依赖Promise
+#### service Worker 前提条件
+
+* 要求 HTTPS 的环境
+* 缓存机制是依赖 cache API 实现的
+* 依赖 HTML5 fetchAPI
+* 依赖 Promise
 
 #### 注册
-```javascript
+
+````javascript
       if ('serviceWorker' in navigator) {
             navigator.serviceWorker
                 .register('./pwa/sw.js', {scope: '/pwa'})
@@ -167,8 +171,4 @@ pwa 添加至桌面的功能实现依赖于manifest.json。
 在这个过程中，由于页面未加载完毕，因此屏幕将显示空白并且看似停滞。如果是从网络加载的页面资源，白屏过程将会变得更加明显。因此 PWA 提供了启动画面功能，用标题、颜色和图像组成的画面来替代白屏，提升用户体验。
 
 目前，如果修改了manifest.json 的应用的名称，已经添加到主屏幕的名称并不会改变，只有当用户重新添加到桌面时，更改后的名称才会显示出来。但是未来版本的chrome 支持自动更新。
-
-
-
-
-
+````
