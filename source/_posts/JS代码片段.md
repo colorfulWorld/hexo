@@ -68,3 +68,15 @@ let total = this.fileSizeFormat(spaceSize, 2, true, false)
       }
     }
 ```
+
+## 获取文件扩展名
+
+```javascript
+const extname = filename => {
+  if (filename.indexOf('.') > 0) {
+    var resultArr = filename.split('.')
+    var result = '.' + resultArr[resultArr.length - 1]
+    return result
+  } else return ''
+}
+```
