@@ -8,6 +8,18 @@ tags:
 
 <!--more-->
 
+## JS 数据类型
+
+JS 数据类型分为基本数据类型和复杂数据类型
+
+**基本数据类型**
+
+`Number`、`Boolean`、`String`、`Null`、`String`、`Symbol`
+
+** 复杂数据类型**
+
+Object，其他引用类型（Array 、 Date、RegExp 、 Function、基本包装类型（Boolean 、 String、Number ）、Math 等）都是 Object 类型的实例对象
+
 ## 类型和语法
 
 ### 内置类型
