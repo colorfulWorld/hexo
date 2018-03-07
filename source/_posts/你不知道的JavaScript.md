@@ -1,12 +1,24 @@
 ---
-title: 你不知道的JavaScript(中)
+title: 你不知道的JavaScript
 date: 2018-01-15 16:52:42
 tags:
 ---
 
-读 《你不知道的 JavaScript( 中 )》 笔记
+读 《你不知道的 JavaScript》 笔记
 
 <!--more-->
+
+## JS 数据类型
+
+JS 数据类型分为基本数据类型和复杂数据类型
+
+**基本数据类型**
+
+`Number`、`Boolean`、`String`、`Null`、`String`、`Symbol`
+
+** 复杂数据类型**
+
+Object，其他引用类型（Array 、 Date、RegExp 、 Function、基本包装类型（Boolean 、 String、Number ）、Math 等）都是 Object 类型的实例对象
 
 ## 类型和语法
 
