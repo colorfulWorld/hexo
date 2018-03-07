@@ -229,7 +229,9 @@ function callOtherDomain() {
 * 在页面http://damonare.cn/b.html 中也设置 document.domain:
 
 ```javascript
-;<script type="text/javascript">document.domain = 'damonare.cn';//在iframe载入这个页面也设置document.domain，使之与主页面的document.domain相同</script>
+;<script type="text/javascript">
+  document.domain = 'damonare.cn';//在iframe载入这个页面也设置document.domain，使之与主页面的document.domain相同
+</script>
 ```
 
 修改 document.domain 的方法只适用于不同子域的框架间的交互。
@@ -384,3 +386,38 @@ b.html 中的代码
 * 为什么服务器在接到断开请求时不立即同意断开：当服务器收到断开连接的请求时，可能仍然有数据未发送完毕，所以服务器先发送确认信号，等所有数据发送完毕后再同意断开。
 
 * 第四次握手后，主机发送确认信号后并没有立即断开连接，而是等待了 2 个报文传送周期，原因是：如果第四次握手的确认信息丢失，服务器将会重新发送第三次握手的断开连接的信号，而服务器发觉丢包与重新发送的断开连接到达主机的时间正好为 2 个报文传输周期。
+
+## session、cookie、seesionStorage、localStorage 的区别
+
+cookie 和 session 都是用来跟踪浏览器用户身份的会话方式。
+
+### cookie 机制
+
+如果不子啊浏览器中设置过期时间，cookie 会被保存在内存中，生命周期谁浏览器的关闭而结束，这种 cookie 称为会话 cookie，如果设置了 cookie 过期时间会保存在硬盘中，关闭浏览器之后，cookie 数据仍然存在，直到过期时间结束才消失。
+
+cookie 是服务器发给客户端的特殊信息，cookie 是以文本的方式保存在客户端，每次请求时会带上它。
+
+### session 机制
+
+当服务器收到请求需要创建 seesion 对象时，首先会检查客户端请求是否包含 sessionId。如果有 seesionId,服务器将根据该 id 返回对象的 session 对象，如果没有 sessionid,服务器将会创建新的 session 对象，并把 sessionid 再本次响应中返回给客户端。通常使用 cookie 方式存储 sessionid 到客户端，再交互中浏览器按照规则将 sessionid 发给服务端。如果用户禁用 cookie，则要使用 URL 重写，可以通过 response.encodeURL(url)进行实现；API 对 encodeURL 的结束为，当浏览器支持 Cookie 时，url 不做任何处理；当浏览器不支持 Cookie 时，url 不做任何处理；当浏览器不支持 Cookie 的时候，将会重写 URL 将 seesionid 拼接到访问地址之后。
+
+### 存储内容
+
+cookie 只能保存字符串，以文本的方式；session 通过类型与 Hashtable 的数据结构来保存，能支持任何类型的对象（session 中可含有多个对象）。
+
+### 存储的大小
+
+* cookie:单个 cookie 保存的数据不能超过 4kb;
+* session:大小没有限制。
+
+### sessionStorage
+
+是一个 HTML5 新增的一个会话储存对象，用于临时保存同一个窗口（或标签页）的数据，再关闭窗口或关闭标签页之后会将删除这些数据。
+
+在 JavaScript 中可以通过 window。sessionStorage 或 sessionStrorage
+
+非常适合 SPA，可以方便再各业务模块进行传值
+
+### localSotrage
+
+localStorage 存储的数据是永久性的。
