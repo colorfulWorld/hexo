@@ -325,7 +325,7 @@ b.html 中的代码
 
 #### 浏览器缓存机制
 
-![img](/images/problem/2.png)
+![img caption](/images/problem/2.png)
 
 ##### 当前缓存是否过期。
 
@@ -373,7 +373,7 @@ b.html 中的代码
 3. 304 Not Modified 是浏览器和服务器多确认了一次缓存有效性，再用的缓存。200(from cache) 是速度最快的 , 因为不需要访问远程服务器 , 直接使用本地缓存 .304 的过程是 , 先请求服务器 , 然后服务器告诉我们这个资源没变 , 浏览器再使用本地缓存。
 4. 200 from dist cache 不访问服务器，直接度缓存，当进程 kill 时，数据依旧存在。只能缓存派生资源。
 
-![img](/images/problem/1.png)
+![img caption](/images/problem/1.png)
 
 ### 浏览器解析渲染页面
 

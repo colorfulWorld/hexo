@@ -468,7 +468,7 @@ console.log(foo.count) // 0 -- WTF?
 
 ** 匿名函数无法指向自身 **，arguments.callee 是唯一一种从匿名函数对象中引用自身的方法，已被弃用。，然而更好的是避免使用匿名函数，至少在需要自引用时使用时使用具名函数
 
-**this 在任何情况下都不指向函数的词法作用域 **，作用域 “ 对象 ” 无法通过 js 代码来访问，它存在于 js 引擎内部 \**
+**this 在任何情况下都不指向函数的词法作用域 **，作用域 “ 对象 ” 无法通过 js 代码来访问，它存在于 js 引擎内部 \*\*
 
 ```javascript
 function foo() {
@@ -484,3 +484,69 @@ foo()
 试图用 this 联通 foo() 和 bar() 的词法作用域，从而让 bar 可以 i 访问 foo() 变量的 a，这是不可能实现的，** 不能使用 this 来引用一个词法作用域内部的东西 **，每当想要把 this 和此法作用域混用的时候，一定要提醒自己，这是无法实现的
 
 ---
+
+## 综合题
+
+### 1
+
+```javascript
+var names = '宋伟老师'
+var obj = {
+  names: '张健老师',
+  showName: function() {
+    console.log(this.name)
+  },
+  returnName: function() {
+    return this.name
+  },
+  returnFunctionName: function() {
+    return function() {
+      console.log(this.name)
+    }
+  }
+}
+obj.showName() //输出什么？   "张健老师"
+obj.returnName() //输出什么？   "张健老师"
+obj.returnFunctionName()() //输出什么？   "宋伟老师"
+obj.showName.call(names) //输出什么？   undefined
+obj.returnName.call(names) //输出什么？   undefined
+obj.returnFunctionName().call(names) //输出什么？   undefined
+var newObj = obj.returnFunctionName().bind(window)
+newObj.call(obj) //输出什么？   "宋伟老师"
+//为什么最后一个输出"宋伟老师"？因为bind指向this对象后  再一次调用的话  this指向不会被改变
+```
+
+### 2
+
+```javascript
+var big = '万达老师'
+
+var obj = {
+  big: '宋伟老师',
+  showBig: function() {
+    return this.big
+  }
+}
+obj.showBig.call(big) //ƒ big() { [native code] }  //精通String的操作方法的同学就把为什么回复出来吧
+```
+
+### 3
+
+```javascript
+function a(a,b,c){
+    console.log(this.length);                 //4
+    console.log(this.callee.length);          //1
+}
+
+function fn(d){
+    arguments[0](10,20,30,40,50);
+}
+
+fn(a,10,20,30);
+
+
+//第一个输出结果:因为this当前指向的是arguments 。 arguments是一个伪数组具备length属性。arguments又是保存函数的实参。
+fn调用的时候传入4个实参。所以arguments长度为4。这个时候arguments[0] 等同于 arguments.a调用这个函数。所以this指向的是arguments这个伪数组也是(对象)(听到这还有疑惑小伙伴留言问我)
+
+//第二个输出结果：callee是arguments的一个属性,主要返回当前arguments直属的函数体。所以this.callees是返回fn 。每一个函数有一个length属性主要用来返回函数的形参的所以就是1。
+```

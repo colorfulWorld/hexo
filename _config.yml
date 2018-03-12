@@ -64,6 +64,5 @@ theme: next
 # Deployment
 deploy:
   type: git
-  repo:
-    github: https://github.com/colorfulWorld/colorfulWorld.github.io.git
+  repo: ssh://git@github.com/colorfulWorld/colorfulWorld.github.io.git
   branch: master

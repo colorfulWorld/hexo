@@ -26,14 +26,14 @@ categories: PWA
 * 出于安全的考虑，必须在 HTTPS 环境下才能工作
 * 异步实现，内部大都是通过 Promise 实现
 
-#### service Worker 前提条件
+### service Worker 前提条件
 
 * 要求 HTTPS 的环境
-* 缓存机制是依赖 cache API 实现的
+* 缓存机制是依赖 cache API 实现的 (cacheStorage)
 * 依赖 HTML5 fetchAPI
 * 依赖 Promise
 
-#### 注册
+### 注册
 
 ````javascript
       if ('serviceWorker' in navigator) {
@@ -53,11 +53,12 @@ categories: PWA
                 });
 
         }
-        ```
 
-#### 安装
+```
 
-install事件我们会绑定在service worker 文件中，在service worker 安装成功后，install事件被触发。**install事件一般是被用来填充你的浏览器的离线缓存能力。**为了达到这个目的，我们使用了service worker 新的标志性的存储**cache API** ——一个service worker上的全局对象，**它使我们可以存储网络响应发来的资源，并且根据他们的请求来生成key。**这个 API 和浏览器的标准的缓存工作原理很相似，但是是只对应你的站点的域的。它会一直持久存在，直到你告诉它不再存储，你拥有全部的控制权。
+### 安装
+
+install事件我们会绑定在service worker 文件中，在service worker 安装成功后，install事件被触发。**install事件一般是被用来填充你的浏览器的离线缓存能力。**为了达到这个目的，我们使用了service worker 新的标志性的存储**cache API** ——一个service worker上的全局对象，**它使我们可以存储网络响应发来的资源，并且根据他们的请求来生成key**。这个 API 和浏览器的标准的缓存工作原理很相似，但是是只对应你的站点的域的。它会一直持久存在，直到你告诉它不再存储，你拥有全部的控制权。
 
 ```javascript
     self.addEventListener('install', function (e) {
@@ -79,9 +80,10 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
     /*我们使用caches.open()方法创建了一个yu的新缓存，将会是我们站点资源的缓存的第一个版本。它返回了一个创建缓存的promise,
       当它resolved 的时候，我们接着会调用在创建的缓存上的一个方法addALL()，这个方法的参数是一个由一组相对于origin的URL组成的数组，
       这个数组就是你想缓存的资源的列表*/
-      ```
+```
 
-#### 自定义请求响应
+### 自定义请求响应
+
 ``` javascript
     self.addEventListener('fetch', function (e) {
      console.log('[service worker] fetch',e.request.url);
@@ -137,7 +139,7 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
 ## manifest.json
 pwa 添加至桌面的功能实现依赖于manifest.json。
 
-#### 基本功能
+### 基本功能
 - name:{string} 应用名称，用于安装横幅、启动画面显示
 - short_name:{string} 应用短名称，用于主屏幕显示
 - icon:img 应用图标列表，其中包括:
@@ -154,14 +156,14 @@ pwa 添加至桌面的功能实现依赖于manifest.json。
 - orientation: string 应用显示方向
 - theme_color: 主题颜色
 
-#### 设置作用域
+### 设置作用域
 
 - 如果没有在manifest中设置scope，则默认的作用域为manifest.json所在的文件夹；
 - **start_url 必须在作用域范围之内**;
 - 如果start_url 为相对地址，其根路径收scope所影响;
 - 如果start_url 为绝对地址（以/开头）,则该地址将永远以/作为跟地址；
 
-#### 添加启动动画
+### 添加启动动画
 
 当PWA添加到主屏幕点击打开时，幕后执行了若干操作：
 1. 启动浏览器

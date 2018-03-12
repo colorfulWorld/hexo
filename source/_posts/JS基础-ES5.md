@@ -65,7 +65,7 @@ DOG.prototype.constructor === DOG
 
 现在，species 属性放在 prototype 对象里，是两个实例对象共享的。只要修改了 prototype 对象，就会同时影响到两个实例对象。
 
-![img](/images/prototype/1.png)
+![img caption](/images/prototype/1.png)
 
 以上就是一个简单的 DOG 类完整的原型链。
 
@@ -103,7 +103,7 @@ JS 在创建对象（不论是普通对象还是函数对象）的时候，都�
 
 ### 原型链图
 
-褐色的线为原型链 ![img](/images/prototype/2.png)
+褐色的线为原型链 ![img caption](/images/prototype/2.png)
 
 够造函数、原型和实例的关系：
 

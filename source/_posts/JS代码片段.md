@@ -111,7 +111,7 @@ alert(arrSorted)
 
 快速排序是处理大数据急最快的排序算法之一。它是一种分而治之的算法，通过递归的方式将数据一次分解为包含较小元素和较大元素的不同子序列。
 
-![img](/images/common/kuaipai.png)
+![img caption](/images/common/kuaipai.png)
 
 ```javascript
 function quickSort(array) {
@@ -131,4 +131,68 @@ function quickSort(array) {
   }
   return quickSort(left).concat(privot, quickSort(right))
 }
+```
+
+## JS 深度克隆
+
+```javascript
+function deepClone(obj) {
+  var _toString = Object.prototype.toString
+
+  // null, undefined, non-object, function
+  if (!obj || typeof obj !== 'object') {
+    return obj
+  }
+
+  // DOM Node
+  if (obj.nodeType && 'cloneNode' in obj) {
+    return obj.cloneNode(true)
+  }
+
+  // Date
+  if (_toString.call(obj) === '[object Date]') {
+    return new Date(obj.getTime())
+  }
+
+  // RegExp
+  if (_toString.call(obj) === '[object RegExp]') {
+    var flags = []
+    if (obj.global) {
+      flags.push('g')
+    }
+    if (obj.multiline) {
+      flags.push('m')
+    }
+    if (obj.ignoreCase) {
+      flags.push('i')
+    }
+
+    return new RegExp(obj.source, flags.join(''))
+  }
+
+  var result = Array.isArray(obj) ? [] : obj.constructor ? new obj.constructor() : {}
+
+  for (var key in obj) {
+    result[key] = deepClone(obj[key])
+  }
+
+  return result
+}
+
+function A() {
+  this.a = a
+}
+
+var a = {
+  name: 'qiu',
+  birth: new Date(),
+  pattern: /qiu/gim,
+  container: document.body,
+  hobbys: ['book', new Date(), /aaa/gim, 111]
+}
+
+var c = new A()
+var b = deepClone(c)
+console.log(c.a === b.a)
+console.log(c, b)
 ```
