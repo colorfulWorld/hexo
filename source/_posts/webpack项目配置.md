@@ -38,7 +38,10 @@ module.exports = function(env) {
     profile: true,
     cache: true,
     module: {
-      loaders: getLoaders(env)
+      loaders: [{test:/\.jsx?$/,
+      exclude:/(node_modulesbowser_companents)/,
+      loader:'babel',
+      query:{presets:['react','ea2015']}}]
     },
     resolve: {
       alias: getAlias(env)
@@ -49,9 +52,12 @@ module.exports = function(env) {
 ```
 
 * context: 上下文。
-* entry: 入口文件，是所有依赖关系的入口，webpack 从这个入口开始静态解析，分析模块之间的依赖关系。
-* output: 打包输出的配置。
+* entry: 入口文件，是所有依赖关系的入口，webpack 从这个入口开始静态解析，分析模块之间的依赖关系。假设是一个多页面文件，然后需要通过一个对象告诉webpack为每个html生成一个bundle文件。
+* output: 打包输出的配置。output的两个配置项“path"和”publicPath"
+  - path: 仅仅告诉webpack结果存储在哪里。
+  - publicPath: 则被许多webpack的插件同于在生产模式下更新到css、html文件的url值。
 * devtools:SourceMap 选项，便于开发模式下调试。
+* .babelrc 文件： babal-loader使用"presets"配置项来标识如何将ES6语法转成ES5以及如何转换React的JSX成js文件。我们可以使用"query"参数传入配置。然而在很多项目里面babal的配置可能比较大，因此可以把babal-loader的配置项单独保存在一个名为".babelrc"的文件中，在执行时babal-loader将会自动加载.babelrc文件。
 * watch: 监听模式，增量更新，开发必备
 * profile: 优化。
 * cache: webpack 构建的过程中会生成很多的临时文件，打开 cache 可以让这些临时文件缓存起来，从而更快的构建。
@@ -59,3 +65,8 @@ module.exports = function(env) {
 * resolve.alias: 模块别名，这样就可以更方便的引用模块。
 * plugins: 如前文介绍，webpack 的一些内置功能均是以插件的形式提供。
 
+## webpack与gulp的区别
+gulp是基于流的构建工具：all in one 的打包模式，输出一个js和一个css文件，优点是减少http请求，万金油方案。
+webpack 是模块化管理工具，使用webpack可以对模块进行压缩、预处理、打包、按需加载。
+
+## 一个webpack项目文件结构
