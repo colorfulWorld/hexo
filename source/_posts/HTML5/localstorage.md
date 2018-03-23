@@ -1,0 +1,99 @@
+---
+title: localstorage
+categories: webAPI
+---
+
+HTML5 中 Web Storage 的出现，主要是为了弥补使用 Cookie 作为本地存储的不足。**Cookie 存储的数据量非常小，而且数据会自动携带到请求头里，但服务器端可能并不关心这些数据，所以会造成带宽的浪费**。
+
+web storage 提供了两个存储对象：localStorage 和 sessionStorage。
+
+<!--more-->
+
+## localStorage 和 sessionStorage
+
+sessionStorage 存储的数据仅在本次会话有用，会话结束之后会自动失效，而且数据仅在当前窗口有效，同一源下新窗口也访问不到其他窗口基于 sessionStorage 存储的数据。也是由这些特性导致 sessionStorage 的使用场景较少。
+
+localStorage 可以永久存储，而且同源下数据多窗口可以共享。
+
+## localStorage 的基本使用
+
+有两点需要注意一下。在 setItem 时，可能会达到大小限制，最好加上错误捕捉 ：
+
+```javascript
+try {
+  localStorage.setItem(key, value);
+} catch(e) {
+  if (isQuotaExceeded(e)) {
+    // Storage full, maybe notify user or do some clean-up
+  }
+}
+
+function isQuotaExceeded(e) {
+  var quotaExceeded = false;
+  if (e) {
+    if (e.code) {
+      switch (e.code) {
+        case 22:
+          quotaExceeded = true;
+          break;
+        case 1014:
+          // Firefox
+          if (e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+            quotaExceeded = true;
+          }
+          break;
+      }
+    } else if (e.number === -2147024882) {
+      // Internet Explorer 8
+      quotaExceeded = true;
+    }
+  }
+  return quotaExceeded;
+```
+
+另外在存储容量快满时，会造成 getItem 性能急剧下降
+
+### sessionStorage,localStorage,cookie 区别
+
+* 都会在浏览器端保存，有大小限制，同源限制
+* cookie 会在请求时发送到服务器，作为会话标识，服务器可修改 cookie；web storage 不会发送到服务器
+  cookie 有 path 概念，子路径可以访问父路径 cookie，父路径不能访问子路径 cookie
+* 有效期：cookie 在设置的有效期内有效，默认为浏览器关闭；sessionStorage 在窗口关闭前有效，localStorage 长期有效，直到用户删除
+* 共享：sessionStorage 不能共享，localStorage 在同源文档之间共享，cookie 在同源且符合 path 规则的文档之间共享
+* localStorage 的修改会促发其他文档窗口的 update 事件
+* cookie 有 secure 属性要求 HTTPS 传输
+* 浏览器不能保存超过 300 个 cookie，单个服务器不能超过 20 个，每个 cookie 不能超过 4k。web storage 大小支持能达到 5M
+
+
+cookie 和 session 都是用来跟踪浏览器用户身份的会话方式。
+
+### cookie 机制
+
+如果不子啊浏览器中设置过期时间，cookie 会被保存在内存中，生命周期谁浏览器的关闭而结束，这种 cookie 称为会话 cookie，如果设置了 cookie 过期时间会保存在硬盘中，关闭浏览器之后，cookie 数据仍然存在，直到过期时间结束才消失。
+
+cookie 是服务器发给客户端的特殊信息，cookie 是以文本的方式保存在客户端，每次请求时会带上它。
+
+### session 机制
+
+当服务器收到请求需要创建 seesion 对象时，首先会检查客户端请求是否包含 sessionId。如果有 seesionId,服务器将根据该 id 返回对象的 session 对象，如果没有 sessionid,服务器将会创建新的 session 对象，并把 sessionid 再本次响应中返回给客户端。通常使用 cookie 方式存储 sessionid 到客户端，再交互中浏览器按照规则将 sessionid 发给服务端。如果用户禁用 cookie，则要使用 URL 重写，可以通过 response.encodeURL(url)进行实现；API 对 encodeURL 的结束为，当浏览器支持 Cookie 时，url 不做任何处理；当浏览器不支持 Cookie 时，url 不做任何处理；当浏览器不支持 Cookie 的时候，将会重写 URL 将 seesionid 拼接到访问地址之后。
+
+### 存储内容
+
+cookie 只能保存字符串，以文本的方式；session 通过类型与 Hashtable 的数据结构来保存，能支持任何类型的对象（session 中可含有多个对象）。
+
+### 存储的大小
+
+* cookie:单个 cookie 保存的数据不能超过 4kb;
+* session:大小没有限制。
+
+### sessionStorage
+
+是一个 HTML5 新增的一个会话储存对象，用于临时保存同一个窗口（或标签页）的数据，再关闭窗口或关闭标签页之后会将删除这些数据。
+
+在 JavaScript 中可以通过 window。sessionStorage 或 sessionStrorage
+
+非常适合 SPA，可以方便再各业务模块进行传值
+
+### localSotrage
+
+localStorage 存储的数据是永久性的。
