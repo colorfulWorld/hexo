@@ -1,5 +1,5 @@
 ---
-title: http/2
+title: http2
 date: 2018-03-22 11:05:35
 categories: http
 ---
