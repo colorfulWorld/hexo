@@ -387,3 +387,44 @@ bar.bind(foo)() //undefined 3
 var func = bar.bind(foo)
 func()
 ```
+
+## 事件委托
+
+利用事件委托技术能让你对特定的每个节点添加事件监听器；相反，事件监听器是被添加到他们的父元素上的。事件监听器会分析从子元素冒泡上来的事件，找到是哪一个子元素的事件。
+
+```html
+<ul id="parent-list">
+	<li id="post-1">Item 1</li>
+	<li id="post-2">Item 2</li>
+	<li id="post-3">Item 3</li>
+	<li id="post-4">Item 4</li>
+	<li id="post-5">Item 5</li>
+	<li id="post-6">Item 6</li>
+</ul>
+<script>
+document.getElementById("parent-list").addEventListener("click",function(e) {
+	// e.target是被点击的元素!
+	// 如果被点击的是li元素
+	if(e.target && e.target.nodeName == "LI") {
+		// 找到目标，输出ID!
+		console.log("List item ",e.target.id.replace("post-")," was clicked!");
+	}
+
+$('li').click(function(){
+        $(this).css('background', '#D4DFE6');
+});
+
+// jQuery的delegate写法
+    $('#wrap').delegate('li', 'click', function(ev){
+
+        // this 指向委托的对象 li
+        $(this).css('background', '#D4DFE6');
+
+        // 找到父级 ul#wrap
+        $(ev.delegateTarget).css('border', '2px solid #f00');
+    });
+
+
+});</script>
+
+```

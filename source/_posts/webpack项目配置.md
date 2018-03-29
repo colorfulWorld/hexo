@@ -69,4 +69,14 @@ module.exports = function(env) {
 gulp是基于流的构建工具：all in one 的打包模式，输出一个js和一个css文件，优点是减少http请求，万金油方案。
 webpack 是模块化管理工具，使用webpack可以对模块进行压缩、预处理、打包、按需加载。
 
-## 一个webpack项目文件结构
+## 一个webpack的命令行选项
+- webpack 用于构建一个开发目录
+- webpack -p 用于构建一个生产目录（压缩过的）
+- webpack --watch 用于连续地构建
+- webapck -d 展示映射关系
+- webpack --colors 用于美化展示关系
+- webpack-dev-server 启动服务器
+- webpack --display-error-details//带上参数可以找出详细的错误信息
+
+webpack 会根据webpack.config.js来构建bundle.js
+依赖  babel-loader(编译器可以将es6语法转成低版本【如es5语法】提高兼容性)
