@@ -306,3 +306,24 @@ f(1) // NaN (b and c are undefined)
 f(1, 2, 3) // 6
 f(1, 2, 3, 4) //6 (the fourth parameter is not destructured)
 ```
+
+## 模板字符串(``)
+
+```javascript
+function authorize(user, action) {
+  if (!user.hasPrivilege(action)) {
+    throw new Error(
+      `用户 ${user.name} 未被授权执行 ${action} 操作。`);
+  }
+}
+```
+在这个示例中，`${user.name}`,`${action}`被称为模板占位符，javascript 将把user.name 和 action 的值插入到最终生成的字符串中。
+
+```javascript
+$("#warning").html(`
+  <h1>小心！>/h1>
+  <p>未经授权打冰球可能受罚
+  将近${maxPenalty}分钟。</p>
+`);
+```
+模板字符串中所有的空格、新进、缩进，都会原样输出在生成的字符串中。
