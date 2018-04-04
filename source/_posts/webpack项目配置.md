@@ -5,6 +5,7 @@ categories: 项目构建工具
 ---
 
 webpack 是模块化管理工具，使用 webpack 可以对模块进行压缩，预处理，按需打包，按需加载等。
+Browsersify、webpack 一开始的目的就是打包commonJS模块。
 
 <!--more-->
 
