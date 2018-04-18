@@ -421,48 +421,6 @@ cookie 只能保存字符串，以文本的方式；session 通过类型与 Hash
 ### localSotrage
 
 localStorage 存储的数据是永久性的。
-## Javascript 的节流和防抖
-
-函数节流和函数防抖，两者都是优化高频率执行 JS 代码的一种手段。
-
-### 函数节流
-
-是指一定时间内 js 方法只跑一次。
-
-函数节流应用的实际场景，多数在监听页面元素滚动时间的时候会用到。因为滚动事件，是一个高频触发的事件。以下是监听页面元素滚动的示例代码：
-
-```javascript
-//函数节流
-var canRun = true
-document.getElementById('throttle').onsroll = function() {
-  if (!canRun) {
-    //判断是否空闲，如果在执行中，则直接return
-    return
-  }
-  canRun = false
-  setTimeout(function() {
-    console.log('函数节流')
-    canRun = true
-  }, 300)
-}
-```
-
-### 函数防抖
-
-函数防抖的应有场景，最常见的就是用户注册的时候的手机号码验证和邮箱验证了。只有等用户输入完毕后，前端才需要检查格式是否正确，如果不正确，在弹出提示语。以下还是以页面元素滚动监听的例子，来解析：
-
-```javascript
-//函数防抖
-var timer = fasle
-document.getElementById('document').onsrcoll = function() {
-  clearTimeout(timer).timer = setTimeout(function() {
-    //清楚未执行的代码，重置回初始状态
-    console.log('函数防抖')
-  }, 300)
-}
-```
-
-函数防抖的要点，也是需要一个 setTimeout 来辅助实现。延迟执行需要跑的代码
 
 ## html 页面的渲染过程
 
