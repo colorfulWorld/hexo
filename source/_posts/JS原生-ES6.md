@@ -24,10 +24,6 @@ console.log(set1.has(6)); // expected output:false
 console.log(Array.from(set1)) // Array [1, 2, 3, 4, NaN, 5]
 ```
 
-## Array.from()
-
-从一个类似数组或可迭代对象中创建一个新的数组实例。
-
 ## super
 
 super 关键字用于访问和调用一个对象的父对象的函数。( 只能在 class 内部用 )
@@ -248,6 +244,41 @@ console.log(b) // "Sandy"
 
 ---
 
+### 解构赋值
+```javascript
+let [a, b, c] = [1, 2, 3];
+//定义了三个变量，并对应赋了值；如果值的个数与变量名个数不匹配，没有对应上的变量值为 undefined
+
+let [a, b, c='default'] = [1, 2];
+//指定默认值，在定义变量时就指定了默认值，如果赋值时，没有给定内容，则会取默认值
+
+let [a, …b] = [1,2,3];
+//这里 b 的值为[2，3]，这样可以快速使用剩余的数据赋值给变量，
+//但实际使用中为了避免代码阅读的歧义，不推荐这么使用，仅作了解即可
+
+let [a,b,c] = 'yes';
+console.log(a);//y
+console.log(b);//e
+console.log(c);//s
+```
+字符串的结构赋值会以单个字符串的方式进行赋值。
+
+```javascript
+let {length} ='yes';
+console.log(length);//3
+```
+以对象赋值的方法，如果名称是字符串的自带属性，则会获得属性值
+
+```javascript
+let arr =[1,2];
+let obj = {a:1,b:2};
+function test({a=10,b}){
+  console.log(a);
+  console.log(b);
+}
+test(obj);
+``` 
+
 ## 默认和剩余参数
 
 ### 默认参数
@@ -307,26 +338,6 @@ f(1, 2, 3) // 6
 f(1, 2, 3, 4) //6 (the fourth parameter is not destructured)
 ```
 
-## 模板字符串(``)
-
-```javascript
-function authorize(user, action) {
-  if (!user.hasPrivilege(action)) {
-    throw new Error(
-      `用户 ${user.name} 未被授权执行 ${action} 操作。`);
-  }
-}
-```
-在这个示例中，`${user.name}`,`${action}`被称为模板占位符，javascript 将把user.name 和 action 的值插入到最终生成的字符串中。
-
-```javascript
-$("#warning").html(`
-  <h1>小心！>/h1>
-  <p>未经授权打冰球可能受罚
-  将近${maxPenalty}分钟。</p>
-`);
-```
-模板字符串中所有的空格、新进、缩进，都会原样输出在生成的字符串中。
 ## Generator 函数
 
 Generator 函数是协程在 ES6 的实现，最大特点就是可以交出函数的执行权（即暂停执行）。协程：多个现成互相协作，完成异步任务。
@@ -373,4 +384,195 @@ g1.done // false
 var g2 = gen.next('B')
 g2.value // 'end'
 g2.done // true
+```
+## 字符串扩展
+
+### 字符串内容测试
+
+```javascript
+'abcdef'.includes('c');//true
+'abcdef'.includes('ye');//false
+'abcdef'.startsWith('a');//true
+'abcdef'.endswidth('f');//true
+//includes(), startsWith(), endsWith() 都支持第二个参数，
+//类型为数字类型，意为从第 n 个字符开始，endsWith()的第二个参数有点不一样
+'abcdef'.includes('c', 4);//false 从第5个字符开始查找是否有 'c' 这个字符
+'abcdef'.startsWith('d', 3);//true 从第4个字符开始查找是否是以 'd' 字符为开头
+'abcdef'.endsWith('d', 4);//true 前面的4个字符里，是否以 'd' 字符为结尾
+```
+
+**字符串重复输出：** 
+```javascript
+'a'.repeat(5);//aaaaa 重复输出5遍
+```
+
+## 模板字符串(``)
+
+```javascript
+function authorize(user, action) {
+  if (!user.hasPrivilege(action)) {
+    throw new Error(
+      `用户 ${user.name} 未被授权执行 ${action} 操作。`);
+  }
+}
+```
+在这个示例中，`${user.name}`,`${action}`被称为模板占位符，javascript 将把user.name 和 action 的值插入到最终生成的字符串中。
+
+```javascript
+$("#warning").html(`
+  <h1>小心！>/h1>
+  <p>未经授权打冰球可能受罚
+  将近${maxPenalty}分钟。</p>
+`);
+```
+模板字符串中所有的空格、新进、缩进，都会原样输出在生成的字符串中。
+
+### 原生支持模板语言
+```javascript
+//es5
+$('#result').append(
+  'There are <b>' + basket.count + '</b> ' +
+  'items in your basket, ' +
+  '<em>' + basket.onSale +
+  '</em> are on sale!'
+);
+//es6
+//在es6中，内容模板，可以定义在 `` 包起来的字符串中，其中的内容会保持原有格式
+//另外可以在字符串中直接使用模板语言进行变量填充，优雅而简洁
+$('#result').append(`
+  There are <b>${basket.count}</b> items
+   in your basket, <em>${basket.onSale}</em>
+  are on sale!
+`);
+```
+### 字符串遍历输出
+
+```javascript
+//for ...of 格式为 es6 中的 Iterator 迭代器的输出方式
+for(let c of 'abc'){
+  console.log(c);
+}
+//a
+//b
+//c
+```
+### 字符串补全
+```javascript
+//参数1：[number] 目标字符串长度
+//参数2：[string] 进行补全的字符串
+'12345'.padStart(7, '0')//0012345 - 字符串不足7位，在头部补充不足长度的目标字符串
+'12345'.padEnd(7, '0')//1234500 - 在尾部进行字符串补全
+```
+
+## 数组扩展
+
+### Array.from()
+
+从一个类似数组或可迭代对象中创建一个新的数组实例。
+
+### 合并数组
+```javascript
+let a = [1, 2];
+let b = [3];
+let c = [2, 4];
+let d = [...a, ...b, ...c];//[1, 2, 3, 2, 4] 所有内容合并，但并不会去除重复
+```
+### 快速转换为数组
+
+```javascript
+Array.of(3,4,5);//[3,4,5]
+```
+### 内容过滤
+```javascript
+//判断对象是否为数组
+if(Array.isArray(obj)){...}
+
+[1,2,3].includes(5);//false，检索数据中是否有5
+
+//找出第一个匹配表达式的结果，注意是只要匹配到一项，函数即会返回
+let a = [1, 3, -4, 10].find(function(value, index, arr){
+  return value < 0;
+});
+console.log(a);//-4
+
+//找出第一个匹配表达式的结果下标
+let a = [1, 3, -4, 10].findIndex(function(value, index, arr){
+  return value < 0;
+});
+console.log(a);//2
+
+//排除负数内容
+let a = [1, 3, -4, 10].filter(function(item){
+  return item > 0;
+});
+console.log(a);//[1, 3, 10]
+```
+
+## 对象扩展
+
+### 属性的简洁表示
+```javascript
+//直接使用变量/常量的名称个为对象属性的名称
+let a = 'abc';
+let b = {a};//{a: 'abc'}
+
+function f(x, y){ return {x, y};}
+//等效于
+function f(x, y){ return {x: x, y: y}}
+
+let o = {
+  f(){ return 1; }
+}
+//等效于
+let o = {
+  f: function(){ return 1; }
+}
+```
+### 对象内容合并
+```javascript
+let a = {a:1,b:2}, b = {b:3}, c = {b:4,c:5};
+let d = Object.assign(a, b, c);
+console.log(d);//{a:1,b:4,c:5}
+console.log(a);//{a:1,b:4}
+//上面的合并方式会同时更新 a 对象的内容，a 的属性如果有多次合并会被更新数据，
+//但自身没有的属性，其它对象有的属性不会被添加到 a 身上；
+//参数列中的对象只会影响第一个，后面的参数对象不会被修改数据
+
+//推荐使用这种方式进行对象数据合并
+let a = {a:1,b:2}, b = {b:3}, c = {b:4,c:5};
+let d = Object.assign({}, a, b, c);//第一个参数增加一个空对象，在合并时让它被更新，不影响实际的对象变量内容
+console.log(d);//{a:1,b:4,c:5}//与上面的方式合并结果一致，使用这种方式, a 对象的内容就不会被影响了
+```
+对象内容合并的方向是从参数顺序的后向前合并
+
+### 对象内容集合
+
+#### Object.keys()
+
+获取对象中所有的键名，以数组的形式返回
+```javascript
+var obj={a:1,b:2};
+var name=Object.keys(obj);//['a','b,]
+```
+#### Object.values() 
+
+获取对象中所有值内容，以数组的形式返回
+
+```javascript
+var obj={a:1,b:2};
+var values=Object.values(obj);//[1,2]
+```
+#### Object.entries()
+获得对象中所有成员的数据，以数组的形式返回，成员的内容也是数组形式
+
+```javascript
+var obj={a:1,b:2};
+var values=Object.entries(obj);//[['a',1],['b',2]]
+```
+#### 对象内容测试
+```javascript
+//判断对象是否为数组对象
+if(Object.isArray(someobj)){};
+//判断目标对象是否为空对象
+if(someobj&&Object.keys(someobj).length);
 ```
