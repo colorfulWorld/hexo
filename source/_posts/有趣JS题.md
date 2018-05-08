@@ -1,6 +1,7 @@
 ---
 title: 有趣JS题
 date: 2018-03-08 15:57:30
+categories: 原生JS
 tags:
 ---
 
