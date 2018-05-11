@@ -428,3 +428,24 @@ $('li').click(function(){
 });</script>
 
 ```
+## `getComputedStyle()`
+`getComputedStyle`是一个可以获取当前元素所有最终使用css属性值。返回一个css样式声明对象([object CSSStyleDeclaration])，只读。之前偶尔有一次要更改伪类元素 ::after 的样式
+
+```javascript
+var dom = document.getElementById("test"),
+style = window.getComputedStyle(dom,":after");
+```
+
+### `getComputedStyle`与`style`的区别
+- `getComputedStyle`方法是只读的，只能获取样式，不能设置；而`element.style`能读能写。
+- 获取对象范围
+ `getComputedStyle`方法获取的是最终应用在元素上的所有css属性对象；而`element.style`只能获取元素`style`中的css样式。因此对于一个光秃秃的元素`<p>`，`getComputedStyle`方法返回对象中的length属性值就有190+,而`element.style`就是0。
+
+### `getPropertyValue`方法
+`getPropertyValue`方法可以获取CSS样式申明对象上的属性值（直接属性名称），例如：
+
+```javascript
+window.getComputedStyle(element,null).getPropertyValue("float");
+```
+
+
