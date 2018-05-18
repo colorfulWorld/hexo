@@ -168,3 +168,66 @@ font-size: 100vw / 750
 - display 的值为table-cell,table-caption,inline-block,flex,或者inline-flex中的一个。
 - overflow的值不为visible。
 
+## 响应式页面开发
+
+在页头`head`标签内添加`viewoport meta`是实现响应式页面的第一步。
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1">
+```
+### 使用`Media Queries`
+
+- 使用link标签 ，根据指定特性引入特定的外部样式文件
+
+    ```html
+    <link rel="stylesheet" media="(max-width:640px)" href="max-640px.css">
+    ```
+- 直接在style标签或样式文件内使用`@media`规则
+
+### 样式断点
+- moblie  移动设备断点 ，视窗宽度<=768px
+- tablet 平板电脑设备断点，视窗宽度>=769px
+- desktop 桌面电脑断点，视窗宽度>=1024px
+- widescreen 宽屏电脑断点，视窗宽度>=1216px
+- fullhd 高清宽屏电脑断点，视窗宽度>=1408px
+
+## 1px 细线（普通屏幕下1px，高清屏下0.5px的情况）
+```css
+.mod_grid {
+    position: relative;
+    &::after {
+        // 实现1物理像素的下边框线
+        content: '';
+        position: absolute;
+        z-index: 1;
+        pointer-events: none;
+        background-color: #ddd;
+        height: 1px;
+        left: 0;
+        right: 0;
+        top: 0;
+        @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+            -webkit-transform: scaleY(0.5);
+            -webkit-transform-origin: 50% 0%;
+        }
+    }
+    ...
+}...
+```
+## 需要保持宽高比的图，应该用padding-top实现
+
+```css
+.mod_banner {
+    position: relative;
+    // 使用padding-top 实现宽高比为 100:750 的图片区域
+    padding-top: percentage(100/750);
+    height: 0;
+    overflow: hidden;
+    img {
+        width: 100%;
+        height: auto;
+        position: absolute;
+        left: 0;
+        top: 0; 
+    }
+}...
+```

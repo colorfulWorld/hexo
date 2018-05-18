@@ -1,7 +1,7 @@
 ---
 title: innerHTML与createElement
 date: 2018-05-11 15:05:13
-tags:
+categories: 原生JS
 ---
 
 最近看到一道海量渲染的面试题的答案，看到他用的是`createElement`然后`appendChild`感觉无法理解为什么要这样使用，难道`innerHTML`比这种方法的性能差吗？
@@ -28,7 +28,7 @@ tags:
         function test1(){
             console.time("html1:")
            for(let i = 0;i<1000;i++){
-            html1 +='<p>i</p>';
+            html1 +='<p>'+i+'</p>';
            }
            $a.innerHTML = html1;
            console.timeEnd("html1:")
@@ -58,10 +58,8 @@ tags:
 ### `createElement`
 在创建节点后就能直接事件监听事件，可是这种大量渲染，使用事件委托不是更完美吗？何必每一个都要绑定事件监听？
 ```javascript
-var oButton = document.createElement("INPUT");
+var oButton = document.createElement("input");
     oButton.type = "button";
     oButton.value = "xxxxx";
     aaa.appendChild(oButton);
  ```
-
-仍然不懂，`createdElement`到底比`innerHTML`好在哪儿
