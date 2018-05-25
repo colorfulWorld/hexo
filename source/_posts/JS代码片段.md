@@ -8,7 +8,7 @@ categories: 原生JS
 
 <!--more-->
 
-## 将 bytes 格式化
+# 将 bytes 格式化
 
 ```javascript
 let total = this.fileSizeFormat(spaceSize, 2, true, false)
@@ -73,12 +73,12 @@ let total = this.fileSizeFormat(spaceSize, 2, true, false)
 
 ```javascript
 const extname = filename => {
-  if (filename.indexOf('.') > 0) {
-    var resultArr = filename.split('.')
-    var result = '.' + resultArr[resultArr.length - 1]
-    return result
-  } else return ''
-}
+  if (filename.indexOf(".") > 0) {
+    var resultArr = filename.split(".");
+    var result = "." + resultArr[resultArr.length - 1];
+    return result;
+  } else return "";
+};
 ```
 
 ## 冒泡排序
@@ -86,25 +86,25 @@ const extname = filename => {
 ```javascript
 function bubbleSort(arr) {
   var i = arr.length,
-    j
-  var tempExchangVal
+    j;
+  var tempExchangVal;
   while (i > 0) {
     for (j = 0; j < i - 1; j++) {
       if (arr[j] > arr[j + 1]) {
-        tempExchangVal = arr[j]
-        arr[j] = arr[j + 1]
-        arr[j + 1] = tempExchangVal
+        tempExchangVal = arr[j];
+        arr[j] = arr[j + 1];
+        arr[j + 1] = tempExchangVal;
       }
     }
-    i--
+    i--;
   }
-  return arr
+  return arr;
 }
 
-var arr = [3, 2, 4, 9, 1, 5, 7, 6, 8]
-var arrSorted = bubbleSort(arr)
-console.log(arrSorted)
-alert(arrSorted)
+var arr = [3, 2, 4, 9, 1, 5, 7, 6, 8];
+var arrSorted = bubbleSort(arr);
+console.log(arrSorted);
+alert(arrSorted);
 ```
 
 ## 快速排序算法
@@ -116,20 +116,20 @@ alert(arrSorted)
 ```javascript
 function quickSort(array) {
   if (array.length == 0) {
-    return []
+    return [];
   }
-  var left = []
-  var right = []
-  var priot = array[0]
+  var left = [];
+  var right = [];
+  var priot = array[0];
 
   for (var i = 1; i < array.length; i++) {
     if (array[i] < privot) {
-      left.push(array[i])
+      left.push(array[i]);
     } else {
-      right.push(array[i])
+      right.push(array[i]);
     }
   }
-  return quickSort(left).concat(privot, quickSort(right))
+  return quickSort(left).concat(privot, quickSort(right));
 }
 ```
 
@@ -137,64 +137,68 @@ function quickSort(array) {
 
 ```javascript
 function deepClone(obj) {
-  var _toString = Object.prototype.toString
+  var _toString = Object.prototype.toString;
 
   // null, undefined, non-object, function
-  if (!obj || typeof obj !== 'object') {
-    return obj
+  if (!obj || typeof obj !== "object") {
+    return obj;
   }
 
   // DOM Node
-  if (obj.nodeType && 'cloneNode' in obj) {
-    return obj.cloneNode(true)
+  if (obj.nodeType && "cloneNode" in obj) {
+    return obj.cloneNode(true);
   }
 
   // Date
-  if (_toString.call(obj) === '[object Date]') {
-    return new Date(obj.getTime())
+  if (_toString.call(obj) === "[object Date]") {
+    return new Date(obj.getTime());
   }
 
   // RegExp
-  if (_toString.call(obj) === '[object RegExp]') {
-    var flags = []
+  if (_toString.call(obj) === "[object RegExp]") {
+    var flags = [];
     if (obj.global) {
-      flags.push('g')
+      flags.push("g");
     }
     if (obj.multiline) {
-      flags.push('m')
+      flags.push("m");
     }
     if (obj.ignoreCase) {
-      flags.push('i')
+      flags.push("i");
     }
 
-    return new RegExp(obj.source, flags.join(''))
+    return new RegExp(obj.source, flags.join(""));
   }
 
-  var result = Array.isArray(obj) ? [] : obj.constructor ? new obj.constructor() : {}
+  var result = Array.isArray(obj)
+    ? []
+    : obj.constructor
+      ? new obj.constructor()
+      : {};
 
   for (var key in obj) {
-    result[key] = deepClone(obj[key])
+    result[key] = deepClone(obj[key]);
   }
 
-  return result
+  return result;
 }
 
 function A() {
-  this.a = a
+  this.a = a;
 }
 
 var a = {
-  name: 'qiu',
+  name: "qiu",
   birth: new Date(),
   pattern: /qiu/gim,
   container: document.body,
-  hobbys: ['book', new Date(), /aaa/gim, 111]
-}
+  hobbys: ["book", new Date(), /aaa/gim, 111]
+};
 
-var c = new A()
-var b = deepClone(c)
-console.log(c.a === b.a)
-console.log(c, b)
+var c = new A();
+var b = deepClone(c);
+console.log(c.a === b.a);
+console.log(c, b);
 ```
 
 ## Javascript 的节流和防抖
@@ -209,18 +213,18 @@ console.log(c, b)
 
 ```javascript
 //函数节流
-var canRun = true
-document.getElementById('throttle').onsroll = function() {
+var canRun = true;
+document.getElementById("throttle").onsroll = function() {
   if (!canRun) {
     //判断是否空闲，如果在执行中，则直接return
-    return
+    return;
   }
-  canRun = false
+  canRun = false;
   setTimeout(function() {
-    console.log('函数节流')
-    canRun = true
-  }, 300)
-}
+    console.log("函数节流");
+    canRun = true;
+  }, 300);
+};
 ```
 
 ### 函数防抖
@@ -229,13 +233,39 @@ document.getElementById('throttle').onsroll = function() {
 
 ```javascript
 //函数防抖
-var timer = fasle
-document.getElementById('document').onsrcoll = function() {
+var timer = fasle;
+document.getElementById("document").onsrcoll = function() {
   clearTimeout(timer).timer = setTimeout(function() {
     //清楚未执行的代码，重置回初始状态
-    console.log('函数防抖')
-  }, 300)
-}
+    console.log("函数防抖");
+  }, 300);
+};
 ```
 
 函数防抖的要点，也是需要一个 setTimeout 来辅助实现。延迟执行需要跑的代码
+
+## 图片上传 小图片转 base64
+
+```javascript
+let reader = new FileReader();
+let imgUrlBase64 = reader.readAsDataURL(file);
+reader.onload = function(e) {
+  reader.result.length; //去判断大小 reader.result就是
+};
+```
+
+### FileReader
+
+`FileReader`对象允许 WEB 应用程序异步读取存储在用户及上级上的文件（或原始数据缓冲）的内容,使用`File`和`Blob`对象指定要读取的文件或数据。
+
+其中 file 对象可以是来自用户在一个`<input>`元素上悬着文件后返回的 filelist 对象，也可以来自拖放操作生成的`DataTransfer`对象，还可以是来自一个`HTMLCanvasElement`上执行`mozGetAsFile()`方法后返回结果。
+
+`FileReader.readyState`表示 FileReader 状态的数字。取值如下：
+
+* EMPTY: 0 还没有加载任何数据。
+* LOADING: 1 数据正在加载。
+* DONE：2 已经完成全部的读取请求。
+
+`FileReader.result`表示文件内容。该属性仅在读取操作完成后才有效，数据的格式取决于使用哪个方法来启动读取操作。
+
+`FileReader.readAsDataURL()`表示开始读取指定的 Blob 中的内容。一旦完成，result 属性中将包含一个 data:URL 格式的字符串以表示所读取文件的内容。

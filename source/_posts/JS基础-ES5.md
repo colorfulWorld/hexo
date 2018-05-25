@@ -34,7 +34,7 @@ var obj=new MyClass(); new 运算符创建并初始化一个**新对象** 用 ne
 
 * constructor ：原型对象中的属性，指向该原型对象的构造函数
 
-* *proto*：实例中的属性，指向 new 这个实例的构造函数的原型对象
+* _proto_：实例中的属性，指向 new 这个实例的构造函数的原型对象
 
 ### prototype 属性的引入
 
@@ -46,20 +46,20 @@ var obj=new MyClass(); new 运算符创建并初始化一个**新对象** 用 ne
 
 ```javascript
 function DOG(name) {
-  this.name = name
+  this.name = name;
 }
-DOG.prototype = { species: '犬科' }
+DOG.prototype = { species: "犬科" };
 
-var dogA = new DOG('大毛')
-var dogB = new DOG('二毛')
+var dogA = new DOG("大毛");
+var dogB = new DOG("二毛");
 
-alert(dogA.species)
+alert(dogA.species);
 // 其实是通过dogA._proto_.species 来访问DOG.prototype.species
-alert(dogB.species)
+alert(dogB.species);
 // 犬科
-DOG.prototype
+DOG.prototype;
 //{species:''犬科',constructor:fDOG(name),_proto_:Object}
-DOG.prototype.constructor === DOG
+DOG.prototype.constructor === DOG;
 //true
 ```
 
@@ -78,24 +78,24 @@ DOG.prototype.constructor === DOG
 
 ```javascript
 function Person(name, age, job) {
-  this.name = name
-  this.age = age
-  this.job = job
+  this.name = name;
+  this.age = age;
+  this.job = job;
   this.sayName = function() {
-    alert(this.name)
-  }
+    alert(this.name);
+  };
 }
-var person1 = new Person('Zaxlct', 28, 'Software Engineer')
-var person2 = new Person('Mick', 23, 'Doctor')
-person1.__proto__ == Person.prototype
+var person1 = new Person("Zaxlct", 28, "Software Engineer");
+var person2 = new Person("Mick", 23, "Doctor");
+person1.__proto__ == Person.prototype;
 //person1.__proto__  = person1.constructor.prototype , person1.constructor = Person
-Person.__proto__
+Person.__proto__;
 //Person.constructor = Function => Person.__proto__  = Function.prototype
-Person.prototype.__proto__
+Person.prototype.__proto__;
 // Person.prototype 是一个普通对象（原型对象），普通函数的构造函数是Object => Person.prototype.__proto__ =  Object.prototype
-Object.__proto__
+Object.__proto__;
 //普通对象 同上
-Object.prototype.__proto__
+Object.prototype.__proto__;
 //对象也有proto属性，但它比较特殊，为null,因为null处于原型链的顶端
 ```
 
@@ -107,9 +107,9 @@ JS 在创建对象（不论是普通对象还是函数对象）的时候，都�
 
 够造函数、原型和实例的关系：
 
-1. 每个构造函数都有一个原型对象（x.prototype)
-2. 原型对象都包含一个指向构造函数的指针（x.prototype.constructor === x)
-3. 实例都包含一个指向原型对象的内部指针（a._proto_ ）
+1.  每个构造函数都有一个原型对象（x.prototype)
+2.  原型对象都包含一个指向构造函数的指针（x.prototype.constructor === x)
+3.  实例都包含一个指向原型对象的内部指针（a._proto_ ）
 
 ** 所有函数的默认原型都是 Object 的实例**
 
@@ -124,40 +124,40 @@ javascript 对象具有 “ 自有属性 ” 也有一些属性是从原型对�
 ```javascript
 function test() {
   for (var i = 0; i < 4; i++) {
-    console.log('i:' + i)
-    ;(function(e) {
+    console.log("i:" + i);
+    (function(e) {
       setTimeout(function() {
-        console.log(e)
-      }, 0)
-    })(i)
+        console.log(e);
+      }, 0);
+    })(i);
   }
 }
-test() //i:0 => i:1 => i:2=> i:3=>  0 => 1=> 2 => 3
+test(); //i:0 => i:1 => i:2=> i:3=>  0 => 1=> 2 => 3
 ```
 
 循环当中，匿名函数会立即执行，并且会将循环当前的 i 作为参数传入，将其作为当前匿名函数中的形参 e 的指向，即会保存对 i 的引用，它是不会被循环改变的。
 
 ```javascript
 function makeAdder(x) {
-  console.log('x:' + x)
+  console.log("x:" + x);
   return function(y) {
-    console.log('y:' + y)
-    return x + y
-  }
+    console.log("y:" + y);
+    return x + y;
+  };
 }
 
-var add5 = makeAdder(5)
+var add5 = makeAdder(5);
 //x:5 undefined
-add5
+add5;
 //f(y){  console.log('y:' + y) return x + y}
-var add10 = makeAdder(10)
+var add10 = makeAdder(10);
 
-console.log(add5(2)) // y:2 => 7
-console.log(add10(2)) // 12
+console.log(add5(2)); // y:2 => 7
+console.log(add10(2)); // 12
 
 // 释放对闭包的引用
-add5 = null
-add10 = null
+add5 = null;
+add10 = null;
 ```
 
 add5 和 add10 都是闭包。他们共享相同的函数定义，但是保存了不同的环境。在 add5 中，x 为 5，在 add10 中，x 则为 10 ，最后通过 null 释放对闭包的引用。
@@ -168,19 +168,19 @@ add5 和 add10 都是闭包。他们共享相同的函数定义，但是保存�
 
 ```javascript
 function test() {
-  var arr = []
+  var arr = [];
   for (var i = 0; i < 10; i++) {
     //作用域1
     arr[i] = function() {
       //作用域2 声明arr[]()
-      return i
-    }
+      return i;
+    };
   }
   for (var a = 0; a < 10; a++) {
-    console.log(arr[a]())
+    console.log(arr[a]());
   }
 }
-test()
+test();
 // 毫无疑问连续打印 10 个 10。因为在for循环中 a[i] 为一个函数声明
 //1.执行完for之后，在for作用域中i的值为10
 ```
@@ -189,26 +189,26 @@ test()
 
 ```javascript
 function test() {
-  var arr = []
+  var arr = [];
   //块1作用域
   for (let i = 0; i < 10; i++) {
     //块2作用域
     arr[i] = function() {
       //块3作用域
-      return i
-    }
+      return i;
+    };
   }
   //块1作用域
   for (var a = 0; a < 10; a++) {
-    console.log(arr[a]())
+    console.log(arr[a]());
   }
 }
-test() // 连续打印 0 到 9
+test(); // 连续打印 0 到 9
 ```
 
 **实现原因 :**
 
-* 当用 var 的时候 函数 2 作用域中没有 i 就向函数作用域 1 中去找，而执行到 console.log(arr[a]()) 时 i 已经循环完毕，因此 i 全为 10。
+* 当用 var 的时候 函数 2 作用域中没有 i 就向函数作用域 1 中去找，而执行到 `console.log(arr[a]())` 时 i 已经循环完毕，因此 i 全为 10。
 
 - 当使用 let 时，每次迭代 i 都被**重新声明**，即每层迭代会生成一个块作用域，并且变量 i 被定义为上一次结算的值。
 - var 是函数作用域，for 循环无论执行多少次，都是去最近的函数里面找，而不是块中找，所以只有一个 i，现在的 i 是 10。
@@ -216,19 +216,19 @@ test() // 连续打印 0 到 9
 ### 闭包中的 this 对象
 
 ```javascript
-var name = 'The Window'
+var name = "The Window";
 
 var obj = {
-  name: 'My Object',
+  name: "My Object",
 
   getName: function() {
     return function() {
-      return this.name
-    }
+      return this.name;
+    };
   }
-}
+};
 
-console.log(obj.getName()()) // The Window
+console.log(obj.getName()()); // The Window
 ```
 
 obj.getName()() 实际上是在全局作用域中调用了匿名函数，this 指向了 window。这里要理解函数名与函数功能（或者称函数值）是分割开的，不要认为函数在哪里，其内部的 this 就指向哪里。匿名函数的执行环境具有全局性，因此其 this 对象通常指向 window。
@@ -242,42 +242,42 @@ obj.getName()() 实际上是在全局作用域中调用了匿名函数，this �
 
 ```javascript
 function fun(n, o) {
-  console.log(o)
+  console.log(o);
   return {
     fun: function(m) {
-      return fun(m, n)
+      return fun(m, n);
     }
-  }
+  };
 }
 
-var a = fun(0) // undefined
-a.fun(1) // 0
-a.fun(2) // 0
-a.fun(3) // 0
+var a = fun(0); // undefined
+a.fun(1); // 0
+a.fun(2); // 0
+a.fun(3); // 0
 
 var b = fun(0)
   .fun(1)
   .fun(2)
-  .fun(3) // undefined,0,1,2
+  .fun(3); // undefined,0,1,2
 
-var c = fun(0).fun(1) // undefined,0
-c.fun(2) // 1
-c.fun(3) // 1
+var c = fun(0).fun(1); // undefined,0
+c.fun(2); // 1
+c.fun(3); // 1
 ```
 
 ```javascript
 function fn1() {
-  var a = 1
+  var a = 1;
   return function() {
-    console.log(++a)
-  }
+    console.log(++a);
+  };
 }
 
-var fn2 = fn1()
+var fn2 = fn1();
 
-fn2() //输出2
+fn2(); //输出2
 
-fn2() //输出3
+fn2(); //输出3
 ```
 
 ## call、apply 、 bind
@@ -289,43 +289,44 @@ fn2() //输出3
 ```javascript
 function class1() {
   this.name = function() {
-    console.log('我是class1内的方法')
-  }
+    console.log("我是class1内的方法");
+  };
 }
 function class2() {
-  class1.call(this) //此行代码执行后，当前的this指向了class1（也可以说class2继承了class1）
+  class1.call(this); //此行代码执行后，当前的this指向了class1（也可以说class2继承了class1）
 }
 
-var f = new class2()
-f.name() //调用的是class1内的方法，将class1的name方法交给class2使用
+
+var f = new class2();
+f.name(); //调用的是class1内的方法，将class1的name方法交给class2使用
 ```
 
 ```javascript
 function eat(x, y) {
-  console.log(x + y)
+  console.log(x + y);
 }
 function drink(x, y) {
-  console.log(x - y)
+  console.log(x - y);
 }
-eat.call(drink, 3, 2) //5
+eat.call(drink, 3, 2); //5
 ```
 
 这个例子中的意思就是用 eat 来替换 drink，eat.call(drink,3,2) == eat(3,2)
 
 ```javascript
 function Animal() {
-  this.name = 'animal'
+  this.name = "animal";
   this.showName = function() {
-    console.log(this.name)
-  }
+    console.log(this.name);
+  };
 }
 function Dog() {
-  this.name = 'dog'
+  this.name = "dog";
 }
-var animal = new Animal()
-var dog = new Dog()
+var animal = new Animal();
+var dog = new Dog();
 
-animal.showName.call(dog) //dog
+animal.showName.call(dog); //dog
 ```
 
 意思是把 animal 的方法放到 dog 上执行，也可以说，把 animal 的 showName() 方法放到 dog 上来执行，所以 this.name 应该是 dog。
@@ -334,16 +335,16 @@ animal.showName.call(dog) //dog
 
 ```javascript
 function Animal(name) {
-  this.name = name
+  this.name = name;
   this.showName = function() {
-    console.log(this.name)
-  }
+    console.log(this.name);
+  };
 }
 function Dog(name) {
-  Animal.call(this, name)
+  Animal.call(this, name);
 }
-var dog = new Dog('Crazy dog')
-dog.showName()
+var dog = new Dog("Crazy dog");
+dog.showName();
 ```
 
 Animal.call(this) 的意思就是使用 Animal 对象代替 this 对象，那么 Dog 就能直接调用 Animal 的所有属性和方法。
@@ -353,19 +354,19 @@ Animal.call(this) 的意思就是使用 Animal 对象代替 this 对象，那么
 ```javascript
 function class1(args1, args2) {
   this.name = function() {
-    console.log(args, args)
-  }
+    console.log(args, args);
+  };
 }
 function class2() {
-  var args1 = '1'
-  var args2 = '2'
-  class1.call(this, args1, args2)
+  var args1 = "1";
+  var args2 = "2";
+  class1.call(this, args1, args2);
   /*或*/
-  class1.apply(this, [args1, args2])
+  class1.apply(this, [args1, args2]);
 }
 
-var c = new class2()
-c.name()
+var c = new class2();
+c.name();
 ```
 
 ### bind
@@ -376,16 +377,16 @@ bind() 方法会创建一个新函数，称为绑定函数，当调用这个绑�
 
 ```javascript
 var bar = function() {
-  console.log(this.x)
-}
+  console.log(this.x);
+};
 var foo = {
   x: 3
-}
-bar()
-bar.bind(foo)() //undefined 3
+};
+bar();
+bar.bind(foo)(); //undefined 3
 /*或*/
-var func = bar.bind(foo)
-func()
+var func = bar.bind(foo);
+func();
 ```
 
 ## 事件委托
@@ -394,12 +395,12 @@ func()
 
 ```html
 <ul id="parent-list">
-	<li id="post-1">Item 1</li>
-	<li id="post-2">Item 2</li>
-	<li id="post-3">Item 3</li>
-	<li id="post-4">Item 4</li>
-	<li id="post-5">Item 5</li>
-	<li id="post-6">Item 6</li>
+<li id="post-1">Item 1</li>
+<li id="post-2">Item 2</li>
+<li id="post-3">Item 3</li>
+<li id="post-4">Item 4</li>
+<li id="post-5">Item 5</li>
+<li id="post-6">Item 6</li>
 </ul>
 <script>
 document.getElementById("parent-list").addEventListener("click",function(e) {
@@ -426,26 +427,27 @@ $('li').click(function(){
 
 
 });</script>
-
 ```
+
 ## `getComputedStyle()`
-`getComputedStyle`是一个可以获取当前元素所有最终使用css属性值。返回一个css样式声明对象([object CSSStyleDeclaration])，只读。之前偶尔有一次要更改伪类元素 ::after 的样式
+
+`getComputedStyle`是一个可以获取当前元素所有最终使用 css 属性值。返回一个 css 样式声明对象([object CSSStyleDeclaration])，只读。之前偶尔有一次要更改伪类元素 ::after 的样式
 
 ```javascript
 var dom = document.getElementById("test"),
-style = window.getComputedStyle(dom,":after");
+  style = window.getComputedStyle(dom, ":after");
 ```
 
 ### `getComputedStyle`与`style`的区别
-- `getComputedStyle`方法是只读的，只能获取样式，不能设置；而`element.style`能读能写。
-- 获取对象范围
- `getComputedStyle`方法获取的是最终应用在元素上的所有css属性对象；而`element.style`只能获取元素`style`中的css样式。因此对于一个光秃秃的元素`<p>`，`getComputedStyle`方法返回对象中的length属性值就有190+,而`element.style`就是0。
+
+* `getComputedStyle`方法是只读的，只能获取样式，不能设置；而`element.style`能读能写。
+* 获取对象范围
+  `getComputedStyle`方法获取的是最终应用在元素上的所有 css 属性对象；而`element.style`只能获取元素`style`中的 css 样式。因此对于一个光秃秃的元素`<p>`，`getComputedStyle`方法返回对象中的 length 属性值就有 190+,而`element.style`就是 0。
 
 ### `getPropertyValue`方法
-`getPropertyValue`方法可以获取CSS样式申明对象上的属性值（直接属性名称），例如：
+
+`getPropertyValue`方法可以获取 CSS 样式申明对象上的属性值（直接属性名称），例如：
 
 ```javascript
-window.getComputedStyle(element,null).getPropertyValue("float");
+window.getComputedStyle(element, null).getPropertyValue("float");
 ```
-
-
