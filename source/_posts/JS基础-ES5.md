@@ -30,11 +30,11 @@ var obj=new MyClass(); new 运算符创建并初始化一个**新对象** 用 ne
 
 原型模式是 js 对继承的一种实现
 
-* prototype：构造函数中的属性，指向该构造函数的原型对象。
+- prototype：构造函数中的属性，指向该构造函数的原型对象。
 
-* constructor ：原型对象中的属性，指向该原型对象的构造函数
+- constructor ：原型对象中的属性，指向该原型对象的构造函数
 
-* _proto_：实例中的属性，指向 new 这个实例的构造函数的原型对象
+- _proto_：实例中的属性，指向 new 这个实例的构造函数的原型对象
 
 ### prototype 属性的引入
 
@@ -71,8 +71,8 @@ DOG.prototype.constructor === DOG;
 
 #### 原型链的作用：对象属性的访问修改和删除。
 
-* 访问。优先在对象本身查找，没有则顺着原型链向上查找
-* 修改。只能修改跟删除自身属性，不会影响到原型链上的其他对象。
+- 访问。优先在对象本身查找，没有则顺着原型链向上查找
+- 修改。只能修改跟删除自身属性，不会影响到原型链上的其他对象。
 
 ### _proto_ （原型指针）
 
@@ -208,10 +208,10 @@ test(); // 连续打印 0 到 9
 
 **实现原因 :**
 
-* 当用 var 的时候 函数 2 作用域中没有 i 就向函数作用域 1 中去找，而执行到 `console.log(arr[a]())` 时 i 已经循环完毕，因此 i 全为 10。
+- 当用 var 的时候 函数 2 作用域中没有 i 就向函数作用域 1 中去找，而执行到 `console.log(arr[a]())` 时 i 已经循环完毕，因此 i 全为 10。
 
-- 当使用 let 时，每次迭代 i 都被**重新声明**，即每层迭代会生成一个块作用域，并且变量 i 被定义为上一次结算的值。
-- var 是函数作用域，for 循环无论执行多少次，都是去最近的函数里面找，而不是块中找，所以只有一个 i，现在的 i 是 10。
+* 当使用 let 时，每次迭代 i 都被**重新声明**，即每层迭代会生成一个块作用域，并且变量 i 被定义为上一次结算的值。
+* var 是函数作用域，for 循环无论执行多少次，都是去最近的函数里面找，而不是块中找，所以只有一个 i，现在的 i 是 10。
 
 ### 闭包中的 this 对象
 
@@ -237,8 +237,8 @@ obj.getName()() 实际上是在全局作用域中调用了匿名函数，this �
 
 **应用闭包的主要场合是：设计私有的方法和变量。** 闭包的作用：
 
-* 访问函数的内部变量
-* 让被引用的变量值始终保存在内存中
+- 访问函数的内部变量
+- 让被引用的变量值始终保存在内存中
 
 ```javascript
 function fun(n, o) {
@@ -289,13 +289,14 @@ fn2(); //输出3
 ```javascript
 function class1() {
   this.name = function() {
+    console.log(this.names);
     console.log("我是class1内的方法");
   };
 }
 function class2() {
+  this.names = "class2内部变量";
   class1.call(this); //此行代码执行后，当前的this指向了class1（也可以说class2继承了class1）
 }
-
 
 var f = new class2();
 f.name(); //调用的是class1内的方法，将class1的name方法交给class2使用
@@ -440,8 +441,8 @@ var dom = document.getElementById("test"),
 
 ### `getComputedStyle`与`style`的区别
 
-* `getComputedStyle`方法是只读的，只能获取样式，不能设置；而`element.style`能读能写。
-* 获取对象范围
+- `getComputedStyle`方法是只读的，只能获取样式，不能设置；而`element.style`能读能写。
+- 获取对象范围
   `getComputedStyle`方法获取的是最终应用在元素上的所有 css 属性对象；而`element.style`只能获取元素`style`中的 css 样式。因此对于一个光秃秃的元素`<p>`，`getComputedStyle`方法返回对象中的 length 属性值就有 190+,而`element.style`就是 0。
 
 ### `getPropertyValue`方法
