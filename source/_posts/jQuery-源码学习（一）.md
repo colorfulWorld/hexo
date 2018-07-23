@@ -6,7 +6,7 @@ tags:
 
 # 为什么想要学习 jQuery 源码
 
-感觉自己的很多的代码质量不够好，最近在频繁的使用 jQuery,感觉 jQuery 中的一些函数的思想是应该去学习的，在以后的 vue 开发中，在不引用 jQuery 的情况下，能借鉴 jQuery 的思想封装一些不依赖 DOM 的公共函数。也觉得自己对一些设计模式之内的了解甚少，所以学习 jQuery 源码势在必行。
+感觉自己的很多的代码质量不够好，最近在频繁的使用 jQuery,感觉 jQuery 中的一些函数的思想是应该去学习的，尤其是设计模式的思想，在以后的 vue 开发中，在不引用 jQuery 的情况下，能借鉴 jQuery 的思想封装一些不依赖 DOM 的公共函数。也觉得自己对一些设计模式之内的了解甚少，所以学习 jQuery 源码势在必行。
 
 <!--more-->
 
@@ -30,13 +30,85 @@ a.name();
 
 这是常规的使用方法，显而易见 jquery 不是如此的
 
-因此 源码应该是:
+因此 源码可能是:
 
 ```javascript
 var aQuery = function(selector,context){
-    
+    return aQuery.prototype.init();
+}
+aQuery.prototype={
+    init:function(){
+        this.age = 18;
+        return this;
+    }, 
+    name:function(){},
+    age:20
+}
+
+aQuery().age //18
+```
+
+这种情况下就出错了，因为this只是只想aquery，所以需要*设计独立的作用域* 才行;
+怎么访问jquery类原型上的属性与方法？
+    做到既能隔离作用域还能使用jquery原型对象的作用域呢？还能在返回实例中方为jquery的原型对象。
+实现关键点：
+
+```javascript
+jQuery.fn.init.prototype =jQuery.fn;
+```
+
+通过原型对象传递解决问题。把jquery的原型传递给jquery.prototype.init.prototype 换句话说jquery的原型对象覆盖了init构造器的原型对象
+
+```javascript
+var aQuery = function (selector,context){
+    return new aQuery.prototype.init();
+}
+
+aQuery.prototype = {
+    init:function(){
+        return this;
+    },
+    name:function(){
+        return this.age
+    },
+    age:20
+}
+
+aQuery.prototype.init.prototype = aQuery.prototype;
+console.log(aQuery.name()) //20
+```
+
+## 链式调用
+
+DOM链式调用的处理：
+
+- 节约代码。
+- 所返回的都是同一个对象。
+
+通过简单扩展原型方法并通过return this的形式来实现跨浏览器的链式调用。
+利用JS的简单工厂模式，来将所有对同一个DOM对象操作指定同一实例。
+
+```javascript
+aQuery.prototype = {
+    init:function(){
+        return this;
+    },
+    name:function(){
+        return this;
+    }
 }
 ```
+
+所以我们在需要链式的方法访问this就可以了，因为返回当前实例的this，从而又可以访问你自己的原型了
+
+## 插件接口
+
+如果要为jQuery或者jQuery prototype添加属性方法，同样如果要提供给开发者对方法的扩展，从封装的角度讲应该提供一个接口，而不是看上去直接修改prototype
+
+jquery支持自己扩展属性，这个对外提供了一个接口，jquery.fn.extend()来对对象增加方法
+
+从jquery的元am中可以看到，jquery.extend和jquery.fn.extend其实是同指向同一方法的不同引用。
+--------------------------------
 
 ## $.trim 去掉字符串两端空格
 

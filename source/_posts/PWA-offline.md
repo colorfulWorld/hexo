@@ -3,7 +3,7 @@ title: PWA 离线缓存
 categories: PWA
 ---
 
-## PWA (Progressive Web App) 特点
+# PWA (Progressive Web App) 特点
 
 1. installability( 可安装性 )，可被添加自主屏与全屏运行。
 2. app shell: 第一次渲染个壳，等异步数据来了在填充。
@@ -26,14 +26,15 @@ categories: PWA
 * 出于安全的考虑，必须在 HTTPS 环境下才能工作
 * 异步实现，内部大都是通过 Promise 实现
 
-### service Worker 前提条件
+## service Worker 前提条件
 
 * 要求 HTTPS 的环境
 * 缓存机制是依赖 cache API 实现的 (cacheStorage)
 * 依赖 HTML5 fetchAPI
 * 依赖 Promise
 
-### 注册
+
+## 注册
 
 ````javascript
       if ('serviceWorker' in navigator) {
@@ -42,7 +43,8 @@ categories: PWA
                 /* 每次页面加载成功后，就会调用register()方法。浏览器会判断service Worker线程是否
                  已注册，并作出相应的处理*/
                 /* scope 方法是可选的，用于指定你想让service worker 控制内容的子目录。service worker 线程将接受
-                 scope指定网域目录上所有事项的fetch事件。
+                 scope指定网域目录上所有事项的fetch事件。并将它保存在你正在访问的域名下。
+                 sw.js将包含所有自定义的service worker事件处理程序
                  scope的意义在于如果sw.js在/a/b/sw.js下，那么scope默认是/a/b,那么service worker 线程只能
                  捕捉到path为/a/b开头的（/a/b/page1,/a/b/page2,..)下的fetch事件*/
                 .then(function (registration) {
@@ -56,9 +58,17 @@ categories: PWA
 
 ```
 
+现在 Service Worker 已经被注册好了，接下来是在 Service Worker 生命周期中触发实现对应的事件处理程序了。
+
+## 事件处理程序
+
+生命周期：installing  installed activating activated,这个状态变化的过程就是service worker生命周期的反应。
+
 ### 安装
 
 install事件我们会绑定在service worker 文件中，在service worker 安装成功后，install事件被触发。**install事件一般是被用来填充你的浏览器的离线缓存能力。**为了达到这个目的，我们使用了service worker 新的标志性的存储**cache API** ——一个service worker上的全局对象，**它使我们可以存储网络响应发来的资源，并且根据他们的请求来生成key**。这个 API 和浏览器的标准的缓存工作原理很相似，但是是只对应你的站点的域的。它会一直持久存在，直到你告诉它不再存储，你拥有全部的控制权。
+
+由于service worker是走的另外的线程，因此，window 和 DOM 都是不能访问的，因此我们要使用self访问全局上下文。
 
 ```javascript
     self.addEventListener('install', function (e) {
