@@ -39,13 +39,6 @@ categories: PWA
       if ('serviceWorker' in navigator) {
             navigator.serviceWorker
                 .register('./pwa/sw.js', {scope: '/pwa'})
-                /* 每次页面加载成功后，就会调用register()方法。浏览器会判断service Worker线程是否
-                 已注册，并作出相应的处理*/
-                /* scope 方法是可选的，用于指定你想让service worker 控制内容的子目录。service worker 线程将接受
-                 scope指定网域目录上所有事项的fetch事件。并将它保存在你正在访问的域名下。
-                 sw.js将包含所有自定义的service worker事件处理程序
-                 scope的意义在于如果sw.js在/a/b/sw.js下，那么scope默认是/a/b,那么service worker 线程只能
-                 捕捉到path为/a/b开头的（/a/b/page1,/a/b/page2,..)下的fetch事件*/
                 .then(function (registration) {
                     console.log('Service Worker 注册成功，域名: ', registration.scope);
                 })
@@ -54,6 +47,13 @@ categories: PWA
                 });
         }
 ```
+
+ 每次页面加载成功后，就会调用register()方法。浏览器会判断service Worker线程是否已注册，并作出相应的处理
+scope 方法是可选的，用于指定你想让service worker 控制内容的子目录。service worker 线程将接受
+scope指定网域目录上所有事项的fetch事件。并将它保存在你正在访问的域名下。
+sw.js将包含所有自定义的service worker事件处理程序
+scope的意义在于如果sw.js在/a/b/sw.js下，那么scope默认是/a/b,那么service worker 线程只能
+捕捉到path为/a/b开头的（/a/b/page1,/a/b/page2,..)下的fetch事件
 
 现在 Service Worker 已经被注册好了，接下来是在 Service Worker 生命周期中触发实现对应的事件处理程序了。
 
@@ -99,6 +99,30 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
 当它`resolved` 的时候，我们接着会调用在创建的缓存上的一个方法`addALL()`，这个方法的参数是一个由一组相对于origin的URL组成的数组，
 这个数组就是你想缓存的资源的列表
 `caches`是一个全局的`CacheStorage`对象，允许在浏览器中管理你的缓存。调用`open`方法来检索具体我们想要使用的`Cache`对象。
+
+### 更新静态资源
+
+缓存资源随着班恩的更新会过期，所以会根据缓存的字符串名称（CACHE_NAME）值清除旧缓存，可以遍历所有的缓存名称最易判断决定是否清除
+
+```javascript
+self.addEventListener('activate', function(e) {
+  e.waitUntil(
+    Promise.all(
+      caches.keys().then(cacheNames => {
+        return cacheNames.map(name => {
+          if (name !== CACHE_NAME) {
+            return caches.delete(name)
+          }
+        })
+      })
+    ).then(() => {
+      return self.clients.claim()
+    })
+  )
+})
+```
+
+在新安装的Service Worker 中调用self.clients.claim()取的页面的控制权，这样之后打开的页面都会使用版本更新的缓存。旧的Service Worker 脚本不在控制页面之后会被停止。
 
 ### 自定义请求响应
 
@@ -202,3 +226,15 @@ pwa 添加至桌面的功能实现依赖于manifest.json。
 在这个过程中，由于页面未加载完毕，因此屏幕将显示空白并且看似停滞。如果是从网络加载的页面资源，白屏过程将会变得更加明显。因此 PWA 提供了启动画面功能，用标题、颜色和图像组成的画面来替代白屏，提升用户体验。
 
 目前，如果修改了manifest.json 的应用的名称，已经添加到主屏幕的名称并不会改变，只有当用户重新添加到桌面时，更改后的名称才会显示出来。但是未来版本的chrome 支持自动更新。
+
+## 更新页面
+
+（个人认为这是一个缺点）
+页面被缓存之后，就需要适当处理缓存失效时的页面更新。某些配置中被缓存的资源是无法发起请求判断是否被更新的，只有sw.js会自动根据HTTP缓存的机制尝试去判断应用是否被更新。所以当页面发生改变时，要同事对sw.js文件的缓存名进行修改。这就意味着在联网情况下，用户得到的可能不是最新的数据。
+然后重新打开页面，这个时候渲染的页面依旧是的，但是sw.js被安装和激活。之后关闭页面后再次打开才可以看到更新过后的页面。所以最好是将一些不经常更改的静态文件发到缓存中，提高用户体验。
+
+### 缓存刷新
+
+静态文件，类似于图片和视频等不会经常改变的资源，做长时间缓存是没有很大的问题，可以在HTTP头里设置 `Cache-Control`来缓存文件使其缓存时间为一年：`Cache-Control: max-age=31536000`
+
+页面，css和script文件会经常变化，所以应该设置一个很短的缓存时间比如24小时，并在联网时与服务区端文件进行验证 `Cache-Control: must-revalidate, max-age=86400`
