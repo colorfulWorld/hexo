@@ -33,10 +33,9 @@ categories: PWA
 * 依赖 HTML5 fetchAPI
 * 依赖 Promise
 
-
 ## 注册
 
-````javascript
+```javascript
       if ('serviceWorker' in navigator) {
             navigator.serviceWorker
                 .register('./pwa/sw.js', {scope: '/pwa'})
@@ -53,9 +52,7 @@ categories: PWA
                 .catch(function (err) {
                     console.log('Service Worker 注册失败: ', err);
                 });
-
         }
-
 ```
 
 现在 Service Worker 已经被注册好了，接下来是在 Service Worker 生命周期中触发实现对应的事件处理程序了。
@@ -138,9 +135,11 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
         );
 
     });
-      ```
+
+```
+
 每次任何被`service worker` 控制的资源被请求到时，都会触发`fetch`事件，这些资源包括了指定的`scope`内的
-`html` 文档，和这些`html`文档内引用的其他任何资源（比如`index.html`发起了一个跨域的请求来嵌入一张图片，这个也会通过`service worker`
+`html` 文档，和这些`html`文档内引用的其他任何资源（比如`index.html`发起了一个跨域的请求来嵌入一张图片，这个也会通过`service worker`。
 我们可以在`install` 的时候进行静态资源缓存。也可以通过`fetch`事件回调来代理页面请求从而实现动态资源缓存:
 
 - `on install` 的优点是第二次访问就可以离线访问，缺点是需要缓存的URL在编译时插入到脚本中，增加代码量和降低可维护性。
@@ -153,9 +152,6 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
 
 `fetch`事件是在每次网页发出请求的时候触发的，触发该事件的时候 `service worker`能够拦截请求，弄决定是返回缓存的数据，还是返回真是请求响应的数据。与请求匹配的任何缓存数据都将优先被返回，而不需要发送网络请求。只有当没有现有的缓存数据时才会发出网络请求。
 
-
-
-
 #### Service Worker 生命周期 （也许翻译的不好，尽量去看原文）
 
 - installing: 这一阶段标志着开始注册。它想要允许设置worker-specific 的资源,例如离线模式的caches.
@@ -167,9 +163,11 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
 - message: service worker 运行于独立context 中，无法直接访问当前页面主线程的DOM信息，但是通过postMessageAPI ,可以实现他们之间的消息传递，这样主线程就可以接受service worker 的指令操作DOM。
 
 ## manifest.json
+
 pwa 添加至桌面的功能实现依赖于manifest.json。
 
 ### 基本功能
+
 - name:{string} 应用名称，用于安装横幅、启动画面显示
 - short_name:{string} 应用短名称，用于主屏幕显示
 - icon:img 应用图标列表，其中包括:
@@ -196,6 +194,7 @@ pwa 添加至桌面的功能实现依赖于manifest.json。
 ### 添加启动动画
 
 当PWA添加到主屏幕点击打开时，幕后执行了若干操作：
+
 1. 启动浏览器
 2. 启动显示页面的渲染器
 3. 加载资源
@@ -203,4 +202,3 @@ pwa 添加至桌面的功能实现依赖于manifest.json。
 在这个过程中，由于页面未加载完毕，因此屏幕将显示空白并且看似停滞。如果是从网络加载的页面资源，白屏过程将会变得更加明显。因此 PWA 提供了启动画面功能，用标题、颜色和图像组成的画面来替代白屏，提升用户体验。
 
 目前，如果修改了manifest.json 的应用的名称，已经添加到主屏幕的名称并不会改变，只有当用户重新添加到桌面时，更改后的名称才会显示出来。但是未来版本的chrome 支持自动更新。
-````
