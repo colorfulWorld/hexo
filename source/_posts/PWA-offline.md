@@ -71,6 +71,14 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
 由于service worker是走的另外的线程，因此，window 和 DOM 都是不能访问的，因此我们要使用self访问全局上下文。
 
 ```javascript
+    const CACHE_NAME = 'yu';
+    const urlsToCache = [
+        '/',
+        '/js/main.js',
+        '/css/style.css',
+        '/img/bob-ross.jpg'
+    ];
+
     self.addEventListener('install', function (e) {
         console.log('[ServiceWorker] Install');
         /*ExtendableEvent.waitUntil():
@@ -81,16 +89,19 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
             caches.open(chache_name).then(function (cache) {
                 console.log('[ServiceWorker] Caching app shell');
                 console.log(cache);
-                return cache.addAll(filesToCache);
+                return cache.addAll(urlsToCache);
             })
         );
     });
-    /*这里我们新增了install 事件监听器，接着在事件上接了一个ExtendableEvent.waitUntil()方法
-      这会确保service worker不会在waitUntil()里面的代码执行完毕之前安装完成*/
-    /*我们使用caches.open()方法创建了一个yu的新缓存，将会是我们站点资源的缓存的第一个版本。它返回了一个创建缓存的promise,
-      当它resolved 的时候，我们接着会调用在创建的缓存上的一个方法addALL()，这个方法的参数是一个由一组相对于origin的URL组成的数组，
-      这个数组就是你想缓存的资源的列表*/
+
 ```
+
+这里我们新增了`install`事件监听器，接着在事件上接了一个`ExtendableEvent.waitUntil()`方法
+这会确保`service worker`不会在`waitUntil()`里面的代码执行完毕之前安装完成
+我们使用`caches.open()`方法创建了一个yu的新缓存，将会是我们站点资源的缓存的第一个版本。它返回了一个创建缓存的`promise`,
+当它`resolved` 的时候，我们接着会调用在创建的缓存上的一个方法`addALL()`，这个方法的参数是一个由一组相对于origin的URL组成的数组，
+这个数组就是你想缓存的资源的列表
+`caches`是一个全局的`CacheStorage`对象，允许在浏览器中管理你的缓存。调用`open`方法来检索具体我们想要使用的`Cache`对象。
 
 ### 自定义请求响应
 
@@ -127,14 +138,23 @@ install事件我们会绑定在service worker 文件中，在service worker 安�
         );
 
     });
-    /*每次任何被service worker 控制的资源被请求到时，都会触发fetch事件，这些资源包括了指定的scope内的
-      html 文档，和这些html文档内引用的其他任何资源（比如index.html发起了一个跨域的请求来嵌入一张图片，这个也会通过service worker*/
       ```
+每次任何被`service worker` 控制的资源被请求到时，都会触发`fetch`事件，这些资源包括了指定的`scope`内的
+`html` 文档，和这些`html`文档内引用的其他任何资源（比如`index.html`发起了一个跨域的请求来嵌入一张图片，这个也会通过`service worker`
+我们可以在`install` 的时候进行静态资源缓存。也可以通过`fetch`事件回调来代理页面请求从而实现动态资源缓存:
 
-我们可以在install 的时候进行静态资源缓存。也可以通过fetch事件回调来代理页面请求从而实现动态资源缓存:
+- `on install` 的优点是第二次访问就可以离线访问，缺点是需要缓存的URL在编译时插入到脚本中，增加代码量和降低可维护性。
+- `on fetch` 的优点是无需变更编译过程，也不会产生额外的流量，缺点是需要多一次访问才能离线访问。
+- `request` 属性包含在`FetchEvent`对象里，它用于查找匹配请求的缓存。
+- `cache.match`将尝试找到一个与指定请求匹配的缓存响应。如果没有找到对应的缓存，则`promise`会返回一个undefined值。在这里我们通过判断这个值来决定是否返回这个值，还是调用`fetch`发出一个网络请求并返回一个`promise`。
+- `e.resondWith`是一个fetchevent对象中的特殊方法，用于将请求的响应发送回浏览器（提供对应的请求）。打开缓存找到匹配的响应，如果它不存在，就发情网络请求。
 
-- on install 的优点是第二次访问就可以离线访问，缺点是需要缓存的URL在编译时插入到脚本中，增加代码量和降低可维护性。
-- on fetch 的优点是无需变更编译过程，也不会产生额外的流量，缺点是需要多一次访问才能离线访问。
+#### Fetch事件
+
+`fetch`事件是在每次网页发出请求的时候触发的，触发该事件的时候 `service worker`能够拦截请求，弄决定是返回缓存的数据，还是返回真是请求响应的数据。与请求匹配的任何缓存数据都将优先被返回，而不需要发送网络请求。只有当没有现有的缓存数据时才会发出网络请求。
+
+
+
 
 #### Service Worker 生命周期 （也许翻译的不好，尽量去看原文）
 
