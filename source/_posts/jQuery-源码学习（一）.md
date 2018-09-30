@@ -8,292 +8,177 @@ tags:
 
 感觉自己的很多的代码质量不够好，最近在频繁的使用 jQuery,感觉 jQuery 中的一些函数的思想是应该去学习的，尤其是设计模式的思想，在以后的 vue 开发中，在不引用 jQuery 的情况下，能借鉴 jQuery 的思想封装一些不依赖 DOM 的公共函数。也觉得自己对一些设计模式之内的了解甚少，所以学习 jQuery 源码势在必行。
 
+任何库与框架设计的第一要点就是解决命名空间与变量污染的问题。jQuery就是利用js函数作用域的特性，采用立即调用表达式包裹自身的方法解决
+
 <!--more-->
 
-## 分析：jquery 的无 new 构建
-
-javascript 是函数式语言，函数可以实现类，类就是面向对象编程中最基本的概念
+# jQuery核心代码
 
 ```javascript
-var aQuery = function(selector, context) {
-  //构造函数
-};
+(function(window,undefined){
+    function jQuery(selector){
+        return new jQuery.fn.init(selector)
+    }
+    jQuery.fn = jQuery.prototype ={
+        init:function(){}
+    }
+    jQuery.fn.init.prototype = jQuery.fn;
+    window.jQuery = window.$ = jQuery;
+})(window)
+```
 
-aQuery.prototype = {
-  name: function() {},
-  age: function() {}
-};
+- 闭包结构传参window
+    - 闭包结构传入实参window,然后里面用形参接收
+        - 减少内部每次引用window 的查询时间
+        - 方便压缩代码
+- 形参undefined
+    - 因为ie低版本的浏览器可以给undefined赋值成功，所以为了保证undefined一定是undefined
+- jQuery传参selector
+    - selector可以是一对标签，可以是id、类 、后代、子代等等，可以是jQuery对象
+- jQuery原型对象赋值给jQuery原型方法init的原型
+- 给window暴露可利用成员。
+
+**javascript中的undefined并不是作为一个关键字，因此可以允许用户对其赋值。**
+
+## 对象的构建
+
+类一：
+
+```javascript
+function aQuery(){
+    this.name= 'jQuery';
+    this.sayName = function(){
+        return this.name
+    }
+}
 
 var a = new aQuery();
-a.name();
+var b = new aQuery();
+var c = new aQuery();
 ```
 
-这是常规的使用方法，显而易见 jquery 不是如此的
-
-因此 源码可能是:
+类二：
 
 ```javascript
-var aQuery = function(selector,context){
-    return aQuery.prototype.init();
-}
-aQuery.prototype={
-    init:function(){
-        this.age = 18;
-        return this;
-    }, 
-    name:function(){},
-    age:20
-}
-
-aQuery().age //18
-```
-
-这种情况下就出错了，因为this只是只想aquery，所以需要*设计独立的作用域* 才行;
-怎么访问jquery类原型上的属性与方法？
-    做到既能隔离作用域还能使用jquery原型对象的作用域呢？还能在返回实例中方为jquery的原型对象。
-实现关键点：
-
-```javascript
-jQuery.fn.init.prototype =jQuery.fn;
-```
-
-通过原型对象传递解决问题。把jquery的原型传递给jquery.prototype.init.prototype 换句话说jquery的原型对象覆盖了init构造器的原型对象
-
-```javascript
-var aQuery = function (selector,context){
-    return new aQuery.prototype.init();
+function aQuery(){
+    this.name = 'jQuery'
 }
 
 aQuery.prototype = {
+    sayName:function(){
+        return this.name
+    }
+}
+
+var a = new aQuery()
+var b = new aQuery()
+var c = new aQuery()
+
+```
+
+类二new产生的a、b、c三个实例对象共享了原型的sayName方法，这样的好处是节省了内存空间，类一则是要为每一个实例复制sayName方法，每个方法属性都占用一定的内存空间，所以如果把所有属性方法都声明在构造函数中，就会无形的增大很多开销。除此之外类一的所有方法都是拷贝到当前实例对象上。类二则是要通过scope连接到原型链上查找，这样就无形中多一层作用域链的查找。
+
+```javascript
+jQuery = function (select,context){
+    return new jQuery.fn.init(selector,context);
+}
+jQuery.fn = jQuery.prototype = {
     init:function(){
+        return this
+    },
+    jquery:version,
+    constructor:jQuery,
+    .....
+}
+
+var a = $();
+```
+
+使用原型结构，性能上是得到了优化，但是aQuery类这个接口与目标jQuery的结构的还是有很大的不同：
+
+- 没有采用 new 操作符
+- return 返回的是一个通过new出来的对象
+
+## 分离构造器
+
+通过new操作符构建一个对象，一般经过4步：
+
+- 创建一个新对象
+- 将构造函数的作用域给新对象（所以this就指向了这个新对象）
+- 执行构造函数中的代码
+- 返回这个新对象
+
+其实new操作符主要是把原型链跟实例的this关联起来，所以我们如果需要原型链就必须要new操作符来进行处理。否则this则变成window对象了。
+
+```javascript
+
+var $$ = ajQuery = function(selsctor){
+    this.selector = selector;
+    return this
+}
+
+ajQuery.fn = ajQuery.prototype = {
+    selectorName:function(){
+        return this.selector;
+    },
+    constructor:ajQuery
+}
+
+var a = new $$('aaa');//实例化
+a.selectorName() //aaa //得到选择器名字
+
+```
+
+首先改造jQuery无new的格式，我们可以通过instanceof来判断this是否是当前实例：
+
+```javascript
+var $$ = ajQuery = function(selector){
+    if(!(this instanceof ajQuery)){
+        return new ajQuery(selector);
+    }
+    this.selector = selector;
+    return this
+}
+```
+
+## 静态与实例方法共享设计
+
+遍历方法：
+
+```javascript
+$('.aaron').each()  //作为实例方法存在
+$.each()    //作为静态方法存在
+```
+
+第一条语句是给指定的上下文调用的，就是获取('.aaron')获取的DOM合集，第二条语句$.each()函数可用于得带任何集合，无论是“名/值”对象 或是数组。在迭代数组的情况下，回调函数每次都会传递一个数组索引和相应的数组值作为参数。
+
+```javascript
+jQuery.prototype ={
+    each:function(callback,args){
+        return jQuery.each(this,callback,args);
+    }
+}
+```
+
+实例方法取于静态方法，静态方法挂在jQuery构造器上，原型方法呢？jQuery通过new原型prototype上init方法当成构造器，那么init原型链方法就是实例的方法了，所以jQuery通过2个构造器划分2种不同的调用方式，一种是静态，一种是原型。
+
+```javascript
+var $$=ajQuery = function(select){
+    return new ajQuery.fn.init(selector);
+}
+ajQuery.fn = ajQuery.prototype = {
+    name:'aaron',
+    init:function(selector){
+        this.selector = selector;
         return this;
     },
-    name:function(){
-        return this.age
-    },
-    age:20
+    constructor:ajQuery
 }
 
-aQuery.prototype.init.prototype = aQuery.prototype;
-console.log(aQuery.name()) //20
-```
+ajQuery.fn.init.prototype = ajQuery.fn
 
-## 链式调用
-
-DOM链式调用的处理：
-
-- 节约代码。
-- 所返回的都是同一个对象。
-
-通过简单扩展原型方法并通过return this的形式来实现跨浏览器的链式调用。
-利用JS的简单工厂模式，来将所有对同一个DOM对象操作指定同一实例。
-
-```javascript
-aQuery.prototype = {
-    init:function(){
-        return this;
-    },
-    name:function(){
-        return this;
-    }
+ajQuery.fn.say = function(){
+    $("#aaron").html(this.name)
 }
-```
 
-所以我们在需要链式的方法访问this就可以了，因为返回当前实例的this，从而又可以访问你自己的原型了
-
-## 插件接口
-
-如果要为jQuery或者jQuery prototype添加属性方法，同样如果要提供给开发者对方法的扩展，从封装的角度讲应该提供一个接口，而不是看上去直接修改prototype
-
-jquery支持自己扩展属性，这个对外提供了一个接口，jquery.fn.extend()来对对象增加方法
-
-从jquery的元am中可以看到，jquery.extend和jquery.fn.extend其实是同指向同一方法的不同引用。
---------------------------------
-
-## $.trim 去掉字符串两端空格
-
-主要用于用户在页面上输入的文本情景下。
-
-```javascript
-class2type = {},
-  core_deletedIds = [],
-  core_version = "1.9.0",
-
-  // Save a reference to some core methods
-  core_concat = core_deletedIds.concat,
-  core_push = core_deletedIds.push,
-  core_slice = core_deletedIds.slice,
-  core_indexOf = core_deletedIds.indexOf,
-  core_toString = class2type.toString,
-  core_hasOwn = class2type.hasOwnProperty,
-  core_trim = core_version.trim,
-
-  //等同以下代码：
-  core_concat = Array.prototype.concat,
-
-core_trim = core_version.trim,
-rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,
-
-trim:core_trim&&!core_trim.call("\uFEFF\xA0")?
-function(text){
-    return text == null?"":core_trim.call(text);}
-:
-function(text){
-return text ==null?"":(text+"").replace(rtrim,"");}
-```
-
-剖析：
-`var core_trim = String.prototype.trim;`jquery 为了避免它无法解析全椒空白，所以多加了一个判断："\uFEFF\xA0".trim() !== ""。`\uFEFF`是 utf8 的字节序标记，'\xA0'是去全角空格，如果以上条件成立了，那就直接用原生的 trim 函数。
-
-## $.each 遍历一个数组或者对象 (es6 可替代)
-
-```javascript
-//each接受2个参数， 数组[1,2,3],回调函数
-$.each([1, 2, 3], function(key, value) {
-  console.log("[" + key + "]=" + value);
-  return false;
-});
-//输出：[0]=1  [1]=2  [2]=3 [1,2,3]
-//可以看到回调函数具有两个参数，key是数组的索引，value是对应的元素
-
-//each接受3个参数， 数组[1,2,3],回调函数，一个额外的参数数组args=[4,5]
-$.each(
-  [1, 2, 3],
-  function(arg1, arg2) {
-    console.log(this + "," + arg1 + "," + arg2);
-  },
-  [4, 5]
-);
-//输出：1,4,5  2,4,5  3,4,5 [1,2,3]
-//可以看到回调函数的两个参数就是each的第三个参数args，在函数里边的this就是遍历元素自己
-```
-
-```javascript
-$.each = function(obj, callback, args) {
-  var value,
-    i = 0,
-    length = obj.length,
-    isArray = isArraylike(obj); //判断是否是数组
-
-  if (args) {
-    if (isArray) {
-      //数组
-      for (; i < length; i++) {
-        value = callback.applay(obj[i], args);
-        //相当于：
-        //args = [arg1,arg2,arg3];
-        //callback(args1,args2,args3)。然后callbakc里面的this指向obj[i]
-
-        if (value === false) {
-          //注意到，当callback函数返回值会false的时候，循环结束
-          break;
-        }
-      }
-    } else {
-      //非数组
-      for (i in obj) //遍历对象
-        value = callback.apply(obj[i], args);
-        if(value === flase){
-            break;
-        }
-    }
-  }
-  else {
-    if(isArray){
-        for(;i<length;i++){
-            value = callback.call(obj[i], i ,obj[i]);
-            //相当于callback(i,obj[i])。然后callback里边的this指向了obj[i]
-            if(value==false){
-                break;
-            }
-        }
-    } else{
-        for(i in obj){
-            value = callback.call(obj[i], i ,obj[i]);
-            //相当于callback(i,obj[i])。然后callback里面的this指向obj[i]
-
-            if(value ===false){
-                break;
-            }
-        }
-    }
-  }
-  return obj;
-};
-```
-
-## $.inArray
-
-```javascript
-core_deletedIds = [],
-core_indexOf = core_delectedIds.indexOf,
-
-// elem 规定需要检索的值
-// arr数组
-// i 可选的整数参数。规定在数组中开始检索的位置。它的合法取值是0到arr.length-1。如省略该参数，则将从数组首元素开始检索
-inArray:function(elem,arr,i){
-    var len;
-    if(arr){
-        //原生的Array对象支持indexOf方法，直接调用
-        if(core_index0f){ //这句话感觉有问题，不是恒成立的条件吗？
-           return core_indexOf.call(arr,elem,i);
-        }
-
-        len = arr.length;
-        //当i为负数的时候，从数组后边的len+i的位置开始索引
-        i= i?i<0?Math.max(0,len+i):i:0;
-
-        //jquery 这里的(i in arr)判断是为了跳过稀疏数组中的元素
-        //例如 var arr = [];arr[2]= 1;
-        //此时 arr == [undefined,undefined,1]
-        for(;i<length;i++){
-            if(i in arr &&arr[i]===elem){
-             return i;
-            }
-        }
-
-        return -1;
-    }
-}
-```
-
-## $.grep 根据其返回值过滤
-
-inv 为 true 表示 callback 过滤器返回 true 的那些过滤掉。
-
-使用示例：
-
-```javascript
-$.grep([0, 1, 2], function(n, i) {
-  return n <= 0;
-}); //[0]
-
-$.grep(
-  [0, 1, 2],
-  function(n, i) {
-    return n <= 0;
-  },
-  true
-);
-```
-
-源码：
-
-```javaScript
-grep:function(elems,callback,inv){
-    var retVal,
-    ret=[],
-    i=0,
-    length = elems.length;
-    inv = !!inv; //转成布尔型
-
-    for(;i<length;i++){
-        retVal = !!callback(elems[i],i); //注意这里的callback参数是先value，后key
-        if(inv!==retVal){
-            ret.push(elems[i]);
-        }
-    }
-
-return ret
-}
 ```
