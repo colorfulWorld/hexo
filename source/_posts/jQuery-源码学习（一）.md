@@ -1,7 +1,7 @@
 ---
 title: jQuery 源码学习（-）
 date: 2018-06-22 11:45:06
-tags:
+tags: jQuery
 ---
 
 # 为什么想要学习 jQuery 源码
@@ -175,7 +175,8 @@ ajQuery.fn = ajQuery.prototype = {
     constructor:ajQuery
 }
 
-ajQuery.fn.init.prototype = ajQuery.fn
+ajQuery.fn.init.prototype = ajQuery.fn 
+//核心 没看懂
 
 ajQuery.fn.say = function(){
     $("#aaron").html(this.name)
