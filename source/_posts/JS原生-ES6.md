@@ -8,6 +8,14 @@ categories: 原生JS
 
 <!--more-->
 
+## this
+可以让this指向固定化，这种特性很有利于封装回调函数。
+- 函数体内的this对象，就是定义是所在的对象，而不是使用时所在的对象
+- 不可以当作构造函数，也就是说不可以使用new命令，否则会跑粗错误。
+- 不可以使用arguments 对象，该对象在函数内不存在。如果要用，可以用Rest参数代替
+- 不可以使用yidId命令，因此箭头函数不能用做Generato函数
+
+
 ## set 对象 （可用于去重）
 
 set 独享允许你存储任何类型唯一值，无论是原始值或是对象。NaN 之间视为相同的值。
@@ -576,3 +584,5 @@ if(Object.isArray(someobj)){};
 //判断目标对象是否为空对象
 if(someobj&&Object.keys(someobj).length);
 ```
+
+
