@@ -269,3 +269,18 @@ reader.onload = function(e) {
 `FileReader.result`表示文件内容。该属性仅在读取操作完成后才有效，数据的格式取决于使用哪个方法来启动读取操作。
 
 `FileReader.readAsDataURL()`表示开始读取指定的 Blob 中的内容。一旦完成，result 属性中将包含一个 data:URL 格式的字符串以表示所读取文件的内容。
+
+## 查找数组对象里面是否含有某对象
+
+查找 selectedList 里面是否存在 listAppEquipment 数组里面的对象
+```javascript
+
+ let selectedListString = JSON.stringify(that.selectedList);
+            that.listAppEquipment.forEach((item:any) => {
+              let value = JSON.stringify(item.value);
+              if(selectedListString.indexOf(value)!=-1){
+                item.checked = true;
+                item.selected = true;
+             }
+       });
+ ```
