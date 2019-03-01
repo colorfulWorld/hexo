@@ -83,7 +83,7 @@ module:{
 }
 }，
 vue:{
-    loaders:utils.cssLoaders()
+    loaders:utils.cssLoaders() //对于单独的一些css 编译
 }
 }
 

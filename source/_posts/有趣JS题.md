@@ -36,6 +36,17 @@ console.log(x) //1undefined
 ## 闭包
 
 ```javascript
+   for (var i = 0; i < liListlength; i++) {
+        var ele = document.querySelectorAll("ul > li")[i];
+        ele.addEventListener("click", (function (i) {
+            return function () {
+                console.log("index is :" + i);
+            }
+        })(i))
+    }
+```
+
+```javascript
 function fun(n, o) {
   console.log(o)
   return {

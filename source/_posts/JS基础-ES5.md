@@ -8,6 +8,48 @@ categories: 原生JS
 
 <!--more-->
 
+## 内置类型
+
+JS中有7种内置类型，7种内置类型又分为两大类型：基本类型和对象（Object）
+基础基本类型有6种：`null`,`undefined`,`boolean`,`number`,`string`,`symbol`。
+
+## `Typeof`
+
+`typeof` 对于基本类型。除了`null`都可以显示正确的类型
+
+```javascript
+  typeof 1 // 'number'
+  typeof '1' // 'string'
+  typeof undefined // 'undefined'
+  typeof true // 'boolean'
+  typeof Symbol() // 'symbol'
+  typeof b // b 没有声明，但是还会显示 undefined
+
+  //typeof 对于对象，除了函数都会显示 object
+
+  typeof [] // 'object'
+  typeof {} // 'object'
+  typeof console.log // 'function'
+
+  typeof null // 'object'
+```
+PS：为什么会出现这种情况呢？因为在 JS 的最初版本中，使用的是 32 位系统，为了性能考虑使用低位存储了变量的类型信息，000 开头代表是对象，然而 null 表示为全零，所以将它错误的判断为 object 。虽然现在的内部类型判断代码已经改变了，但是对于这个 Bug 却是一直流传下来
+
+```javascript
+  let a
+  // 我们也可以这样判断 undefined
+  a === undefined
+  // 但是 undefined 不是保留字，能够在低版本浏览器被赋值
+  let undefined = 1
+  // 这样判断就会出错
+  // 所以可以用下面的方式来判断，并且代码量更少
+  // 因为 void 后面随便跟上一个组成表达式
+  // 返回就是 undefined
+  a === void 0
+
+```
+
+
 ## 对象
 
 创建对象可以通过对象直接量，关键字 new 和 object.creat() 函数来创建对象。每一个对象都有与知相关的原型，类和可扩展性。可分为普通对象和函数对象。凡是通过 new function() 创建的都是函数对象。其他都是普通对象。
@@ -17,6 +59,13 @@ categories: 原生JS
 对象直接量是类似于 var a = {x:0,y:0} 的映射表。对象直接量是一个表达式，这个表达式的每次运算都创建并初始化一个新的对象。每次计算对象直接量的时候。也会计算它的每个属性值，**也就是说在一个循环体内使用了对象直接量，他将会创建很对新对象，并且每次创建的对象的属性值也有可能不同。**
 
 ### 通过 new 创建对象
+
+1. 新生成了一个对象
+2. 链接到原型
+3. 绑定this
+4. 返回新对象
+  
+在调用`new`的过程中会发生以上四件事情。
 
 var obj=new MyClass(); new 运算符创建并初始化一个**新对象** 用 new 调用时，this 会指向空的对象，并且这个对象的原型指向 MyClass.prototype
 
@@ -34,7 +83,7 @@ var obj=new MyClass(); new 运算符创建并初始化一个**新对象** 用 ne
 
 - constructor ：原型对象中的属性，指向该原型对象的构造函数
 
-- _proto_：实例中的属性，指向 new 这个实例的构造函数的原型对象
+- _proto_：实例中的属性，指向 new 这个实例的构造函数的原型对象，对象可以通过`_proto_`来寻找不属于该对象的属性，`_proto_`将对象连接起来组成原型链
 
 ### prototype 属性的引入
 
@@ -282,7 +331,8 @@ fn2(); //输出3
 
 ## call、apply 、 bind
 
-参数、绑定规则（显示绑定和强绑定），运行效率（最终都会转换成一个一个的参数去运行）、运行情况（call ， apply 立即执行，bind 是 return 出一个 this “ 固定 ” 的函数，这也是为什么 bind 是强绑定的一个原因）。
+- 参数、绑定规则（显示绑定和强绑定），运行效率（最终都会转换成一个一个的参数去运行）、运行情况（call ， apply 立即执行，bind 是 return 出一个 this “ 固定 ” 的函数，这也是为什么 bind 是强绑定的一个原因）。
+- 在`javascipt`中，`call`和`apply`都是为了改变某个函数运行时的上下文而存在的，换句话说就是为了改变函数体内部`this`的指向。
 
 ### call()
 
@@ -331,6 +381,31 @@ animal.showName.call(dog); //dog
 ```
 
 意思是把 animal 的方法放到 dog 上执行，也可以说，把 animal 的 showName() 方法放到 dog 上来执行，所以 this.name 应该是 dog。
+
+```javascript
+function fruits(){}
+fruits.prototype = {
+  color:'red',
+  say:function(){
+    console.log('my color is ' + this.color);
+  }
+}
+
+var apple = new fruits;
+apply.say() //my color is red
+
+banana ={
+  color:'yellow'
+}
+apple.say.call(banana);//my color is yellow
+apple.say.apply(banana);//my color is yellow
+```
+所以可以看出`call`和`apply`是为了动态改变this二存在的，当一个object没有某个方法。但是其他的有。我们可以借助call或apply用其他对象的方法来操作。
+
+```javascript
+func.call(this, arg1, arg2);
+func.apply(this, [arg1, arg2])
+```
 
 #### 继承
 
@@ -452,3 +527,27 @@ var dom = document.getElementById("test"),
 ```javascript
 window.getComputedStyle(element, null).getPropertyValue("float");
 ```
+
+## `this`
+
+**  `this`要在执行的时候才能确定值，定义时是无法确认，因为js不是编译型语言而是解释型语言
+
+说明this几种不同的使用方式
+- 作为构造函数执行
+- 作为对象属性执行
+- 作为普通函数执行
+- `call`,`applay`,`bind`
+  
+  ```javascript
+  var a  = {
+    name:A,
+    fn:function(){
+      console.log(this.name)
+    }
+  }
+  a.fn()//this===a
+  a.fn({name:'b'}) //this==={name:'b'}
+  var fn1 = a.fn;
+  fn1();//this===window
+
+  ```

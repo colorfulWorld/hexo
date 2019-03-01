@@ -170,7 +170,7 @@ async function fetchdata(){
   console.logtex(text1)
   var text2 = await getasync('test2.text')
   console.log(text2)
-  var text3 = await getasync('text3.text)
+  var text3 = await getasync('text3.text')
   console.log(text3)
   return 'Finished'
 }

@@ -27,7 +27,7 @@ JS中有两类任务队列：宏任务队列(macro task) 和 微任务队列(mic
 - (micro)task微任务：
     (micro)task主要包括：Promise、MutaionObserver、process.nextTick(Node.js环境)
 
-代码开始执行都是从script（全局任务）开始，所以，一旦我们的全局任务（属于宏任务）执行完，就马上执行完整个微任务队列。
+代码开始执行都是从script（全局任务）开始，所以，一旦我们的全局任务（`<script>`属于宏任务）执行完，就马上执行完整个微任务队列。
 ```javascript
 console.log('script start');
 
