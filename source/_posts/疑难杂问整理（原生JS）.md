@@ -12,73 +12,73 @@ categories: 原生JS
 
 ```javascript
 function createPerson(name, age, job) {
-  var o = new Object()
-  o.name = name
-  o.age = age
-  o.job = job
+  var o = new Object();
+  o.name = name;
+  o.age = age;
+  o.job = job;
   o.sayName = function() {
-    alert(this.name)
-  }
-  return 0
+    alert(this.name);
+  };
+  return 0;
 }
 
-var person1 = createPerson('Nicholas', 29, 'Software Engineer')
-var person2 = createPerson('Greg', 27, 'Doctor')
+var person1 = createPerson('Nicholas', 29, 'Software Engineer');
+var person2 = createPerson('Greg', 27, 'Doctor');
 
-person1 // Person {name: "Zaxlct", age: 28, job: "Software Engineer", sayName: ƒ}
-person2 // Person {name: "Mick", age: 23, job: "Doctor", sayName: ƒ}
+person1; // Person {name: "Zaxlct", age: 28, job: "Software Engineer", sayName: ƒ}
+person2; // Person {name: "Mick", age: 23, job: "Doctor", sayName: ƒ}
 ```
 
 ## 构造函数
 
 ```javascript
 function Person(name, age, job) {
-  this.name = name
-  this.age = age
-  this.job = job
+  this.name = name;
+  this.age = age;
+  this.job = job;
   this.sayName = function() {
-    alert(this.name)
-  }
+    alert(this.name);
+  };
 }
-var person1 = new Person('Zaxlct', 28, 'Software Engineer')
-var person2 = new Person('Mick', 23, 'Doctor')
-var person3 = new Person('Mick', 23, 'Doctor')
-person1 // Person {name: "Zaxlct", age: 28, job: "Software Engineer", sayName: ƒ}
-person2 // Person {name: "Mick", age: 23, job: "Doctor", sayName: ƒ}
-person2 === person3 //false
-person1.constructor == Person //true
-Person.prototype // {constructor: ƒ}  为原型对象
-person1.prototype //undefined
-Person.prototype.prototype //undefined
-person1.constructor == Person //true
-Person.prototype.constructor == Person //true
+var person1 = new Person('Zaxlct', 28, 'Software Engineer');
+var person2 = new Person('Mick', 23, 'Doctor');
+var person3 = new Person('Mick', 23, 'Doctor');
+person1; // Person {name: "Zaxlct", age: 28, job: "Software Engineer", sayName: ƒ}
+person2; // Person {name: "Mick", age: 23, job: "Doctor", sayName: ƒ}
+person2 === person3; //false
+person1.constructor == Person; //true
+Person.prototype; // {constructor: ƒ}  为原型对象
+person1.prototype; //undefined
+Person.prototype.prototype; //undefined
+person1.constructor == Person; //true
+Person.prototype.constructor == Person; //true
 ```
 
 实例的构造函数属性（constructor ）指向构造函数。所有的原型对象都会自动获得一个 constructor （构造函数属性）属性
 
 ```javascript
 function Person(name, age, job) {
-  this.name = name
-  this.age = age
-  this.job = job
+  this.name = name;
+  this.age = age;
+  this.job = job;
   this.sayName = function() {
-    alert(this.name)
-  }
-  return this
+    alert(this.name);
+  };
+  return this;
 }
-var person1 = Person('Zaxlct', 28, 'Software Engineer')
-var person2 = Person('Mick', 23, 'Doctor')
-person1 // this 指向window 且被person2覆盖
-person2 // this 指向window
+var person1 = Person('Zaxlct', 28, 'Software Engineer');
+var person2 = Person('Mick', 23, 'Doctor');
+person1; // this 指向window 且被person2覆盖
+person2; // this 指向window
 ```
 
 **与工厂模式的区别**
 
-* 没有显示创建对象（new 运算符创建并实例化新对象）。
-* 直接将属性和方法赋给了 this 对象。
-* 没有 return 语句。
-* 要创建新实例必须要使用 new 运算符，否者属性和方法将会被添加到 window 对象
-* 可以使用 instanceof 操作符检测对象类型。
+- 没有显示创建对象（new 运算符创建并实例化新对象）。
+- 直接将属性和方法赋给了 this 对象。
+- 没有 return 语句。
+- 要创建新实例必须要使用 new 运算符，否者属性和方法将会被添加到 window 对象
+- 可以使用 instanceof 操作符检测对象类型。
 
 构造函数的问题：构造函数的内部方法会被重复构建，不同实例内的同名函数是不相等的。
 
@@ -86,13 +86,13 @@ person2 // this 指向window
 
 发生过程：
 
-* 查看 web 缓存
-* DNS 解析
-* TCP 连接
-* 发送 HTTP 请求
-* 服务器处理请求并返回 HTTP 报文
-* 浏览器解析渲染页面
-* 连接结束
+- 查看 web 缓存
+- DNS 解析
+- TCP 连接
+- 发送 HTTP 请求
+- 服务器处理请求并返回 HTTP 报文
+- 浏览器解析渲染页面
+- 连接结束
 
 ### 查看 web 缓存
 
@@ -129,9 +129,9 @@ person2 // this 指向window
 2. 搜索操作系统中的 DNS 缓存（维护一张域名与 IP 地址的对应表）
 3. 搜索操作系统的 host 文件（Windows 环境下，维护一张域名与 IP 地址的对应表）
 4. 操作系统间根域名发送至 LDNS（本地域名服务器），首先查找自己的缓存若是失败：
-   * 向根域名服务器发起请求，此处根域名服务器返回 com 域的 sing 机域名服务器地址。
-   * LDNS 向 com 域的顶级域名服务器发起请求，得到 www.baidu.com 的地址。
-   * LONS 向 baidu.com 域名服务器发起请求，得到 www.baidu.com 的 IP 地址。
+   - 向根域名服务器发起请求，此处根域名服务器返回 com 域的 sing 机域名服务器地址。
+   - LDNS 向 com 域的顶级域名服务器发起请求，得到 www.baidu.com 的地址。
+   - LONS 向 baidu.com 域名服务器发起请求，得到 www.baidu.com 的 IP 地址。
 5. LDNS 将得到的 IP 地址返回给操作系统，同时将 IP 地址缓存起来；
 6. 操作系统将 IP 地址返回给浏览器，同时自己也缓存起来；
 
@@ -163,11 +163,11 @@ person2 // this 指向window
 
 断开连接 --4 次挥手
 
-* 为什么服务器在接到断开请求时不立即同意断开：当服务器收到断开连接的请求时，可能仍然有数据未发送完毕，所以服务器先发送确认信号，等所有数据发送完毕后再同意断开。
+- 为什么服务器在接到断开请求时不立即同意断开：当服务器收到断开连接的请求时，可能仍然有数据未发送完毕，所以服务器先发送确认信号，等所有数据发送完毕后再同意断开。
 
-* 第四次握手后，主机发送确认信号后并没有立即断开连接，而是等待了 2 个报文传送周期，原因是：如果第四次握手的确认信息丢失，服务器将会重新发送第三次握手的断开连接的信号，而服务器发觉丢包与重新发送的断开连接到达主机的时间正好为 2 个报文传输周期。
+- 第四次握手后，主机发送确认信号后并没有立即断开连接，而是等待了 2 个报文传送周期，原因是：如果第四次握手的确认信息丢失，服务器将会重新发送第三次握手的断开连接的信号，而服务器发觉丢包与重新发送的断开连接到达主机的时间正好为 2 个报文传输周期。
 
-## session、cookie、seesionStorage、localStorage 的区别
+## session、cookie、seesionStorage、localStorage、Service Worker 的区别
 
 cookie 和 session 都是用来跟踪浏览器用户身份的会话方式。
 
@@ -187,8 +187,8 @@ cookie 只能保存字符串，以文本的方式；session 通过类型与 Hash
 
 ### 存储的大小
 
-* cookie:单个 cookie 保存的数据不能超过 4kb;
-* session:大小没有限制。
+- cookie:单个 cookie 保存的数据不能超过 4kb;
+- session:大小没有限制。
 
 ### sessionStorage
 
@@ -202,10 +202,14 @@ cookie 只能保存字符串，以文本的方式；session 通过类型与 Hash
 
 localStorage 存储的数据是永久性的。
 
+### Service Worker
+
+`Service Worker`本质上充当 web 应用程序与浏览器之间的代理服务器，也可以在网络可用是作为浏览器和网络之间的代理。他们旨在是的能够创建有效的离线体验。拦截网络请求并给予网络是否可用以及更新的资源是否驻留在服务器上来采取适当的动作。他们还允许访问推送通知和后台同步 API
+
 ## html 页面的渲染过程
 
 当用户请求页面时，浏览器获取 HTML 并构造 DOM。然后获取 CSS 并构造 CSSOM。然后通过匹配 DOM 和 CSSDOM 生成渲染树。如果有任何的 javascript 需要解决，浏览器将不会开始渲染页面，知道 javascript 解决完毕。
 
 ## 事件模型是什么
-w3c中定义的事件发生过程中的3个阶段：捕获阶段，目标阶段，冒泡阶段
 
+w3c 中定义的事件发生过程中的 3 个阶段：捕获阶段，目标阶段，冒泡阶段

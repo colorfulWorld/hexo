@@ -10,45 +10,44 @@ categories: 原生JS
 
 ## 内置类型
 
-JS中有7种内置类型，7种内置类型又分为两大类型：基本类型和对象（Object）
-基础基本类型有6种：`null`,`undefined`,`boolean`,`number`,`string`,`symbol`。
+JS 中有 7 种内置类型，7 种内置类型又分为两大类型：基本类型和对象（Object）
+基础基本类型有 6 种：`null`,`undefined`,`boolean`,`number`,`string`,`symbol`。
 
 ## `Typeof`
 
 `typeof` 对于基本类型。除了`null`都可以显示正确的类型
 
 ```javascript
-  typeof 1 // 'number'
-  typeof '1' // 'string'
-  typeof undefined // 'undefined'
-  typeof true // 'boolean'
-  typeof Symbol() // 'symbol'
-  typeof b // b 没有声明，但是还会显示 undefined
+typeof 1; // 'number'
+typeof '1'; // 'string'
+typeof undefined; // 'undefined'
+typeof true; // 'boolean'
+typeof Symbol(); // 'symbol'
+typeof b; // b 没有声明，但是还会显示 undefined
 
-  //typeof 对于对象，除了函数都会显示 object
+//typeof 对于对象，除了函数都会显示 object
 
-  typeof [] // 'object'
-  typeof {} // 'object'
-  typeof console.log // 'function'
+typeof []; // 'object'
+typeof {}; // 'object'
+typeof console.log; // 'function'
 
-  typeof null // 'object'
+typeof null; // 'object'
 ```
+
 PS：为什么会出现这种情况呢？因为在 JS 的最初版本中，使用的是 32 位系统，为了性能考虑使用低位存储了变量的类型信息，000 开头代表是对象，然而 null 表示为全零，所以将它错误的判断为 object 。虽然现在的内部类型判断代码已经改变了，但是对于这个 Bug 却是一直流传下来
 
 ```javascript
-  let a
-  // 我们也可以这样判断 undefined
-  a === undefined
-  // 但是 undefined 不是保留字，能够在低版本浏览器被赋值
-  let undefined = 1
-  // 这样判断就会出错
-  // 所以可以用下面的方式来判断，并且代码量更少
-  // 因为 void 后面随便跟上一个组成表达式
-  // 返回就是 undefined
-  a === void 0
-
+let a;
+// 我们也可以这样判断 undefined
+a === undefined;
+// 但是 undefined 不是保留字，能够在低版本浏览器被赋值
+let undefined = 1;
+// 这样判断就会出错
+// 所以可以用下面的方式来判断，并且代码量更少
+// 因为 void 后面随便跟上一个组成表达式
+// 返回就是 undefined
+a === void 0;
 ```
-
 
 ## 对象
 
@@ -62,9 +61,9 @@ PS：为什么会出现这种情况呢？因为在 JS 的最初版本中，使�
 
 1. 新生成了一个对象
 2. 链接到原型
-3. 绑定this
+3. 绑定 this
 4. 返回新对象
-  
+
 在调用`new`的过程中会发生以上四件事情。
 
 var obj=new MyClass(); new 运算符创建并初始化一个**新对象** 用 new 调用时，this 会指向空的对象，并且这个对象的原型指向 MyClass.prototype
@@ -97,10 +96,10 @@ var obj=new MyClass(); new 运算符创建并初始化一个**新对象** 用 ne
 function DOG(name) {
   this.name = name;
 }
-DOG.prototype = { species: "犬科" };
+DOG.prototype = { species: '犬科' };
 
-var dogA = new DOG("大毛");
-var dogB = new DOG("二毛");
+var dogA = new DOG('大毛');
+var dogB = new DOG('二毛');
 
 alert(dogA.species);
 // 其实是通过dogA._proto_.species 来访问DOG.prototype.species
@@ -134,8 +133,8 @@ function Person(name, age, job) {
     alert(this.name);
   };
 }
-var person1 = new Person("Zaxlct", 28, "Software Engineer");
-var person2 = new Person("Mick", 23, "Doctor");
+var person1 = new Person('Zaxlct', 28, 'Software Engineer');
+var person2 = new Person('Mick', 23, 'Doctor');
 person1.__proto__ == Person.prototype;
 //person1.__proto__  = person1.constructor.prototype , person1.constructor = Person
 Person.__proto__;
@@ -168,12 +167,26 @@ javascript 对象具有 “ 自有属性 ” 也有一些属性是从原型对�
 
 ## 闭包
 
+闭包的定义非常简单：函数 A 返回一个函数 B，并且函数 B 中使用函数 A 中的变量，函数 B 被称为闭包。
+
+```javascript
+function A() {
+  let a = 1;
+  function B() {
+    console.log(a);
+  }
+  return B;
+}
+```
+
+你是否会疑惑为什么函数 A 已经弹出调用栈了，为什么函数 B 还能引用函数 A 中的变量，因为函数 A 中的变量这时候是存储在堆上的。现在的 JS 引擎可以通过逃逸分析辨别出那些变量需要存储在堆上，哪些需要存储在栈上。
+
 创建闭包最常见的方式就是在一个函数内部创建另一个函数。通常，函数的作用域及其所有变量都会在函数执行结束后被销毁。但是，在创建了一个闭包以后，这个函数的作用域就会一直保存到闭包不存在为止。
 
 ```javascript
 function test() {
   for (var i = 0; i < 4; i++) {
-    console.log("i:" + i);
+    console.log('i:' + i);
     (function(e) {
       setTimeout(function() {
         console.log(e);
@@ -188,9 +201,9 @@ test(); //i:0 => i:1 => i:2=> i:3=>  0 => 1=> 2 => 3
 
 ```javascript
 function makeAdder(x) {
-  console.log("x:" + x);
+  console.log('x:' + x);
   return function(y) {
-    console.log("y:" + y);
+    console.log('y:' + y);
     return x + y;
   };
 }
@@ -265,10 +278,10 @@ test(); // 连续打印 0 到 9
 ### 闭包中的 this 对象
 
 ```javascript
-var name = "The Window";
+var name = 'The Window';
 
 var obj = {
-  name: "My Object",
+  name: 'My Object',
 
   getName: function() {
     return function() {
@@ -331,6 +344,8 @@ fn2(); //输出3
 
 ## call、apply 、 bind
 
+- 都是用来改变函数的 this 对象的指向的。
+- 第一个参数都是 this 要指向的对象。
 - 参数、绑定规则（显示绑定和强绑定），运行效率（最终都会转换成一个一个的参数去运行）、运行情况（call ， apply 立即执行，bind 是 return 出一个 this “ 固定 ” 的函数，这也是为什么 bind 是强绑定的一个原因）。
 - 在`javascipt`中，`call`和`apply`都是为了改变某个函数运行时的上下文而存在的，换句话说就是为了改变函数体内部`this`的指向。
 
@@ -340,11 +355,11 @@ fn2(); //输出3
 function class1() {
   this.name = function() {
     console.log(this.names);
-    console.log("我是class1内的方法");
+    console.log('我是class1内的方法');
   };
 }
 function class2() {
-  this.names = "class2内部变量";
+  this.names = 'class2内部变量';
   class1.call(this); //此行代码执行后，当前的this指向了class1（也可以说class2继承了class1）
 }
 
@@ -366,13 +381,13 @@ eat.call(drink, 3, 2); //5
 
 ```javascript
 function Animal() {
-  this.name = "animal";
+  this.name = 'animal';
   this.showName = function() {
     console.log(this.name);
   };
 }
 function Dog() {
-  this.name = "dog";
+  this.name = 'dog';
 }
 var animal = new Animal();
 var dog = new Dog();
@@ -383,28 +398,29 @@ animal.showName.call(dog); //dog
 意思是把 animal 的方法放到 dog 上执行，也可以说，把 animal 的 showName() 方法放到 dog 上来执行，所以 this.name 应该是 dog。
 
 ```javascript
-function fruits(){}
+function fruits() {}
 fruits.prototype = {
-  color:'red',
-  say:function(){
+  color: 'red',
+  say: function() {
     console.log('my color is ' + this.color);
   }
-}
+};
 
-var apple = new fruits;
-apply.say() //my color is red
+var apple = new fruits();
+apply.say(); //my color is red
 
-banana ={
-  color:'yellow'
-}
-apple.say.call(banana);//my color is yellow
-apple.say.apply(banana);//my color is yellow
+banana = {
+  color: 'yellow'
+};
+apple.say.call(banana); //my color is yellow
+apple.say.apply(banana); //my color is yellow
 ```
-所以可以看出`call`和`apply`是为了动态改变this二存在的，当一个object没有某个方法。但是其他的有。我们可以借助call或apply用其他对象的方法来操作。
+
+所以可以看出`call`和`apply`是为了动态改变 this 二存在的，当一个 object 没有某个方法。但是其他的有。我们可以借助 call 或 apply 用其他对象的方法来操作。
 
 ```javascript
 func.call(this, arg1, arg2);
-func.apply(this, [arg1, arg2])
+func.apply(this, [arg1, arg2]);
 ```
 
 #### 继承
@@ -419,7 +435,7 @@ function Animal(name) {
 function Dog(name) {
   Animal.call(this, name);
 }
-var dog = new Dog("Crazy dog");
+var dog = new Dog('Crazy dog');
 dog.showName();
 ```
 
@@ -434,8 +450,8 @@ function class1(args1, args2) {
   };
 }
 function class2() {
-  var args1 = "1";
-  var args2 = "2";
+  var args1 = '1';
+  var args2 = '2';
   class1.call(this, args1, args2);
   /*或*/
   class1.apply(this, [args1, args2]);
@@ -471,38 +487,36 @@ func();
 
 ```html
 <ul id="parent-list">
-<li id="post-1">Item 1</li>
-<li id="post-2">Item 2</li>
-<li id="post-3">Item 3</li>
-<li id="post-4">Item 4</li>
-<li id="post-5">Item 5</li>
-<li id="post-6">Item 6</li>
+  <li id="post-1">Item 1</li>
+  <li id="post-2">Item 2</li>
+  <li id="post-3">Item 3</li>
+  <li id="post-4">Item 4</li>
+  <li id="post-5">Item 5</li>
+  <li id="post-6">Item 6</li>
 </ul>
 <script>
-document.getElementById("parent-list").addEventListener("click",function(e) {
-	// e.target是被点击的元素!
-	// 如果被点击的是li元素
-	if(e.target && e.target.nodeName == "LI") {
-		// 找到目标，输出ID!
-		console.log("List item ",e.target.id.replace("post-")," was clicked!");
-	}
+  document.getElementById('parent-list').addEventListener('click', function(e) {
+    // e.target是被点击的元素!
+    // 如果被点击的是li元素
+    if (e.target && e.target.nodeName == 'LI') {
+      // 找到目标，输出ID!
+      console.log('List item ', e.target.id.replace('post-'), ' was clicked!');
+    }
 
-$('li').click(function(){
-        $(this).css('background', '#D4DFE6');
-});
-
-// jQuery的delegate写法
-    $('#wrap').delegate('li', 'click', function(ev){
-
-        // this 指向委托的对象 li
-        $(this).css('background', '#D4DFE6');
-
-        // 找到父级 ul#wrap
-        $(ev.delegateTarget).css('border', '2px solid #f00');
+    $('li').click(function() {
+      $(this).css('background', '#D4DFE6');
     });
 
+    // jQuery的delegate写法
+    $('#wrap').delegate('li', 'click', function(ev) {
+      // this 指向委托的对象 li
+      $(this).css('background', '#D4DFE6');
 
-});</script>
+      // 找到父级 ul#wrap
+      $(ev.delegateTarget).css('border', '2px solid #f00');
+    });
+  });
+</script>
 ```
 
 ## `getComputedStyle()`
@@ -510,8 +524,8 @@ $('li').click(function(){
 `getComputedStyle`是一个可以获取当前元素所有最终使用 css 属性值。返回一个 css 样式声明对象([object CSSStyleDeclaration])，只读。之前偶尔有一次要更改伪类元素 ::after 的样式
 
 ```javascript
-var dom = document.getElementById("test"),
-  style = window.getComputedStyle(dom, ":after");
+var dom = document.getElementById('test'),
+  style = window.getComputedStyle(dom, ':after');
 ```
 
 ### `getComputedStyle`与`style`的区别
@@ -525,29 +539,114 @@ var dom = document.getElementById("test"),
 `getPropertyValue`方法可以获取 CSS 样式申明对象上的属性值（直接属性名称），例如：
 
 ```javascript
-window.getComputedStyle(element, null).getPropertyValue("float");
+window.getComputedStyle(element, null).getPropertyValue('float');
 ```
 
 ## `this`
 
-**  `this`要在执行的时候才能确定值，定义时是无法确认，因为js不是编译型语言而是解释型语言
+\*\* `this`要在执行的时候才能确定值，定义时是无法确认，因为 js 不是编译型语言而是解释型语言
 
-说明this几种不同的使用方式
+说明 this 几种不同的使用方式
+
 - 作为构造函数执行
 - 作为对象属性执行
 - 作为普通函数执行
 - `call`,`applay`,`bind`
-  
-  ```javascript
-  var a  = {
-    name:A,
-    fn:function(){
-      console.log(this.name)
-    }
-  }
-  a.fn()//this===a
-  a.fn({name:'b'}) //this==={name:'b'}
-  var fn1 = a.fn;
-  fn1();//this===window
 
+```javascript
+var a = {
+  name: A,
+  fn: function() {
+    console.log(this.name);
+  }
+};
+a.fn(); //this===a
+a.fn({ name: 'b' }); //this==={name:'b'}
+var fn1 = a.fn;
+fn1(); //this===window
+```
+
+---
+
+## 深浅拷贝
+
+### 浅拷贝
+
+浅拷贝之解决了第一层的问题，如果接下去的值中还有对象的话，那么就又会出现值引用，改变值会互相影响
+
+- 首先可以通过`Object.assign`来解决这个问题。
+
+  ```javascript
+  let a = {
+    age: 1
+  };
+  let b = Object.assign({}, a);
+  a.age = 2;
+  console.log(b.age);
   ```
+
+- 当然也可以通过展开运算符（···）来解决
+  ```javascript
+  let a = {
+    age: 1
+  };
+  let b = { ...a };
+  a.age = 2;
+  console.log(b.age); //1
+  ```
+
+### 深拷贝
+
+这个问题可以通过`JSON.parse(JSON.stringfy(object))`来解决。
+
+但是该方法也是有局限性的：
+
+- 会忽略 `undefined`
+- 会忽略`symbol`
+- 不能序列化函数
+- 不能解决循环引用对象
+
+```javascript
+let obj = {
+  a: 1,
+  b: {
+    c: 2,
+    d: 3
+  }
+};
+obj.c = obj.b;
+obj.e = obj.a;
+obj.b.c = obj.c;
+obj.b.e = obj.b.c;
+let newObj = JSON.parse(JSON.stringfy(obj));
+console.log(newObj); //会报错
+```
+
+```javascript
+let a = {
+  age: undefined,
+  sex: Symbol('male'),
+  jobs: function() {},
+  name: 'yck'
+};
+
+let b = JSON.parse(JSON.stringfy(a));
+console.log(b); //{name:'yck'}
+```
+
+## `Map`、`FlatMap`、`Reduce`
+
+`Map`作用是生成一个新数组，遍历原数组，将每一个元素拿出来做一些变换然后`append`到新的数组中。
+
+```javascript
+[1, 2, 3].map(v => v + 1); //=>[2,3,4]
+```
+
+`Map`有三个参数，分别是当前索引元素，索引，原数组
+
+```javascript
+['1', '2', '3'].map(parseInt);
+//  parseInt('1', 0) -> 1
+//  parseInt('2', 1) -> NaN
+//  parseInt('3', 2) -> NaN
+```
