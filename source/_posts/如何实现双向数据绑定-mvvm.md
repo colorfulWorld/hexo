@@ -10,11 +10,20 @@ tags:
 
 实现数据双向绑定的集中做法大致如下：
 
-* 发布者 - 订阅者模式（backbone.js ）
+- 发布者 - 订阅者模式（backbone.js ）
 
-* 脏值检查（angular.js ）
+- 脏值检查（angular.js ）
 
-* 数据劫持（vue.js ）
+- 数据劫持（vue.js ）
+
+## vue 的响应式原理
+
+vue 内部使用腊肉 object.defineProperty() 来实现数据响应式，通过这个函数可以监听到 set 和 get 的事件
+
+1. 首先利用 object.defineproperty()给 data 中的属性去设置 set,get 事件
+2. 递归的去把 data 中的每一个属性注册给被观察者。
+3. 解析模板时，在属性的 get 事件中去收集观察者依赖。
+4. 当属性的值发生改变时，在 set 时间中去通知每一个观察者，做到全部更新。
 
 ## 数据劫持 :
 
@@ -71,28 +80,28 @@ Angular 的数据监测采用的是 “ 脏值检测 ”，每一个指令都会
 1. 任何数据变动都意味着当前作用域的每一个 watcher 需要被重新求值，且同一时间只允许一个 digest 运行，因此当 watcher 庞大时，应用性能就不可避免的收到影响，并且很难优化。
 2. 当数据变化时，框架并不能主动监测到变化的产生，需要手动触发 digest cycle 才能触发相应的 DOM 更新。Angular 通过在 DOM 事件处理函数中自动触发 digest cycle 部分避免了这个问题，但还是有很多情况下需要用户手动进行触发。
 
-#### $watch 对象
+#### \$watch 对象
 
-Angular 每一个绑定到 UI 的数据，就会有一 $watch 对象这个对象包含 3 个值
+Angular 每一个绑定到 UI 的数据，就会有一 \$watch 对象这个对象包含 3 个值
 
 ```javascript
 watch = {
   name: '',
   getNewValue: function($scope) {
     //得到新值
-    return newValue
+    return newValue;
   },
   listener: function(newValue, oldValue) {
     //当数据发生变化时
   }
-}
+};
 ```
 
-getNewValue() 可以得到当前 $scope 上的最新值，listener 函数得到新值和旧值并进行一些操作。
+getNewValue() 可以得到当前 \$scope 上的最新值，listener 函数得到新值和旧值并进行一些操作。
 
-每当我们将数据绑定到 UI 上，angular 就会想你的 watchList 上插入一个 $watch
+每当我们将数据绑定到 UI 上，angular 就会想你的 watchList 上插入一个 \$watch
 
-\** 只有触发 UI 事件，ajax 请求或者 timeout 等回调操作，而数据到界面的呈现则是由脏检查来做。
+\*\* 只有触发 UI 事件，ajax 请求或者 timeout 等回调操作，而数据到界面的呈现则是由脏检查来做。
 
 ### Vue
 

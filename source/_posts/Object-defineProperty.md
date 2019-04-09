@@ -14,13 +14,13 @@ Object.defineProperty() 方法会直接在一个对象上定义一个新属性�
 
 ```javascript
 // (1) define someOne property name
-someOne.name = 'cover'
+someOne.name = 'cover';
 //or use (2)
-someOne['name'] = 'cover'
+someOne['name'] = 'cover';
 // or use (3) defineProperty
 Object.defineProperty(someOne, 'name', {
   value: 'cover'
-})
+});
 ```
 
 ### descriptor
@@ -36,14 +36,14 @@ Object.defineProperty(someOne, 'name', {
 该属性是否可写，如果设置成 false，则任何对该属性改写的操作都无效（但不会报错），对于像前面例子中直接在对象上定义的属性，这个属性该特性默认值为为 true。
 
 ```javascript
-var someOne = {}
+var someOne = {};
 Object.defineProperty(someOne, 'name', {
   value: 'coverguo', //由于设定了writable属性为false 导致这个量不可以修改 ，任何修改豆浆无效化
   writable: false
-})
-console.log(someOne.name) // 输出 coverguo
-someOne.name = 'linkzhu'
-console.log(someOne.name) // 输出coverguo
+});
+console.log(someOne.name); // 输出 coverguo
+someOne.name = 'linkzhu';
+console.log(someOne.name); // 输出coverguo
 ```
 
 #### 【 configurable】
@@ -57,19 +57,19 @@ console.log(someOne.name) // 输出coverguo
 是否能在 for-in 循环中遍历出来或在 Object.keys 中列举出来。对于像前面例子中直接在对象上定义的属性，这个属性该特性默认值为为 true。
 
 ```javascript
-var a = {}
+var a = {};
 Object.defineProperty(a, 'b', {
   value: 3445,
   enumerable: true
-})
-console.log(Object.keys(a)) // 打印["b"]
+});
+console.log(Object.keys(a)); // 打印["b"]
 //改为false
-var a = {}
+var a = {};
 Object.defineProperty(a, 'b', {
   value: 3445,
   enumerable: false //注意咯这里改了
-})
-console.log(Object.keys(a)) // 打印[]
+});
+console.log(Object.keys(a)); // 打印[]
 ```
 
 #### 注意：
@@ -78,17 +78,17 @@ console.log(Object.keys(a)) // 打印[]
 
 ```javascript
 //调用Object.defineProperty()方法时，如果不指定
-var someOne = {}
-someOne.name = 'coverguo'
-console.log(Object.getOwnPropertyDescriptor(someOne, 'name'))
+var someOne = {};
+someOne.name = 'coverguo';
+console.log(Object.getOwnPropertyDescriptor(someOne, 'name'));
 //输出 Object {value: "coverguo", writable: true, enumerable: true, configurable: true}
 
 //直接在对象上定义的属性，这个特性默认值为为 true
-var otherOne = {}
+var otherOne = {};
 Object.defineProperty(otherOne, 'name', {
   value: 'coverguo'
-})
-console.log(Object.getOwnPropertyDescriptor(otherOne, 'name'))
+});
+console.log(Object.getOwnPropertyDescriptor(otherOne, 'name'));
 //输出 Object {value: "coverguo", writable: false, enumerable: false, configurable: false}
 ```
 
@@ -112,7 +112,7 @@ console.log(a.b)    //打印 你取我的值
                     //打印 2    注意这里，和我的硬编码相同的
 ```
 
-\** 这个 "b" 赋值 或者取值的时候会分别触发 set 和 get 对应的函数，这就是 observe 的关键，是 vue 实现 observe 的实现的基础，也是实现 $watch 的基础。
+\*\* 这个 "b" 赋值 或者取值的时候会分别触发 set 和 get 对应的函数，这就是 observe 的关键，是 vue 实现 observe 的实现的基础，也是实现 \$watch 的基础。
 
 ##### 【 get】
 
