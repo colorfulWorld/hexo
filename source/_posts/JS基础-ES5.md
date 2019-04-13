@@ -68,6 +68,13 @@ a === void 0;
 
 var obj=new MyClass(); new 运算符创建并初始化一个**新对象** 用 new 调用时，this 会指向空的对象，并且这个对象的原型指向 MyClass.prototype
 
+#### new 的过程以及是实现 new
+
+```javascript
+let obj = {};
+let con = [].shift.call(arguments);
+```
+
 #### object.creat()
 
 ## 原型
@@ -190,148 +197,12 @@ c.say();
 
 寄生函数继承：利用 call 继承父类上的属性，用一个干净的函数的原型去等于父类原型，再用子类的原型的等于干净函数的实例。
 
-## call、apply 、 bind
-
-- 都是用来改变函数的 this 对象的指向的。
-- 第一个参数都是 this 要指向的对象。
-- 参数、绑定规则（显示绑定和强绑定），运行效率（最终都会转换成一个一个的参数去运行）、运行情况（call ， apply 立即执行，bind 是 return 出一个 this “ 固定 ” 的函数，这也是为什么 bind 是强绑定的一个原因）。
-- 在`javascipt`中，`call`和`apply`都是为了改变某个函数运行时的上下文而存在的，换句话说就是为了改变函数体内部`this`的指向。
-
-### call()
-
-```javascript
-function class1() {
-  this.name = function() {
-    console.log(this.names);
-    console.log('我是class1内的方法');
-  };
-}
-function class2() {
-  this.names = 'class2内部变量';
-  class1.call(this); //此行代码执行后，当前的this指向了class1（也可以说class2继承了class1）
-}
-
-var f = new class2();
-f.name(); //调用的是class1内的方法，将class1的name方法交给class2使用
-```
-
-```javascript
-function eat(x, y) {
-  console.log(x + y);
-}
-function drink(x, y) {
-  console.log(x - y);
-}
-eat.call(drink, 3, 2); //5
-```
-
-这个例子中的意思就是用 eat 来替换 drink，eat.call(drink,3,2) == eat(3,2)
-
-```javascript
-function Animal() {
-  this.name = 'animal';
-  this.showName = function() {
-    console.log(this.name);
-  };
-}
-function Dog() {
-  this.name = 'dog';
-}
-var animal = new Animal();
-var dog = new Dog();
-
-animal.showName.call(dog); //dog
-```
-
-意思是把 animal 的方法放到 dog 上执行，也可以说，把 animal 的 showName() 方法放到 dog 上来执行，所以 this.name 应该是 dog。
-
-```javascript
-function fruits() {}
-fruits.prototype = {
-  color: 'red',
-  say: function() {
-    console.log('my color is ' + this.color);
-  }
-};
-
-var apple = new fruits();
-apply.say(); //my color is red
-
-banana = {
-  color: 'yellow'
-};
-apple.say.call(banana); //my color is yellow
-apple.say.apply(banana); //my color is yellow
-```
-
-所以可以看出`call`和`apply`是为了动态改变 this 二存在的，当一个 object 没有某个方法。但是其他的有。我们可以借助 call 或 apply 用其他对象的方法来操作。
-
-```javascript
-func.call(this, arg1, arg2);
-func.apply(this, [arg1, arg2]);
-```
-
-#### 继承
-
-```javascript
-function Animal(name) {
-  this.name = name;
-  this.showName = function() {
-    console.log(this.name);
-  };
-}
-function Dog(name) {
-  Animal.call(this, name);
-}
-var dog = new Dog('Crazy dog');
-dog.showName();
-```
-
-Animal.call(this) 的意思就是使用 Animal 对象代替 this 对象，那么 Dog 就能直接调用 Animal 的所有属性和方法。
-
-### apply
-
-```javascript
-function class1(args1, args2) {
-  this.name = function() {
-    console.log(args, args);
-  };
-}
-function class2() {
-  var args1 = '1';
-  var args2 = '2';
-  class1.call(this, args1, args2);
-  /*或*/
-  class1.apply(this, [args1, args2]);
-}
-
-var c = new class2();
-c.name();
-```
-
-### bind
-
-bind 是在 EcmaScript5 中扩展的方法（IE6,7,8 不支持。
-
-bind() 方法会创建一个新函数，称为绑定函数，当调用这个绑定函数时，绑定函数会以创建它时传入 bind() 方法的第一个参数作为 this，传入 bind() 方法的第二个以及以后的参数加上绑定函数运行时本身的参数按照顺序作为原函数的参数来调用原函数。
-
-```javascript
-var bar = function() {
-  console.log(this.x);
-};
-var foo = {
-  x: 3
-};
-bar();
-bar.bind(foo)(); //undefined 3
-/*或*/
-var func = bar.bind(foo);
-func();
-```
-
 ## 事件委托
 
 利用事件委托技术能让你对特定的每个节点添加事件监听器；相反，事件监听器是被添加到他们的父元素上的。事件监听器会分析从子元素冒泡上来的事件，找到是哪一个子元素的事件。
+
+- event.target 返回触发事件的元素
+- event.currentTarget 返回绑定事件的元素
 
 ```html
 <ul id="parent-list">

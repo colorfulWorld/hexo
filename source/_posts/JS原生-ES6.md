@@ -4,7 +4,7 @@ date: 2018-01-24 10:51:11
 categories: 原生JS
 ---
 
-发现自己对于 javascript 的底层 API 所知甚少，在这里记录一下所遇到的有趣又实在的API用法。
+发现自己对于 javascript 的底层 API 所知甚少，在这里记录一下所遇到的有趣又实在的 API 用法。
 
 <!--more-->
 
@@ -13,12 +13,13 @@ categories: 原生JS
 `Symbol`是通过`Symbol`函数生成的，凡是属性名属于`symbol`类型，就都是独一无二的，可以保证不会与其他属性名冲突。
 
 ## this
-可以让this指向固定化，这种特性很有利于封装回调函数。
-- 函数体内的this对象，就是定义是所在的对象，而不是使用时所在的对象
-- 不可以当作构造函数，也就是说不可以使用new命令，否则会跑粗错误。
-- 不可以使用arguments 对象，该对象在函数内不存在。如果要用，可以用Rest参数代替
-- 不可以使用yidId命令，因此箭头函数不能用做Generato函数
 
+可以让 this 指向固定化，这种特性很有利于封装回调函数。
+
+- 函数体内的 this 对象，就是定义是所在的对象，而不是使用时所在的对象
+- 不可以当作构造函数，也就是说不可以使用 new 命令，否则会跑粗错误。
+- 不可以使用 arguments 对象，该对象在函数内不存在。如果要用，可以用 Rest 参数代替
+- 不可以使用 yidId 命令，因此箭头函数不能用做 Generato 函数
 
 ## set 对象 （可用于去重）
 
@@ -111,24 +112,24 @@ Computer.pingpong()
 
 ```javascript
 function Parent(name) {
-  this.name = name
+  this.name = name;
 }
 Parent.prototype.getName = function() {
-  return this.name
-}
+  return this.name;
+};
 function Child(name, age) {
-  Parent.call(this, name)
-  this.age = age
+  Parent.call(this, name);
+  this.age = age;
 }
 //实现继承
-Child.prototype = new Parent()
-Child.prototype.constructor = Child
+Child.prototype = new Parent();
+Child.prototype.constructor = Child;
 
 Child.prototype.getAge = function() {
-  return this.Age
-}
-var people = new Child('lily', 20)
-console.log(people.getName())
+  return this.Age;
+};
+var people = new Child('lily', 20);
+console.log(people.getName());
 ```
 
 **语法糖**
@@ -161,27 +162,27 @@ async function fetchdata(url) {}
 ```javascript
 function getaSync(url) {
   return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest()
-    xhr.open('GET', url)
-    xhr.onload = () => resolve(xhr.responseText)
-    xhr.onerror = () => reject(xhr.statusText)
-    xhr.send()
-  })
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.onload = () => resolve(xhr.responseText);
+    xhr.onerror = () => reject(xhr.statusText);
+    xhr.send();
+  });
 }
 
-async function fetchdata(){
-  var text1 = await getasync('test.txt')
-  console.logtex(text1)
-  var text2 = await getasync('test2.text')
-  console.log(text2)
-  var text3 = await getasync('text3.text')
-  console.log(text3)
-  return 'Finished'
+async function fetchdata() {
+  var text1 = await getasync('test.txt');
+  console.logtex(text1);
+  var text2 = await getasync('test2.text');
+  console.log(text2);
+  var text3 = await getasync('text3.text');
+  console.log(text3);
+  return 'Finished';
 }
 
-fetchdata().then((msg)=>{
-  console.log(msg) //“test.txt”，“test2.txt”，“test3.txt”
-})
+fetchdata().then(msg => {
+  console.log(msg); //“test.txt”，“test2.txt”，“test3.txt”
+});
 ```
 
 在异步函数中，我们把异步函数 getasync() 当做是同步函数，没有 then() 方法或回调函数通知下一步。无论何时遇到关键字 await , 执行都会停止，直到 getasync() 解决，然后再转到异步函数中的下一行。结果与纯粹的基于 Promise , 使用一串 then 方法的方式一样
@@ -191,10 +192,10 @@ fetchdata().then((msg)=>{
 ES6 解构并非一个新的功能，而是一个新的复制语法，可以快速解压缩对象属性和数组中的值，并将它们分配给各个变量。
 
 ```javascript
-var profile = { name: 'georage', age: 39, hobby: 'Tennis' }
-var { name, hobby } = profile
-console.log(name) //'georage'
-console.log(hobby) //'Tennis'
+var profile = { name: 'georage', age: 39, hobby: 'Tennis' };
+var { name, hobby } = profile;
+console.log(name); //'georage'
+console.log(hobby); //'Tennis'
 ```
 
 这里我用解构快速提取 profile 对象的 name 和 hobby 属性。
@@ -202,10 +203,10 @@ console.log(hobby) //'Tennis'
 使用别名，你可以使用与你正在提取值的对象属性不同的变量名：
 
 ```javascript
-var profile = { name: 'georage', age: 39, hobby: 'Tennis' }
-var { name: n, hobby: h } = profile
-console.log(n) //'georage'
-console.log(h) //'Tennis'
+var profile = { name: 'georage', age: 39, hobby: 'Tennis' };
+var { name: n, hobby: h } = profile;
+console.log(n); //'georage'
+console.log(h); //'Tennis'
 ```
 
 ---
@@ -239,10 +240,10 @@ console.log(modified)
 数组的解构与对象上的工作方式类似，除了左边的花括号使用**方括号**代替：
 
 ```javascript
-var soccerteam = ['George', 'Dennis', 'Sandy']
-var [a, b] = soccerteam
-console.log(a) // "George"
-console.log(b) // "Dennis"
+var soccerteam = ['George', 'Dennis', 'Sandy'];
+var [a, b] = soccerteam;
+console.log(a); // "George"
+console.log(b); // "Dennis"
 ```
 
 你可以跳过某些数组元素，通过使用 (,)
@@ -257,6 +258,7 @@ console.log(b) // "Sandy"
 ---
 
 ### 解构赋值
+
 ```javascript
 let [a, b, c] = [1, 2, 3];
 //定义了三个变量，并对应赋了值；如果值的个数与变量名个数不匹配，没有对应上的变量值为 undefined
@@ -273,23 +275,25 @@ console.log(a);//y
 console.log(b);//e
 console.log(c);//s
 ```
+
 字符串的结构赋值会以单个字符串的方式进行赋值。
 
 ```javascript
-let {length} ='yes';
-console.log(length);//3
+let { length } = 'yes';
+console.log(length); //3
 ```
+
 以对象赋值的方法，如果名称是字符串的自带属性，则会获得属性值
 
 ```javascript
-let arr =[1,2];
-let obj = {a:1,b:2};
-function test({a=10,b}){
+let arr = [1, 2];
+let obj = { a: 1, b: 2 };
+function test({ a = 10, b }) {
   console.log(a);
   console.log(b);
 }
 test(obj);
-``` 
+```
 
 ## 默认和剩余参数
 
@@ -299,9 +303,9 @@ test(obj);
 
 ```javascript
 function getarea(w, h) {
-  var w = w || 10
-  var h = h || 15
-  return w * h
+  var w = w || 10;
+  var h = h || 15;
+  return w * h;
 }
 ```
 
@@ -309,9 +313,9 @@ function getarea(w, h) {
 
 ```javascript
 function getarea(w = 10, h = 15) {
-  return w * h
+  return w * h;
 }
-getarea(5) //75
+getarea(5); //75
 ```
 
 ### 剩余参数 （Rest Parameters ）
@@ -333,21 +337,21 @@ addit(1,2,3,4)//10
 ```javascript
 function addit(theNumbers) {
   // force arguments object into array
-  var numArray = Array.prototype.slice.call(arguments)
-  return numArray.reduce((prevnum, curnum) => prevnum + curnum, 0)
+  var numArray = Array.prototype.slice.call(arguments);
+  return numArray.reduce((prevnum, curnum) => prevnum + curnum, 0);
 }
 
-addit(1, 2, 3, 4) // returns 10
+addit(1, 2, 3, 4); // returns 10
 ```
 
 ```javascript
 function f(...[a, b, c]) {
-  return a + b + c
+  return a + b + c;
 }
 
-f(1) // NaN (b and c are undefined)
-f(1, 2, 3) // 6
-f(1, 2, 3, 4) //6 (the fourth parameter is not destructured)
+f(1); // NaN (b and c are undefined)
+f(1, 2, 3); // 6
+f(1, 2, 3, 4); //6 (the fourth parameter is not destructured)
 ```
 
 ## Generator 函数
@@ -356,24 +360,24 @@ Generator 函数是协程在 ES6 的实现，最大特点就是可以交出函�
 
 协程有点像函数，又有点想线程。他的运行流程大致如下：
 
-* 第一步，协程 A 开始执行。
-* 第二步，协程执行懂啊一半，进入暂停，执行权转移到协程 B。
-* 第三步，一段时间后协程 B 交换执行权。
-* 第四步，协程 A 恢复执行。
+- 第一步，协程 A 开始执行。
+- 第二步，协程执行懂啊一半，进入暂停，执行权转移到协程 B。
+- 第三步，一段时间后协程 B 交换执行权。
+- 第四步，协程 A 恢复执行。
 
 ```javascript
 function* gen(x) {
-  var y = yield x + 2
-  return y
+  var y = yield x + 2;
+  return y;
 }
 ```
 
 上面整个代码就是一个封装的异步任务，或者说是异步任务的容器。异步操作需要暂停的地方，都用 yield 语句注明。Generator 函数的执行方法如下。
 
 ```javascript
-var g = gen(1)
-g.next() // { value: 3, done: false }
-g.next() // { value: undefined, done: true }
+var g = gen(1);
+g.next(); // { value: 3, done: false }
+g.next(); // { value: undefined, done: true }
 ```
 
 next 方法的作用是分阶段执行 Generator 函数。每次调用 next 方法，返回一个对象，表示当前阶段的信息（value 和 done 属性）。value 属性是 yield 语法后面表达式的值。表示当前阶段的值；done 属性是一个布尔值，表示 Generator 函数是否执行完毕，即是否还有下一个阶段。
@@ -382,40 +386,42 @@ next 方法的作用是分阶段执行 Generator 函数。每次调用 next 方�
 
 ```javascript
 function* genFn() {
-  console.log('begin')
-  var value = yield 'a'
-  console.log(value) // 'B'
-  return 'end'
+  console.log('begin');
+  var value = yield 'a';
+  console.log(value); // 'B'
+  return 'end';
 }
 
-var gen = genFn()
-console.log(typeof gen) // 'object'
-var g1 = gen.next()
-g1.value // 'a'
-g1.done // false
-var g2 = gen.next('B')
-g2.value // 'end'
-g2.done // true
+var gen = genFn();
+console.log(typeof gen); // 'object'
+var g1 = gen.next();
+g1.value; // 'a'
+g1.done; // false
+var g2 = gen.next('B');
+g2.value; // 'end'
+g2.done; // true
 ```
+
 ## 字符串扩展
 
 ### 字符串内容测试
 
 ```javascript
-'abcdef'.includes('c');//true
-'abcdef'.includes('ye');//false
-'abcdef'.startsWith('a');//true
-'abcdef'.endswidth('f');//true
+'abcdef'.includes('c'); //true
+'abcdef'.includes('ye'); //false
+'abcdef'.startsWith('a'); //true
+'abcdef'.endswidth('f'); //true
 //includes(), startsWith(), endsWith() 都支持第二个参数，
 //类型为数字类型，意为从第 n 个字符开始，endsWith()的第二个参数有点不一样
-'abcdef'.includes('c', 4);//false 从第5个字符开始查找是否有 'c' 这个字符
-'abcdef'.startsWith('d', 3);//true 从第4个字符开始查找是否是以 'd' 字符为开头
-'abcdef'.endsWith('d', 4);//true 前面的4个字符里，是否以 'd' 字符为结尾
+'abcdef'.includes('c', 4); //false 从第5个字符开始查找是否有 'c' 这个字符
+'abcdef'.startsWith('d', 3); //true 从第4个字符开始查找是否是以 'd' 字符为开头
+'abcdef'.endsWith('d', 4); //true 前面的4个字符里，是否以 'd' 字符为结尾
 ```
 
-**字符串重复输出：** 
+**字符串重复输出：**
+
 ```javascript
-'a'.repeat(5);//aaaaa 重复输出5遍
+'a'.repeat(5); //aaaaa 重复输出5遍
 ```
 
 ## 模板字符串(``)
@@ -423,30 +429,35 @@ g2.done // true
 ```javascript
 function authorize(user, action) {
   if (!user.hasPrivilege(action)) {
-    throw new Error(
-      `用户 ${user.name} 未被授权执行 ${action} 操作。`);
+    throw new Error(`用户 ${user.name} 未被授权执行 ${action} 操作。`);
   }
 }
 ```
-在这个示例中，`${user.name}`,`${action}`被称为模板占位符，javascript 将把user.name 和 action 的值插入到最终生成的字符串中。
+
+在这个示例中，`${user.name}`,`${action}`被称为模板占位符，javascript 将把 user.name 和 action 的值插入到最终生成的字符串中。
 
 ```javascript
-$("#warning").html(`
+$('#warning').html(`
   <h1>小心！>/h1>
   <p>未经授权打冰球可能受罚
   将近${maxPenalty}分钟。</p>
 `);
 ```
+
 模板字符串中所有的空格、新进、缩进，都会原样输出在生成的字符串中。
 
 ### 原生支持模板语言
+
 ```javascript
 //es5
 $('#result').append(
-  'There are <b>' + basket.count + '</b> ' +
-  'items in your basket, ' +
-  '<em>' + basket.onSale +
-  '</em> are on sale!'
+  'There are <b>' +
+    basket.count +
+    '</b> ' +
+    'items in your basket, ' +
+    '<em>' +
+    basket.onSale +
+    '</em> are on sale!'
 );
 //es6
 //在es6中，内容模板，可以定义在 `` 包起来的字符串中，其中的内容会保持原有格式
@@ -457,23 +468,26 @@ $('#result').append(`
   are on sale!
 `);
 ```
+
 ### 字符串遍历输出
 
 ```javascript
 //for ...of 格式为 es6 中的 Iterator 迭代器的输出方式
-for(let c of 'abc'){
+for (let c of 'abc') {
   console.log(c);
 }
 //a
 //b
 //c
 ```
+
 ### 字符串补全
+
 ```javascript
 //参数1：[number] 目标字符串长度
 //参数2：[string] 进行补全的字符串
-'12345'.padStart(7, '0')//0012345 - 字符串不足7位，在头部补充不足长度的目标字符串
-'12345'.padEnd(7, '0')//1234500 - 在尾部进行字符串补全
+'12345'.padStart(7, '0'); //0012345 - 字符串不足7位，在头部补充不足长度的目标字符串
+'12345'.padEnd(7, '0'); //1234500 - 在尾部进行字符串补全
 ```
 
 ## 数组扩展
@@ -483,18 +497,22 @@ for(let c of 'abc'){
 从一个类似数组或可迭代对象中创建一个新的数组实例。
 
 ### 合并数组
+
 ```javascript
 let a = [1, 2];
 let b = [3];
 let c = [2, 4];
-let d = [...a, ...b, ...c];//[1, 2, 3, 2, 4] 所有内容合并，但并不会去除重复
+let d = [...a, ...b, ...c]; //[1, 2, 3, 2, 4] 所有内容合并，但并不会去除重复
 ```
+
 ### 快速转换为数组
 
 ```javascript
-Array.of(3,4,5);//[3,4,5]
+Array.of(3, 4, 5); //[3,4,5]
 ```
+
 ### 内容过滤
+
 ```javascript
 //判断对象是否为数组
 if(Array.isArray(obj)){...}
@@ -523,38 +541,54 @@ console.log(a);//[1, 3, 10]
 ## 对象扩展
 
 ### 属性的简洁表示
+
 ```javascript
 //直接使用变量/常量的名称个为对象属性的名称
 let a = 'abc';
-let b = {a};//{a: 'abc'}
+let b = { a }; //{a: 'abc'}
 
-function f(x, y){ return {x, y};}
-//等效于
-function f(x, y){ return {x: x, y: y}}
-
-let o = {
-  f(){ return 1; }
+function f(x, y) {
+  return { x, y };
 }
 //等效于
-let o = {
-  f: function(){ return 1; }
+function f(x, y) {
+  return { x: x, y: y };
 }
+
+let o = {
+  f() {
+    return 1;
+  }
+};
+//等效于
+let o = {
+  f: function() {
+    return 1;
+  }
+};
 ```
+
 ### 对象内容合并
+
 ```javascript
-let a = {a:1,b:2}, b = {b:3}, c = {b:4,c:5};
+let a = { a: 1, b: 2 },
+  b = { b: 3 },
+  c = { b: 4, c: 5 };
 let d = Object.assign(a, b, c);
-console.log(d);//{a:1,b:4,c:5}
-console.log(a);//{a:1,b:4}
+console.log(d); //{a:1,b:4,c:5}
+console.log(a); //{a:1,b:4}
 //上面的合并方式会同时更新 a 对象的内容，a 的属性如果有多次合并会被更新数据，
 //但自身没有的属性，其它对象有的属性不会被添加到 a 身上；
 //参数列中的对象只会影响第一个，后面的参数对象不会被修改数据
 
 //推荐使用这种方式进行对象数据合并
-let a = {a:1,b:2}, b = {b:3}, c = {b:4,c:5};
-let d = Object.assign({}, a, b, c);//第一个参数增加一个空对象，在合并时让它被更新，不影响实际的对象变量内容
-console.log(d);//{a:1,b:4,c:5}//与上面的方式合并结果一致，使用这种方式, a 对象的内容就不会被影响了
+let a = { a: 1, b: 2 },
+  b = { b: 3 },
+  c = { b: 4, c: 5 };
+let d = Object.assign({}, a, b, c); //第一个参数增加一个空对象，在合并时让它被更新，不影响实际的对象变量内容
+console.log(d); //{a:1,b:4,c:5}//与上面的方式合并结果一致，使用这种方式, a 对象的内容就不会被影响了
 ```
+
 对象内容合并的方向是从参数顺序的后向前合并
 
 ### 对象内容集合
@@ -562,31 +596,64 @@ console.log(d);//{a:1,b:4,c:5}//与上面的方式合并结果一致，使用这
 #### Object.keys()
 
 获取对象中所有的键名，以数组的形式返回
+
 ```javascript
-var obj={a:1,b:2};
-var name=Object.keys(obj);//['a','b,]
+var obj = { a: 1, b: 2 };
+var name = Object.keys(obj); //['a','b,]
 ```
-#### Object.values() 
+
+#### Object.values()
 
 获取对象中所有值内容，以数组的形式返回
 
 ```javascript
-var obj={a:1,b:2};
-var values=Object.values(obj);//[1,2]
+var obj = { a: 1, b: 2 };
+var values = Object.values(obj); //[1,2]
 ```
+
 #### Object.entries()
+
 获得对象中所有成员的数据，以数组的形式返回，成员的内容也是数组形式
 
 ```javascript
-var obj={a:1,b:2};
-var values=Object.entries(obj);//[['a',1],['b',2]]
+var obj = { a: 1, b: 2 };
+var values = Object.entries(obj); //[['a',1],['b',2]]
 ```
+
 #### 对象内容测试
+
 ```javascript
 //判断对象是否为数组对象
-if(Object.isArray(someobj)){};
+if (Object.isArray(someobj)) {
+}
 //判断目标对象是否为空对象
-if(someobj&&Object.keys(someobj).length);
+if (someobj && Object.keys(someobj).length);
 ```
 
+### Map
 
+Map 的用法和普通对象基本一致，先看一下它能用非法字符串或者数字作为 key 的特性。
+
+```javascript
+const map = Map();
+const obj = { p: 'hellow' };
+map.set(obj, 'ok'); //ok
+console.log(obj); //{ p: 'hellow' }
+map.get(obj); //ok
+map.has(obj); //true
+map.delete(obj); //true
+map.has(obj); //false
+```
+
+需要使用 new Map()初始化一个实例。
+
+- size:获取成员数量
+- set:设置成员 key 和 value
+- get:获取成员属性值
+- has:判断成员是否存在
+- delete:删除成员
+- clear:清空所有
+- keys():返回键名的遍历器
+- values():返回键值的遍历器
+- entries():返回所有成员的遍历器
+- forEach():遍历 Map 的所有成员

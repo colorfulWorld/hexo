@@ -1,5 +1,5 @@
 ---
-title: css 小技巧
+title: css 小知识
 categories: css
 ---
 
@@ -292,3 +292,30 @@ $fileInput.on('change', function(e) {
   }
 </style>
 ```
+
+## css 权重
+
+权重分为 4 级，分别是：
+
+- 内联样式:1000
+- id:100
+- 类，伪类和属性选择器 `:hover`,`[attributer]`,权值为 10
+- 代表元素选择器和伪元素选择器，`div`
+
+** 需要注意的是：通用选择器（\*），子选择器（>）和相邻通报选择器并不在这四个等级中，所以他们的权值为 0**
+
+## CSS3 动画
+
+- `animation-name`:对应的动画名称
+- `animation-duration`:是动画时长
+- `animation-timing-function`:规定动画的速度曲线。默认是 ease
+- `animation-delay`:规定动画何时开始。默认是 0
+- `animation-iteration-count`:规定动画播放的次数。默认是 1
+- `animation-diraction`:规定动画是否在下一周期逆向地播放。默认是 normal
+- `animation-play-state`:规定动画是否正在运行或暂停。默认是 running
+- `animation-fill-mode`:规定动画执行之前和之后如何给动画的目标应用，默认是 none，保留在最后一帧可以用 forwords
+
+## 重绘和回流
+
+- 重绘：指的是当前页面中的元素不脱离文档流。而简单的样式的变化，比如修改颜色，背景等，浏览器重新绘制样式
+- 回流：指的是处于文档流中 DOM 的尺寸大小，位置或者默写属性变化时，导致浏览器重新渲染部分或全部文档的情况
