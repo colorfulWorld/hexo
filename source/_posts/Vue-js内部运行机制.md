@@ -42,3 +42,18 @@ vuex 的核心主要是包括以下几个部分：
 - 获取状态在组件内部 computed 中使用 this.\$store.state 得到想要的状态
 - 修改的话可在组件中使用 this.\$store.commit 方法去修改状态
 - 如果在一个组件中，方法，状态使用太多，可以使用 mapstate,mapmutations 辅助函数
+
+## 生命周期
+
+- 窗前前/后（beforeCreate/created）:在 beforeCreate 阶段，Vue 实例的挂载元素 el 和数据对象 data 都为 undefined，还未初始化。在 created 阶段，Vue 实例的数据对象 data 有了，el 还没有
+- 载入前后/后（beforeMount/mounted）:在 beforeMount 阶段，vue 实例的\$el 和 data 都初始化了，但还是挂载之前为虚拟 DOM 节点，data 尚未替换，在 mounted 阶段，vue 实例挂载完成，data 成功渲染
+- 更新前/后（beforeDestory/destory）：beforeDestroy 是在 vue 实例销毁前触发，一般在这里要通过 removeEventLisener 解除手动绑定事件。实例销毁后，触发 destroyed。
+
+## 组件间的通信
+
+1. 父子通信：
+   父向子传递数据是通过 props，子向父是通过 event（\$emit）;通过父链/子链也可以通信（$parent,$children）；ref 也可以访问组件实例。proved/injectApi
+2. 兄弟通信：
+   Bus;Vuex;
+3. 跨级通信
+   Bus；Vuex;provide/inject Api
