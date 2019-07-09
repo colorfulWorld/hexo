@@ -1,32 +1,61 @@
 ---
-title: jQuery 源码学习（-）
+title: jQuery-源码学习（一）
 date: 2018-06-22 11:45:06
 categories: jQuery
 ---
 
-# 为什么想要学习 jQuery 源码
 
 感觉自己的很多的代码质量不够好，最近在频繁的使用 jQuery,感觉 jQuery 中的一些函数的思想是应该去学习的，尤其是设计模式的思想，在以后的 vue 开发中，在不引用 jQuery 的情况下，能借鉴 jQuery 的思想封装一些不依赖 DOM 的公共函数。也觉得自己对一些设计模式之内的了解甚少，所以学习 jQuery 源码势在必行。
 
-任何库与框架设计的第一要点就是解决命名空间与变量污染的问题。jQuery 就是利用 js 函数作用域的特性，采用立即调用表达式包裹自身的方法解决
-
 <!--more-->
 
-# jQuery 核心代码
+
+# jQuery框架的核心
+
+任何库与框架设计的第一要点就是解决命名空间与变量污染的问题。jQuery 就是利用 js 函数作用域的特性，采用立即调用表达式包裹自身的方法解决。
+
+- 匹配`HTML`文档中元素并对其执行操作。
+- 链式调用。
+
+# jQuery 对象的构建方式
+
+常规构建方式：
+```javascript
+var aquery = function(selector, context){
+  //构造函数
+}
+aquery.prototype = {
+  //原型
+  name:function(){},
+  age:function(){}
+}
+var a = new aquery();
+a.name();
+```
+但其实jquery 是使用的下面这种封装方式，为什么呢？我也不懂我也没地方问。
 
 ```javascript
 (function(window, undefined) {
   function jQuery(selector) {
     return new jQuery.fn.init(selector);
+    // 若是return jQuery.fn.init(selector) 则init中的this是指向jQuery，只有new 后才能隔离作用域
   }
   jQuery.fn = jQuery.prototype = {
-    init: function() {}
+    init: function() {
+      this.age = 18
+      return this
+    },
+    name:function(){
+      console.log(this.age)
+    }
+    age:20
   };
-  jQuery.fn.init.prototype = jQuery.fn;
+  jQuery().age //18
+  jQuery.fn.init.prototype = jQuery.fn; 
+  //主要是将jQuery原型链下的方法挂载在 jQuery.fn.init的原型链下
   window.jQuery = window.$ = jQuery;
 })(window);
 ```
-
 - 闭包结构传参 window
   - 闭包结构传入实参 window,然后里面用形参接收
     - 减少内部每次引用 window 的查询时间
@@ -39,6 +68,13 @@ categories: jQuery
 - 给 window 暴露可利用成员。
 
 **javascript 中的 undefined 并不是作为一个关键字，因此可以允许用户对其赋值。**
+
+## `jQuery.fn.init.prototype = jQuery.fn` 的作用
+
+** 既能隔离作用域还能使用jQuery原型对象的作用域，在返回实例中访问jQuery的原型对象**
+
+`jQuery.fn.init.prototype = jQuery.fn`使得jQuery的原型对象覆盖了init 构造器的原型对象。
+
 
 ## 对象的构建
 
@@ -77,26 +113,6 @@ var c = new aQuery();
 
 类二 new 产生的 a、b、c 三个实例对象共享了原型的 sayName 方法，这样的好处是节省了内存空间，类一则是要为每一个实例复制 sayName 方法，每个方法属性都占用一定的内存空间，所以如果把所有属性方法都声明在构造函数中，就会无形的增大很多开销。除此之外类一的所有方法都是拷贝到当前实例对象上。类二则是要通过 scope 连接到原型链上查找，这样就无形中多一层作用域链的查找。
 
-```javascript
-jQuery = function (select,context){
-    return new jQuery.fn.init(selector,context);
-}
-jQuery.fn = jQuery.prototype = {
-    init:function(){
-        return this
-    },
-    jquery:version,
-    constructor:jQuery,
-    .....
-}
-
-var a = $();
-```
-
-使用原型结构，性能上是得到了优化，但是 aQuery 类这个接口与目标 jQuery 的结构的还是有很大的不同：
-
-- 没有采用 new 操作符
-- return 返回的是一个通过 new 出来的对象
 
 ## 分离构造器
 
@@ -137,8 +153,26 @@ var $$ = (ajQuery = function(selector) {
   return this;
 });
 ```
+# 链式调用
+DOM 链式调用的处理：
+1. 节约JS代码
+2. 所返回的都是同一个对象，可以提高代码效率。
 
-## 静态与实例方法共享设计
+```javascript
+  jQuery.prototype = {
+    init:function(){
+      return this
+    },
+    name:function(){
+      return this
+    }
+  }
+
+  jQuery.init().name()
+
+```
+
+# 静态与实例方法共享设计
 
 遍历方法：
 
@@ -159,23 +193,9 @@ jQuery.prototype = {
 
 实例方法取于静态方法，静态方法挂在 jQuery 构造器上，原型方法呢？jQuery 通过 new 原型 prototype 上 init 方法当成构造器，那么 init 原型链方法就是实例的方法了，所以 jQuery 通过 2 个构造器划分 2 种不同的调用方式，一种是静态，一种是原型。
 
-```javascript
-var $$ = (ajQuery = function(select) {
-  return new ajQuery.fn.init(selector);
-});
-ajQuery.fn = ajQuery.prototype = {
-  name: 'aaron',
-  init: function(selector) {
-    this.selector = selector;
-    return this;
-  },
-  constructor: ajQuery
-};
+# 事件绑定
 
-ajQuery.fn.init.prototype = ajQuery.fn;
-//核心 没看懂
+jQuery对事件的绑定分别有几个API `.bind(),.live(),.delegate(),.on()`
+不管是用什么方式绑定，归根到底还是用的`addEventListener/attachEvent`处理的，正如选择器不管如何匹配最终还是那些个浏览器接口处理
 
-ajQuery.fn.say = function() {
-  $('#aaron').html(this.name);
-};
-```
+不管是是用click/bind/delegate之中的哪个方法，最终都是jQuery底层都是调用on方法来完成最终的事件绑定。

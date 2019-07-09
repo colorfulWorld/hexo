@@ -57,3 +57,89 @@ vuex 的核心主要是包括以下几个部分：
    Bus;Vuex;
 3. 跨级通信
    Bus；Vuex;provide/inject Api
+
+## 数组监听漏洞
+Vue检测数据的变动是通过Object.defineProperty实现的，所以无法监听数组的添加操作是可以理解的，因为是在构造函数中就已经为所有属性做了这个检测绑定操作。
+但是官方的原文：由于 JavaScript 的限制， Vue 不能检测以下变动的数组：
+- 当你利用索引直接设置一个项时，例如： vm.items[indexOfItem] = newValue
+- 当你修改数组的长度时，例如： vm.items.length = newLength
+
+Vue.js观察数组变化主要通过以下7个方法（push、pop、shift、unshift、splice、sort、reverse），由于 Vue 会在初始化实例时对属性执行 getter/setter 转化过程，所以属性必须在 data 对象上存在才能让 Vue 转换它，这样才能让它是响应的。
+
+vue 中是通过对每个键设置getter/setter 来实现响应式的，开发者使用数组，目的往往是遍历，此时电泳getter开销太大了，所以vue不在数组每个键上设置，而是在数组上定义`_ob_`,并且替代了push等等能够影响原数组的原型方法。
+
+```javascript
+var vm = new Vue({
+    el: '#app',
+    data: {
+        orderList: [{
+            status: 0,
+            points: 3,
+            money: 300,
+            checked:false
+        },
+        {
+            status: 0,
+            points: 3,
+            money: 300
+        },
+        {
+            status: 1,
+            points: 3,
+            money: 400
+        }]
+    },
+    created() {
+        this.orderList.forEach(function (item) {
+            item.checked = false;
+        })
+    },
+    methods: {
+        handleChoose(item) {
+            item.checked = !item.checked;
+        }
+    }
+})
+```
+上面是检测不到后面两个checked的变化的。
+
+### 解决方案
+
+- Vue.set(vue.obj,'e',0)
+- this.obj= Object.assign({}, this.obj, { a: 1, e: 2 })
+
+```javascript
+var vm = new Vue({
+    el: '#app',
+    data: {
+        orderList: []
+    },
+    created() {
+        var data = [{
+            status: 0,
+            points: 3,
+            money: 300,
+        },
+        {
+            status: 0,
+            points: 3,
+            money: 300
+        },
+        {
+            status: 1,
+            points: 3,
+            money: 400
+        }];
+        data.forEach(function (item) {
+            item.checked = false;
+        })
+        this.orderList = data;
+    },
+    methods: {
+        handleChoose(item) {
+            item.checked = !item.checked;
+        }
+    }
+})
+```
+这样写也是没有问题的，浅层次操作数组是没有问题的。

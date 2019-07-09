@@ -1,11 +1,15 @@
 ---
 title: webpack项目配置
 date: 2018-01-31 17:15:07
-categories: 项目构建工具
+categories: webpack
 ---
+webpack 做的就是分析代码，转换代码，编译代码，输出代码。webpack本身是一个node的模块，所以webpack.config.js是一一commonjs形式书写的
+
 
 webpack 是模块化管理工具，使用 webpack 可以对模块进行压缩，预处理，按需打包，按需加载等。
 Browsersify、webpack 一开始的目的就是打包commonJS模块。
+
+webpack 是一个现代Javascript 应用程序的模块打包器，当webpack处理应用程序时，它会递归的构建一个依赖关系图，其中包含应用程序需要的每个模块，然后将这些模块打包成少量的bundle- 通常只有一个，有浏览器加载。
 
 <!--more-->
 
