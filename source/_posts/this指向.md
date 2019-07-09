@@ -1,7 +1,7 @@
 ---
 title: this指向
 date: 2018-01-23 11:39:32
-tags:
+categories: JavaScript
 ---
 
 [链接](http://mp.weixin.qq.com/s/2PnWD8bIFgEJxYONoPZs6w)

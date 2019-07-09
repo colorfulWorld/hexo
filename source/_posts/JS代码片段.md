@@ -1,7 +1,7 @@
 ---
 title: JS代码片段
 date: 2018-01-15 16:27:23
-categories: 原生JS
+categories: JavaScript
 ---
 
 搬砖时的 JS 代码片段整理

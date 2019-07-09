@@ -1,7 +1,7 @@
 ---
 title: innerHTML与createElement
 date: 2018-05-11 15:05:13
-categories: 原生JS
+categories: JavaScript
 ---
 
 最近看到一道海量渲染的面试题的答案，看到他用的是`createElement`然后`appendChild`感觉无法理解为什么要这样使用，难道`innerHTML`比这种方法的性能差吗？

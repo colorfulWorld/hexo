@@ -1,7 +1,7 @@
 ---
 title: 你不知道的JavaScript
 date: 2018-01-15 16:52:42
-tags:
+categories: JavaScript
 ---
 
 读 《你不知道的 JavaScript》 笔记

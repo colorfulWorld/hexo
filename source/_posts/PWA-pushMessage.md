@@ -1,6 +1,6 @@
 ---
 title: PWA-pushMessage
-categories: PWA
+categories: WEB
 comments: true
 ---
 

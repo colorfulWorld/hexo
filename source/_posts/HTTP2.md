@@ -1,7 +1,7 @@
 ---
 title: HTTP2
 date: 2018-03-22 11:05:35
-categories: http
+categories: WEB
 ---
 http/2 的前身是由Google 与2009 年发布的实验性协议SPDY，其主要目标是**通过解决HTTP/1.1中广为人知的一些性能限制来减少页面的架子啊延迟**。
 

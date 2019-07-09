@@ -1,6 +1,6 @@
 ---
 title: Object.defineProperty
-categories: 数据劫持基石
+categories: JavaScript
 tags:
 ---
 

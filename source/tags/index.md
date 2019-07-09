@@ -1,4 +1,5 @@
 ---
 title: 标签
-tags: Testing
+type: "tag"
+comments: false
 ---

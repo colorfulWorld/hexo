@@ -1,7 +1,7 @@
 ---
 title: Event loop(JS)
 date: 2018-04-28 11:19:52
-categories: 原生JS
+categories: JavaScript
 ---
 JS是一门非阻塞单线程语言。
 

@@ -1,7 +1,7 @@
 ---
 title: webpack(一)
 date: 2019-01-19 15:17:10
-tags: webpack
+categories: webpack
 ---
 没有仔细研究过webpack 如今开始研究一下
 

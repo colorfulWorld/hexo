@@ -1,7 +1,7 @@
 ---
 title: JS基础(ES5)
 date: 2018-01-18 10:12:34
-categories: 原生JS
+categories: JavaScript
 ---
 
 感觉自己的 ES5 掌握的比较杂乱，在此整理一下自己的思路，总结、归纳原生 JS 的知识。

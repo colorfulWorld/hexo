@@ -1,6 +1,6 @@
 ---
 title: PWA 离线缓存
-categories: PWA
+categories: WEB
 ---
 
 # PWA (Progressive Web App) 特点

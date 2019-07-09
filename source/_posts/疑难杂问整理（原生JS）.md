@@ -1,7 +1,7 @@
 ---
 title: 疑难杂问整理（原生JS）
 date: 2018-01-19 10:12:08
-categories: 原生JS
+categories: JavaScript
 ---
 
 在学习原生的过程中的困惑与解惑的总结

@@ -1,7 +1,6 @@
 ---
 title: 如何实现双向数据绑定 mvvm
-categories: vue
-tags:
+categories: Vue
 ---
 
 目前几种主流的 mvc(vm) 框架都实现了单向数据绑定，而我所理解的双向数据绑定无非就是在单向绑定的基础上给可输入元素（input 、 textare 等）添加了 change(input) 事件，来动态修改 model 和 view，并没有多高深。所以无需太过介怀是实现的单向或双向绑定。

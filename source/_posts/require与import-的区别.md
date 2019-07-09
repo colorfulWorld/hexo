@@ -1,7 +1,7 @@
 ---
 title: require与import 的区别
 date: 2018-04-04 16:24:01
-tags:
+categories: JavaScript
 ---
 以前没有深究的问题，仔细思考之后发现自己并不清楚，然后记个笔记。
 
