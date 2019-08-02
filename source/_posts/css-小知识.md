@@ -293,7 +293,7 @@ $fileInput.on('change', function(e) {
 </style>
 ```
 
-## css 权重
+## CSS 权重
 
 权重分为 4 级，分别是：
 
@@ -314,6 +314,38 @@ $fileInput.on('change', function(e) {
 - `animation-diraction`:规定动画是否在下一周期逆向地播放。默认是 normal
 - `animation-play-state`:规定动画是否正在运行或暂停。默认是 running
 - `animation-fill-mode`:规定动画执行之前和之后如何给动画的目标应用，默认是 none，保留在最后一帧可以用 forwords
+
+### 实现动画暂停
+
+使用`animation-play-state`可以实现动画暂停
+
+```html
+.play-state {
+  width: 100px;
+  height: 100px;
+  margin: 40px;
+  text-align: center;
+  line-height: 94px;
+  border: 3px solid #e1efde;
+  border-radius: 50%;
+  animation: play-state 3s linear infinite;
+  cursor: pointer;
+}
+
+.play-state:hover {
+  animation-play-state: paused;
+}
+
+@keyframes play-state {
+  0% {
+    margin-left: 0;
+  }
+  100% {
+    margin-left: 200px
+  }
+}
+```
+
 
 ## 重绘和回流
 

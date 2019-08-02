@@ -73,11 +73,11 @@ let total = this.fileSizeFormat(spaceSize, 2, true, false)
 
 ```javascript
 const extname = filename => {
-  if (filename.indexOf('.') > 0) {
-    var resultArr = filename.split('.');
-    var result = '.' + resultArr[resultArr.length - 1];
-    return result;
-  } else return '';
+    if (filename.indexOf(".") > 0) {
+        var resultArr = filename.split(".");
+        var result = "." + resultArr[resultArr.length - 1];
+        return result;
+    } else return "";
 };
 ```
 
@@ -85,20 +85,20 @@ const extname = filename => {
 
 ```javascript
 function bubbleSort(arr) {
-  var i = arr.length,
-    j;
-  var tempExchangVal;
-  while (i > 0) {
-    for (j = 0; j < i - 1; j++) {
-      if (arr[j] > arr[j + 1]) {
-        tempExchangVal = arr[j];
-        arr[j] = arr[j + 1];
-        arr[j + 1] = tempExchangVal;
-      }
+    var i = arr.length,
+        j;
+    var tempExchangVal;
+    while (i > 0) {
+        for (j = 0; j < i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                tempExchangVal = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = tempExchangVal;
+            }
+        }
+        i--;
     }
-    i--;
-  }
-  return arr;
+    return arr;
 }
 
 var arr = [3, 2, 4, 9, 1, 5, 7, 6, 8];
@@ -115,21 +115,21 @@ alert(arrSorted);
 
 ```javascript
 function quickSort(array) {
-  if (array.length == 0) {
-    return [];
-  }
-  var left = [];
-  var right = [];
-  var priot = array[0];
-
-  for (var i = 1; i < array.length; i++) {
-    if (array[i] < privot) {
-      left.push(array[i]);
-    } else {
-      right.push(array[i]);
+    if (array.length == 0) {
+        return [];
     }
-  }
-  return quickSort(left).concat(privot, quickSort(right));
+    var left = [];
+    var right = [];
+    var priot = array[0];
+
+    for (var i = 1; i < array.length; i++) {
+        if (array[i] < privot) {
+            left.push(array[i]);
+        } else {
+            right.push(array[i]);
+        }
+    }
+    return quickSort(left).concat(privot, quickSort(right));
 }
 ```
 
@@ -137,62 +137,62 @@ function quickSort(array) {
 
 ```javascript
 function deepClone(obj) {
-  var _toString = Object.prototype.toString;
+    var _toString = Object.prototype.toString;
 
-  // null, undefined, non-object, function
-  if (!obj || typeof obj !== 'object') {
-    return obj;
-  }
-
-  // DOM Node
-  if (obj.nodeType && 'cloneNode' in obj) {
-    return obj.cloneNode(true);
-  }
-
-  // Date
-  if (_toString.call(obj) === '[object Date]') {
-    return new Date(obj.getTime());
-  }
-
-  // RegExp
-  if (_toString.call(obj) === '[object RegExp]') {
-    var flags = [];
-    if (obj.global) {
-      flags.push('g');
-    }
-    if (obj.multiline) {
-      flags.push('m');
-    }
-    if (obj.ignoreCase) {
-      flags.push('i');
+    // null, undefined, non-object, function
+    if (!obj || typeof obj !== "object") {
+        return obj;
     }
 
-    return new RegExp(obj.source, flags.join(''));
-  }
+    // DOM Node
+    if (obj.nodeType && "cloneNode" in obj) {
+        return obj.cloneNode(true);
+    }
 
-  var result = Array.isArray(obj)
-    ? []
-    : obj.constructor
-    ? new obj.constructor()
-    : {};
+    // Date
+    if (_toString.call(obj) === "[object Date]") {
+        return new Date(obj.getTime());
+    }
 
-  for (var key in obj) {
-    result[key] = deepClone(obj[key]);
-  }
+    // RegExp
+    if (_toString.call(obj) === "[object RegExp]") {
+        var flags = [];
+        if (obj.global) {
+            flags.push("g");
+        }
+        if (obj.multiline) {
+            flags.push("m");
+        }
+        if (obj.ignoreCase) {
+            flags.push("i");
+        }
 
-  return result;
+        return new RegExp(obj.source, flags.join(""));
+    }
+
+    var result = Array.isArray(obj)
+        ? []
+        : obj.constructor
+        ? new obj.constructor()
+        : {};
+
+    for (var key in obj) {
+        result[key] = deepClone(obj[key]);
+    }
+
+    return result;
 }
 
 function A() {
-  this.a = a;
+    this.a = a;
 }
 
 var a = {
-  name: 'qiu',
-  birth: new Date(),
-  pattern: /qiu/gim,
-  container: document.body,
-  hobbys: ['book', new Date(), /aaa/gim, 111]
+    name: "qiu",
+    birth: new Date(),
+    pattern: /qiu/gim,
+    container: document.body,
+    hobbys: ["book", new Date(), /aaa/gim, 111]
 };
 
 var c = new A();
@@ -216,16 +216,16 @@ console.log(c, b);
 ```javascript
 //函数节流
 var canRun = true;
-document.getElementById('throttle').onsroll = function() {
-  if (!canRun) {
-    //判断是否空闲，如果在执行中，则直接return
-    return;
-  }
-  canRun = false;
-  setTimeout(function() {
-    console.log('函数节流');
-    canRun = true;
-  }, 300);
+document.getElementById("throttle").onsroll = function() {
+    if (!canRun) {
+        //判断是否空闲，如果在执行中，则直接return
+        return;
+    }
+    canRun = false;
+    setTimeout(function() {
+        console.log("函数节流");
+        canRun = true;
+    }, 300);
 };
 ```
 
@@ -236,27 +236,27 @@ document.getElementById('throttle').onsroll = function() {
 ```javascript
 //函数防抖
 var timer = fasle;
-document.getElementById('document').onsrcoll = function() {
-  clearTimeout(timer).timer = setTimeout(function() {
-    //清楚未执行的代码，重置回初始状态
-    console.log('函数防抖');
-  }, 300);
+document.getElementById("document").onsrcoll = function() {
+    clearTimeout(timer).timer = setTimeout(function() {
+        //清楚未执行的代码，重置回初始状态
+        console.log("函数防抖");
+    }, 300);
 };
 
 // func是用户传入需要防抖的函数
 // wait是等待时间
 const debounce = (func, wait = 50) => {
-  // 缓存一个定时器id
-  let timer = 0;
-  // 这里返回的函数是每次用户实际调用的防抖函数
-  // 如果已经设定过定时器了就清空上一次的定时器
-  // 开始一个新的定时器，延迟执行用户传入的方法
-  return function(...args) {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      func.apply(this, args);
-    }, wait);
-  };
+    // 缓存一个定时器id
+    let timer = 0;
+    // 这里返回的函数是每次用户实际调用的防抖函数
+    // 如果已经设定过定时器了就清空上一次的定时器
+    // 开始一个新的定时器，延迟执行用户传入的方法
+    return function(...args) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+            func.apply(this, args);
+        }, wait);
+    };
 };
 // 不难看出如果用户调用该函数的间隔小于wait的情况下，上一次的时间还未到就被清除了，并不会执行函数
 ```
@@ -265,15 +265,15 @@ const debounce = (func, wait = 50) => {
 
 但是这种简单版的防抖也是缺陷的，这个防抖只能在最后调用。一般的防抖会有 imm 选项，表示是否立即调用。这两者的区别在于：
 
-- 在搜索引擎搜索问题的时候，希望达到用户数万最后一个字才调用查询整个接口，这个时候适用`延迟执行`的防抖函数，它总是在一连串（间隔小于 wait 的）函数出发之后才调用。
-- 例如在用户点击按钮时，是立即调用接口，并且下一次调用时间间隔大于 wait 才会触发。
+-   在搜索引擎搜索问题的时候，希望达到用户数万最后一个字才调用查询整个接口，这个时候适用`延迟执行`的防抖函数，它总是在一连串（间隔小于 wait 的）函数出发之后才调用。
+-   例如在用户点击按钮时，是立即调用接口，并且下一次调用时间间隔大于 wait 才会触发。
 
 带有立即执行选项的防抖函数
 
 ```javascript
 function now() {
-  //获取当前时间戳
-  return +new Date();
+    //获取当前时间戳
+    return new Date();
 }
 /**
  * 防抖函数，返回函数连续调用时，空闲时间必须大于或等于 wait，func 才会执行
@@ -285,69 +285,118 @@ function now() {
  */
 
 function debounce(func, wait = 50, immediate = true) {
-  let timer, context, args;
+    let timer, context, args;
 
-  // 延迟执行函数
-  const later = () =>
-    setTimeout(() => {
-      // 延迟函数执行完毕，清空缓存的定时器序号
-      timer = null;
-      // 延迟执行的情况下，函数会在延迟函数中执行
-      // 使用到之前缓存的参数和上下文
-      if (!immediate) {
-        func.apply(context, args);
-        context = args = null;
-      }
-    }, wait);
+    // 延迟执行函数
+    const later = () =>
+        setTimeout(() => {
+            // 延迟函数执行完毕，清空缓存的定时器序号
+            timer = null;
+            // 延迟执行的情况下，函数会在延迟函数中执行
+            // 使用到之前缓存的参数和上下文
+            if (!immediate) {
+                func.apply(context, args);
+                context = args = null;
+            }
+        }, wait);
 
-  // 这里返回的函数是每次实际调用的函数
-  return function(...params) {
-    // 如果没有创建延迟执行函数（later），就创建一个
-    if (!timer) {
-      timer = later();
-      // 如果是立即执行，调用函数
-      // 否则缓存参数和调用上下文
-      if (immediate) {
-        func.apply(this, params);
-      } else {
-        context = this;
-        args = params;
-      }
-      // 如果已有延迟执行函数（later），调用的时候清除原来的并重新设定一个
-      // 这样做延迟函数会重新计时
-    } else {
-      clearTimeout(timer);
-      timer = later();
-    }
-  };
+    // 这里返回的函数是每次实际调用的函数
+    return function(...params) {
+        // 如果没有创建延迟执行函数（later），就创建一个
+        if (!timer) {
+            timer = later();
+            // 如果是立即执行，调用函数
+            // 否则缓存参数和调用上下文
+            if (immediate) {
+                func.apply(this, params);
+            } else {
+                context = this;
+                args = params;
+            }
+            // 如果已有延迟执行函数（later），调用的时候清除原来的并重新设定一个
+            // 这样做延迟函数会重新计时
+        } else {
+            clearTimeout(timer);
+            timer = later();
+        }
+    };
 }
 ```
 
-## 图片上传 小图片转 base64
+## FileReader 对象
 
-```javascript
-let reader = new FileReader();
-let imgUrlBase64 = reader.readAsDataURL(file);
-reader.onload = function(e) {
-  reader.result.length; //去判断大小 reader.result就是
-};
-```
+之前做图片上传预览都是把图片上传到服务器获得线上地址，如今才发现有另一种方法：使用`FildeReader`(但兼容性不是很好，ie10)
 
-### FileReader
-
-`FileReader`对象允许 WEB 应用程序异步读取存储在用户及上级上的文件（或原始数据缓冲）的内容,使用`File`和`Blob`对象指定要读取的文件或数据。
+`FileReader`允许 Web 应用程序异步读取存储在用户计算机上的文件（或原始数据缓冲区）的内容，使用 File 或 Blob 对象指定要读取的文件或数据。主要用来把文件读入内存，并且读取文件中的数据。通过构造函数创建一个 FileReader 对象。
 
 其中 file 对象可以是来自用户在一个`<input>`元素上悬着文件后返回的 filelist 对象，也可以来自拖放操作生成的`DataTransfer`对象，还可以是来自一个`HTMLCanvasElement`上执行`mozGetAsFile()`方法后返回结果。
 
 `FileReader.readyState`表示 FileReader 状态的数字。取值如下：
 
-- EMPTY: 0 还没有加载任何数据。
-- LOADING: 1 数据正在加载。
-- DONE：2 已经完成全部的读取请求。
+-   EMPTY: 0 还没有加载任何数据。
+-   LOADING: 1 数据正在加载。
+-   DONE：2 已经完成全部的读取请求。
 
 `FileReader.result`表示文件内容。该属性仅在读取操作完成后才有效，数据的格式取决于使用哪个方法来启动读取操作。
 
 `FileReader.readAsDataURL()`表示开始读取指定的 Blob 中的内容。一旦完成，result 属性中将包含一个 data:URL 格式的字符串以表示所读取文件的内容。
+
+-   abort：中断读取操作。
+-   readAsArrayBuffer：读取文件内容到 ArrayBuffer 对象中。
+-   readAsBinaryString：将文件读取为二进制数据。
+-   readAsDataURL：将文件读取为 data: URL 格式的字符串。
+-   readAsText：将文件读取为文本。
+
+### 上传图片预览
+
+```html
+<input type="file" id="files" accept="image/jpeg,image/jpg,image/png" />
+<img src="blank.gif" id="preview" />
+<script>
+    var elem = document.getElementById("files"),
+        img = document.getElementById("preview");
+    elem.onchange = function() {
+        var files = elem.files,
+            reader = new FileReader();
+        if (files && files[0]) {
+            reader.onload = function(ev) {
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(files[0]);
+        }
+    };
+</script>
+```
+
+### 图片上传 小图片转 base64
+
+```javascript
+let reader = new FileReader();
+let imgUrlBase64 = reader.readAsDataURL(file);
+reader.onload = function(e) {
+    reader.result.length; //去判断大小 reader.result就是
+};
+```
+
+## Base64 编码
+
+在 HTML5 中新增了 atob 和 btoa 方法来支持 Base64 编码。它们的命名也很简单，b to a 和 a to b，即代表着编码和解码。
+
+```javascript
+var a = "https://lin-xin.github.io";
+var b = btoa(a);
+var c = atob(b);
+console.log(a);     // https://lin-xin.github.io
+console.log(b);     // aHR0cHM6Ly9saW4teGluLmdpdGh1Yi5pbw==
+console.log(c);     // https://lin-xin.github.io复制代码btoa 方法对字符串 a 进行编码，不会改变 a 的值，返回一个编码后的值。atob 方法对编码后的字符串进行解码。
+但是参数中带中文，已经超出了8位ASCII编码的字符范围，浏览器就会报错。所以需要先对中文进行 encodeURIComponent 编码处理。
+var a = "哈喽 世界";
+var b = btoa(encodeURIComponent(a));
+var c = decodeURIComponent(atob(b));
+
+console.log(b);     // JUU1JTkzJTg4JUU1JTk2JUJEJTIwJUU0JUI4JTk2JUU3JTk1JThD
+console.log(c);     // 哈喽 世界
+```
 
 ## 查找数组对象里面是否含有某对象
 
@@ -356,10 +405,10 @@ reader.onload = function(e) {
 ```javascript
 let selectedListString = JSON.stringify(that.selectedList);
 that.listAppEquipment.forEach((item: any) => {
-  let value = JSON.stringify(item.value);
-  if (selectedListString.indexOf(value) != -1) {
-    item.checked = true;
-    item.selected = true;
-  }
+    let value = JSON.stringify(item.value);
+    if (selectedListString.indexOf(value) != -1) {
+        item.checked = true;
+        item.selected = true;
+    }
 });
 ```

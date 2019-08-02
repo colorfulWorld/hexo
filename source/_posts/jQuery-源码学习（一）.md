@@ -32,7 +32,7 @@ aquery.prototype = {
 var a = new aquery();
 a.name();
 ```
-但其实jquery 是使用的下面这种封装方式，为什么呢？我也不懂我也没地方问。
+原因：我猜想是因为更好的封装吧。
 
 ```javascript
 (function(window, undefined) {
