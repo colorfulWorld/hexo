@@ -155,22 +155,9 @@ List.vue
 # 混入
 
 分发 Vue 组件中的可复用功能
+当我们开发应用时，经常会遇到一些功能和逻辑，需要在不同的组件间多次使用，比如同样的方法逻辑，两个组件都要用到，但我们又不想也不应该完全复制两遍，这个时候就该用mixins了。
+这意味着，如果我创建了一个组件，它有X个不同的方法、周期逻辑、本地的状态等，我想复用它们，我就可以创建个mixins，让其他的组件扩展这个mixins，就可以在这些新的组件里使用原本它们没有的方法了
 
-```html
-<template>
-    <div>test{{testCount}}</div>
-</template>
-<script>
-    import { store } from "@/store";
-    export default {
-        computed: {
-            testCount() {
-                return store.count;
-            }
-        }
-    };
-</script>
-```
 
 # 前端路由和后端路由
 
@@ -206,6 +193,10 @@ window.history.pushSate(null, null, "name/orange");
 #### Hjax(Hash+Ajax)
 
 原理：url 中常会出现# ，一可以表示锚点（如回到顶部的按钮的原理），而是路由里的锚点（hash）,web 服务器并不会解析 hash，也就是说#后的内容 web 服务都会自动忽略，但是 javascript 是可以通过 window.loacation.hash 读取到的，读取到路径加以解析之后就可以响应不同路径的逻辑处理。
+
+### 前端路由的缺陷
+
+使用浏览器的前进后退键时，会重新发出请求，没有合理的利用缓存。
 
 # react/vue 列表组件中的 key 值。其作用是什么。
 
