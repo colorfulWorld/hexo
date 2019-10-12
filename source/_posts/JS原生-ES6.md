@@ -322,7 +322,7 @@ function getarea(w = 10, h = 15) {
 getarea(5); //75
 ```
 
-### 剩余参数 （Rest Parameters ）
+### 剩余参数 （Rest Parameters）
 
 ES6 中的 Rest Parameters 使得将函数参数转换成数组的操作变得简单。
 
