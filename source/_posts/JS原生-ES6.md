@@ -6,6 +6,13 @@ categories: JavaScript
 
 发现自己对于 javascript 的底层 API 所知甚少，在这里记录一下所遇到的有趣又实在的 API 用法。
 
+ES6 的更新内容主要分为以下几点
+- 表达式：声明、解构赋值
+- 内置对象：字符串扩展、数值扩展、对象扩展、数组扩展、函数扩展、正则扩展、Symbol、Set、Map、Proxy、Reflect
+- 语句与运算：Class、Module、lterator
+- 异步编程：Promise、Generator、Async
+
+
 <!--more-->
 
 ## var 与 let 的区别
