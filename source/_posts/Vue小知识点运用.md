@@ -21,49 +21,49 @@ Vue API 中的小知识点运用与总结
 store.js
 
 ```javascript
-import vue from "vue";
-export const store = vue.observable({ count: 0 });
+import vue from 'vue'
+export const store = vue.observable({ count: 0 })
 export const mutation = {
-    setCount(count) {
-        store.count = count;
-    }
-};
+  setCount(count) {
+    store.count = count
+  }
+}
 ```
 
 应用组件：
 
 ```html
 <template>
-    <div class="hello">
-        <p @click="setCount(testCount + 1)">+</p>
-        <p @click="setCount(testCount - 1)">-</p>
-        <test />
-        <p>{{testCount}}</p>
-    </div>
+  <div class="hello">
+    <p @click="setCount(testCount + 1)">+</p>
+    <p @click="setCount(testCount - 1)">-</p>
+    <test />
+    <p>{{testCount}}</p>
+  </div>
 </template>
 
 <script>
-    import test from "./test";
-    import { store, mutation } from "@/store";
-    export default {
-        name: "HelloWorld",
-        data() {
-            return {
-                msg: "Welcome to Your Vue.js App"
-            };
-        },
-        components: {
-            test
-        },
-        methods: {
-            setCount: mutation.setCount
-        },
-        computed: {
-            testCount() {
-                return store.count;
-            }
-        }
-    };
+  import test from './test'
+  import { store, mutation } from '@/store'
+  export default {
+    name: 'HelloWorld',
+    data() {
+      return {
+        msg: 'Welcome to Your Vue.js App'
+      }
+    },
+    components: {
+      test
+    },
+    methods: {
+      setCount: mutation.setCount
+    },
+    computed: {
+      testCount() {
+        return store.count
+      }
+    }
+  }
 </script>
 ```
 
@@ -71,17 +71,17 @@ test 组件
 
 ```html
 <template>
-    <div>test{{testCount}}</div>
+  <div>test{{testCount}}</div>
 </template>
 <script>
-    import { store } from "@/store";
-    export default {
-        computed: {
-            testCount() {
-                return store.count;
-            }
-        }
-    };
+  import { store } from '@/store'
+  export default {
+    computed: {
+      testCount() {
+        return store.count
+      }
+    }
+  }
 </script>
 ```
 
@@ -109,23 +109,23 @@ App.vue
 
 ```html
 <template>
-    <div id="app">
-        <List
-            :items="['Wonderwoman', 'Ironman']"
-            :item-click="item => (clicked = item)"
-        />
-        <p>Clicked hero: {{ clicked }}</p>
-    </div>
+  <div id="app">
+    <List
+      :items="['Wonderwoman', 'Ironman']"
+      :item-click="item => (clicked = item)"
+    />
+    <p>Clicked hero: {{ clicked }}</p>
+  </div>
 </template>
 
 <script>
-    import List from "./List";
+  import List from './List'
 
-    export default {
-        name: "App",
-        data: () => ({ clicked: "" }),
-        components: { List }
-    };
+  export default {
+    name: 'App',
+    data: () => ({ clicked: '' }),
+    components: { List }
+  }
 </script>
 ```
 
@@ -133,11 +133,11 @@ List.vue
 
 ```html
 <template functional>
-    <div>
-        <p v-for="item in props.items" @click="props.itemClick(item);">
-            {{ item }}
-        </p>
-    </div>
+  <div>
+    <p v-for="item in props.items" @click="props.itemClick(item);">
+      {{ item }}
+    </p>
+  </div>
 </template>
 ```
 
@@ -155,9 +155,8 @@ List.vue
 # 混入
 
 分发 Vue 组件中的可复用功能
-当我们开发应用时，经常会遇到一些功能和逻辑，需要在不同的组件间多次使用，比如同样的方法逻辑，两个组件都要用到，但我们又不想也不应该完全复制两遍，这个时候就该用mixins了。
-这意味着，如果我创建了一个组件，它有X个不同的方法、周期逻辑、本地的状态等，我想复用它们，我就可以创建个mixins，让其他的组件扩展这个mixins，就可以在这些新的组件里使用原本它们没有的方法了
-
+当我们开发应用时，经常会遇到一些功能和逻辑，需要在不同的组件间多次使用，比如同样的方法逻辑，两个组件都要用到，但我们又不想也不应该完全复制两遍，这个时候就该用 mixins 了。
+这意味着，如果我创建了一个组件，它有 X 个不同的方法、周期逻辑、本地的状态等，我想复用它们，我就可以创建个 mixins，让其他的组件扩展这个 mixins，就可以在这些新的组件里使用原本它们没有的方法了
 
 # 前端路由和后端路由
 
@@ -186,8 +185,8 @@ history.pushState 和 history.replaceSate 是 HTML5 的新接口,他们可以做
 页面首次载入的时候，如果没有查询地址、或查询地址不匹配，则使用第一个菜单的 Ajax 地址的查询内容，并使用 history.replaceSate 更改当前的浏览器历史，然后触发 Ajax 操作。
 
 ```javascript
-window.history.pushSate(null, null, "name/blue");
-window.history.pushSate(null, null, "name/orange");
+window.history.pushSate(null, null, 'name/blue')
+window.history.pushSate(null, null, 'name/orange')
 ```
 
 #### Hjax(Hash+Ajax)
@@ -204,27 +203,43 @@ window.history.pushSate(null, null, "name/orange");
 
 ```html
 <div id="app">
-    <div v-for="i in dataList">{{ i }}</div>
+  <div v-for="i in dataList">{{ i }}</div>
 </div>
 <script>
-    var vm = new Vue({
-        el: "#app",
-        data: {
-            dataList: [1, 2, 3, 4, 5]
-        }
-    });
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      dataList: [1, 2, 3, 4, 5]
+    }
+  })
 </script>
 ```
 
 以上的例子，v-for 的内容会生成以下的 dom 节点数组：
 
 ```javascript
-[
-    "<div>1</div>", // id： A
-    "<div>2</div>", // id:  B
-    "<div>3</div>", // id:  C
-    "<div>4</div>", // id:  D
-    "<div>5</div>" // id:  E
-];
+;[
+  '<div>1</div>', // id： A
+  '<div>2</div>', // id:  B
+  '<div>3</div>', // id:  C
+  '<div>4</div>', // id:  D
+  '<div>5</div>' // id:  E
+]
 ```
-改变dataList数据，进行数据位置替换，对比改变后的数据
+
+改变 dataList 数据，进行数据位置替换，对比改变后的数据
+
+# 组件内导航之 beforeRouteUpdate 的使用
+
+使用场景：
+
+组件复用；路由跳转；
+
+```javascript
+beforeRouteUpdate (to, from, next) {
+    // 在当前路由改变，但是该组件被复用时调用
+    // 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
+    // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
+    // 可以访问组件实例 `this`
+  },
+```
