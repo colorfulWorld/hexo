@@ -1,7 +1,7 @@
 ---
 title: angular 基础
 categories: angular
-comments: true
+comments: false
 ---
 
 ## angular 与 vue 的区别

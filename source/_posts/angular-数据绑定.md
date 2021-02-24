@@ -1,7 +1,7 @@
 ---
 title: angular 数据绑定详解
 categories: angular
-comments: true
+comments: false
 ---
 
 ## 绑定

@@ -1,7 +1,7 @@
 ---
 title: angular form 表单
 categories: angular
-comments: true
+comments: false
 ---
 ## checkbox
 

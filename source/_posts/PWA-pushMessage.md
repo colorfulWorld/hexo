@@ -1,7 +1,7 @@
 ---
 title: PWA-pushMessage
 categories: WEB
-comments: true
+comments: false
 ---
 
 ## 消息推送介绍
