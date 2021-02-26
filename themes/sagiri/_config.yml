@@ -20,10 +20,8 @@ override: false
 # Then need to rename & redefine they on any other names, otherwise icons from Next will rewrite your custom icons in Hexo.
 favicon:
   visibilitychange: true
-  small: /images/favicon-16x16.png
-  medium: /images/favicon-32x32.png
-  narmal: /images/favicon-16x16.png
-  hidden: /images/favicon-16x16.png
+  narmal: /favicon.ico
+  hidden: /failure.ico
   show_text: (/≧▽≦/)咦！又好了！
   hide_text: (●—●)喔哟，崩溃啦！
   apple_touch_icon: /apple-touch-icon.png
@@ -524,7 +522,7 @@ needmoreshare2:
 #google_site_verification:
 
 # Google Analytics
-google_analytics: UA-48084758-7
+# google_analytics: UA-48084758-7
 
 # Bing Webmaster tools verification setting
 # See: https://www.bing.com/webmaster/
