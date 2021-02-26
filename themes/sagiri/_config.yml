@@ -20,10 +20,10 @@ override: false
 # Then need to rename & redefine they on any other names, otherwise icons from Next will rewrite your custom icons in Hexo.
 favicon:
   visibilitychange: true
-  small: /images/favicon-16x16-next.png
-  medium: /images/favicon-32x32-next.png
-  narmal: /images/favicon-16x16-next.png
-  hidden: /images/favicon-16x16-next.png
+  small: /images/favicon-16x16.png
+  medium: /images/favicon-32x32.png
+  narmal: /images/favicon-16x16.png
+  hidden: /images/favicon-16x16.png
   show_text: (/≧▽≦/)咦！又好了！
   hide_text: (●—●)喔哟，崩溃啦！
   apple_touch_icon: /apple-touch-icon.png
@@ -432,22 +432,22 @@ disqus:
 #hypercomments_id:
 
 # changyan
-changyan:
-  enable: false
-  appid:
-  appkey:
+# changyan:
+#   enable: false
+#   appid:
+#   appkey:
 
 
 # Valine.
 # You can get your appid and appkey from https://leancloud.cn
 # more info please open https://github.com/xCss/Valine
-valine:
-  enable: false
-  appid:  # your leancloud application appid
-  appkey:  # your leancloud application appkey
-  notify: false # mail notifier , https://github.com/xCss/Valine/wiki
-  verify: false # Verification code
-  placeholder: Comment input placeholder
+# valine:
+#   enable: false
+#   appid:  # your leancloud application appid
+#   appkey:  # your leancloud application appkey
+#   notify: false # mail notifier , https://github.com/xCss/Valine/wiki
+#   verify: false # Verification code
+#   placeholder: Comment input placeholder
 
 # Support for youyan comments system.
 # You can get your uid from http://www.uyan.cc

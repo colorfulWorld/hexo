@@ -2,14 +2,14 @@
 title: Eternal
 subtitle:
 description: make notes
-author: ColorfulWorlds
+author: ColorfulWorld
 language: zh-Hans
 timezone:
 
 # URL
 url: colorfulWorld.github.io
 root: /
-permalink: :year/:month/:day/:title/
+permalink: :title/
 permalink_defaults:
 
 # Directory

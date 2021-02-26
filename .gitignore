@@ -1,5 +1,8 @@
-.idea/
-.deploy*/
+.DS_Store
+Thumbs.db
+db.json
+*.log
 node_modules/
-public/
-
+/public/
+.deploy*/
+package-lock.json

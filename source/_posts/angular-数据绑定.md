@@ -14,7 +14,10 @@ comments: false
 
 这样就把控制器中额 vm.info 的值绑定在 div 标签中，这样页面在网速不好的时候就不会出现 angular 中 &#123;&#123;&#125;&#125; 的解析符，它隐藏了 angular 解析表达式的过程
 
-2. ngBindTemplate ngBindTemplate 这个指令与上一个指令的不同之处在于它可以绑定多个表达式 ```html <div ng-bind-template="&#123;&#123;vm.info&#125;&#125;&#123;&#123;vm.msg &#125;&#125;"></div>```
+2. ngBindTemplate ngBindTemplate 这个指令与上一个指令的不同之处在于它可以绑定多个表达式 
+```html 
+    <div ng-bind-template="&#123;&#123;vm.info&#125;&#125;&#123;&#123;vm.msg &#125;&#125;"></div>
+```
 
 <!--more-->
 
