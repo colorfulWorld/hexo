@@ -82,12 +82,12 @@
               </div>
           </div>
 
-          <details class="views-top-wrap">
+          <details class="views-top-wrap" style="display:none;">
             <summary class="views-top-name scaleup">看爆 Top5</summary>
             <ul class="views-top"></ul>
           </details>
 
-          {#
+   {#       
           {% if theme.rss %}
             <div class="feed-link motion-element">
               {% if theme.emailfeed %}

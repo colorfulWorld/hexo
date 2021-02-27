@@ -1,6 +1,5 @@
 <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
   <div>{{ theme.reward_comment }}</div>
-  <!--赞赏模块-->
   <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
     <span>{{ __('reward.donate') }}</span>
   </button>
