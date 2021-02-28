@@ -7,9 +7,9 @@ categories: JavaScrWEBpt
 Jenkins是一个开源软件项目，是基于Java开发的一种持续集成工具，用于监控持续重复的工作，旨在提供一个开放易用的软件平台，使软件的持续集成变成可能，最初的创建者川口清子（Kohsuke Kawaguchi）。他独自写了大部分代码
 
 <!--more-->
-![clipboard](https://user-images.githubusercontent.com/16111288/68524077-01e52f80-02fd-11ea-9531-d039a4c77113.png)
+![network](https://user-images.githubusercontent.com/16111288/68524077-01e52f80-02fd-11ea-9531-d039a4c77113.png)
 
-![clipbo123ard](https://user-images.githubusercontent.com/16111288/68523536-9c417500-02f5-11ea-9862-dd7bc23ae9ec.png)
+![network](https://user-images.githubusercontent.com/16111288/68523536-9c417500-02f5-11ea-9862-dd7bc23ae9ec.png)
 
 # 概要
 
@@ -36,7 +36,7 @@ Jenkins是一个开源软件项目，是基于Java开发的一种持续集成工
 
 如果只发一个版本，这种方式完全OK，但是如果需要频繁的更新版本，就会有如下图的操作，各个人员在频发互传代码包，容易出问题。这对于前后端来说，都是一个很低效的事情。
 
-![12313](https://user-images.githubusercontent.com/16111288/68523471-c6466780-02f4-11ea-8700-e6c5e0bef519.png)
+![network](https://user-images.githubusercontent.com/16111288/68523471-c6466780-02f4-11ea-8700-e6c5e0bef519.png)
 
 因此我们需要将低效的手动式部署，升级为更加先进的工程化，流水线式的持续部署。Jenkins就很好的可以做这样的事情，而且我们公司的持续集成也是使用这个工具。
 
@@ -115,15 +115,15 @@ Docker镜像是一个Docker的可执行文件，其中包含了运行应用程�
 	Jenkins需要一个对项目有读写权限的账户，所以要在github生成一个token给jenkins使用，这个token，在后面需要用到。
 > 	进入github --> setting --> Personal Access Token --> Generate new token
 
-![image](https://user-images.githubusercontent.com/16111288/68523844-aebdad80-02f9-11ea-9294-828868dfdf69.png)
+![network](https://user-images.githubusercontent.com/16111288/68523844-aebdad80-02f9-11ea-9294-828868dfdf69.png)
 
-![image](https://user-images.githubusercontent.com/16111288/68523993-9e0e3700-02fb-11ea-9a0b-f07e19b9cc7f.png)
+![network](https://user-images.githubusercontent.com/16111288/68523993-9e0e3700-02fb-11ea-9a0b-f07e19b9cc7f.png)
 
 拿到这个token之后先保存好，等会到jenkins中需要配置凭证
 我们有一个token可以访问到github了，但是还要对其中的项目设置钩子
 > 	进入GitHub上指定的项目 --> setting --> WebHooks&Services --> add webhook --> 输入刚刚部署jenkins的服务器的IP
 
-![image](https://user-images.githubusercontent.com/16111288/68524015-04935500-02fc-11ea-9a12-9cfd5bfc7695.png)
+![network](https://user-images.githubusercontent.com/16111288/68524015-04935500-02fc-11ea-9a12-9cfd5bfc7695.png)
 
 ## 在Jenkins和github钩子
 
@@ -134,9 +134,9 @@ Docker镜像是一个Docker的可执行文件，其中包含了运行应用程�
 
 API URL 输入 `https://api.github.com`，Credentials点击Add添加，Kind选择Secret Text,具体如下图所示。
 
-![image](https://user-images.githubusercontent.com/16111288/68524053-c64a6580-02fc-11ea-9f2d-db3a71b304d3.png)
+![network](https://user-images.githubusercontent.com/16111288/68524053-c64a6580-02fc-11ea-9f2d-db3a71b304d3.png)
 
-![image](https://user-images.githubusercontent.com/16111288/68524112-9485ce80-02fd-11ea-9047-d73780d20b48.png)
+![network](https://user-images.githubusercontent.com/16111288/68524112-9485ce80-02fd-11ea-9047-d73780d20b48.png)
 
 设置完成后，点击`TestConnection`,提示`Credentials verified for user UUserName, rate limit: xxx`,则表明有效。
 
@@ -161,9 +161,9 @@ Shell 是一个用 C 语言编写的程序，它是用户使用 Linux 的桥梁�
 ### 参数化构建
 选择参数化构建，配置参数，在工程的首页就会多一个构建入口，参数化构建使得构建变得更加灵活。
 
-![image](https://user-images.githubusercontent.com/16111288/68524161-5d63ed00-02fe-11ea-9874-1f4672d47891.png)
+![network](https://user-images.githubusercontent.com/16111288/68524161-5d63ed00-02fe-11ea-9874-1f4672d47891.png)
 
-![image](https://user-images.githubusercontent.com/16111288/68524197-a0be5b80-02fe-11ea-8765-a5505bc42420.png)
+![network](https://user-images.githubusercontent.com/16111288/68524197-a0be5b80-02fe-11ea-8765-a5505bc42420.png)
 
 ### 上传构建包
 
@@ -177,7 +177,7 @@ Shell 是一个用 C 语言编写的程序，它是用户使用 Linux 的桥梁�
         autoindex_exact_size off;
         autoindex_localtime on;
     }`
-![微信截图_20191109145520](https://user-images.githubusercontent.com/16111288/68524366-0b709680-0301-11ea-8892-a7e1e50f4cfa.png)
+![network](https://user-images.githubusercontent.com/16111288/68524366-0b709680-0301-11ea-8892-a7e1e50f4cfa.png)
 
 ## Jenkins系统配置SSH账号
 
@@ -188,11 +188,11 @@ Shell 是一个用 C 语言编写的程序，它是用户使用 Linux 的桥梁�
 
 打开“系统管理”--“系统设置”  找到 “Publish over SSH” 项 ，我这里远程服务器用的是ssh登录，通过ppk密钥进行连接，所以我的配置如图，如果是帐号密码登录的Passphrase填写密码Username填写用户名，path to key 为空就可以了。
 
-![微信截图_20191109145522](https://user-images.githubusercontent.com/16111288/68524390-5094c880-0301-11ea-8559-ad729ff4f671.png)
+![network](https://user-images.githubusercontent.com/16111288/68524390-5094c880-0301-11ea-8559-ad729ff4f671.png)
 
 点击 Test Configuration 按钮测试连接是否成功
 
-![image](https://user-images.githubusercontent.com/16111288/68524400-6bffd380-0301-11ea-840d-96bc52a4257b.png)
+![network](https://user-images.githubusercontent.com/16111288/68524400-6bffd380-0301-11ea-840d-96bc52a4257b.png)
 
 ### JOB添加构建后上传
 
@@ -208,7 +208,7 @@ Remote directory：远程服务器的保存路径
 
 Exec command：传输完成后在远程服务器执行的sh命令
 
-![微信截图_20191109150211](https://user-images.githubusercontent.com/16111288/68524450-03652680-0302-11ea-9bce-f7b42ddf589d.png)
+![network](https://user-images.githubusercontent.com/16111288/68524450-03652680-0302-11ea-9bce-f7b42ddf589d.png)
 
 ## 构建后邮件通知
 构建成功之后，可以进行邮件通知。
@@ -217,25 +217,25 @@ Exec command：传输完成后在远程服务器执行的sh命令
 
 如果是QQ邮箱，先去获取一个独立密码
 
-![image](https://user-images.githubusercontent.com/16111288/68524622-02cd8f80-0304-11ea-949b-ec148ea39d08.png)
+![network](https://user-images.githubusercontent.com/16111288/68524622-02cd8f80-0304-11ea-949b-ec148ea39d08.png)
 
 > 系统管理-->系统设置--> Extended E-mail Notification
 
-![image](https://user-images.githubusercontent.com/16111288/68524633-1a0c7d00-0304-11ea-8bdb-3c94222fcfb8.png)
+![network](https://user-images.githubusercontent.com/16111288/68524633-1a0c7d00-0304-11ea-8bdb-3c94222fcfb8.png)
 
-![image](https://user-images.githubusercontent.com/16111288/68524636-21338b00-0304-11ea-8ac7-0e8aa0f07aab.png)
+![network](https://user-images.githubusercontent.com/16111288/68524636-21338b00-0304-11ea-8ac7-0e8aa0f07aab.png)
 
 ## 配置邮件报错
 
-![image](https://user-images.githubusercontent.com/16111288/68524653-593ace00-0304-11ea-9b60-d4f4227f020c.png)
+![network](https://user-images.githubusercontent.com/16111288/68524653-593ace00-0304-11ea-9b60-d4f4227f020c.png)
 
 邮件配置的过程出错，是因为管理的邮箱没有配置，到用户设置去设置
 
-![image](https://user-images.githubusercontent.com/16111288/68524659-6952ad80-0304-11ea-846b-fb1dc721ab56.png)
+![network](https://user-images.githubusercontent.com/16111288/68524659-6952ad80-0304-11ea-846b-fb1dc721ab56.png)
 
 ### 构建后选择接收人
 
-![image](https://user-images.githubusercontent.com/16111288/68524667-7f606e00-0304-11ea-8425-84fbd475e9af.png)
+![network](https://user-images.githubusercontent.com/16111288/68524667-7f606e00-0304-11ea-8425-84fbd475e9af.png)
 
 
 ## 注意
@@ -257,15 +257,15 @@ Exec command：传输完成后在远程服务器执行的sh命令
 轻量应用型服务器，便宜，适合学习。
 买好之后，在点击进入自己的机器
 
-![image](https://user-images.githubusercontent.com/16111288/68524467-30193e00-0302-11ea-8266-0114201443ba.png)
+![network](https://user-images.githubusercontent.com/16111288/68524467-30193e00-0302-11ea-8266-0114201443ba.png)
 
 服务器默认只开发 80,443，22端口是可以通过外网进行访问的，如果自己的应用是8080,8088这个端口，需要在阿里云防火墙里面添加规则，并重启机器
 
-![image](https://user-images.githubusercontent.com/16111288/68524471-3c050000-0302-11ea-8d61-54e8fc0000fb.png)
+![network](https://user-images.githubusercontent.com/16111288/68524471-3c050000-0302-11ea-8d61-54e8fc0000fb.png)
 
 ## 通过xshell进入服务器
 
-![image](https://user-images.githubusercontent.com/16111288/68524476-4c1cdf80-0302-11ea-825b-aa3ce6144c22.png)
+![network](https://user-images.githubusercontent.com/16111288/68524476-4c1cdf80-0302-11ea-825b-aa3ce6144c22.png)
 
 # 访问github慢
 
