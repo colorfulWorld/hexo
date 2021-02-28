@@ -42,10 +42,11 @@ $(document).on('pjax:end', function () {
     require('./zoom')();
     window.originTitle = document.title;
 
-    if (ga) {
-      ga('set', 'location', window.location.href);
-      ga('send', 'pageview');
-    }
+    //google 统计
+    // if (ga) {
+    //   ga('set', 'location', window.location.href);
+    //   ga('send', 'pageview');
+    // }
 
     $('.site-overview, .post-toc').css('max-height', document.body.clientHeight - 164);
 });
