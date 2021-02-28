@@ -2,7 +2,6 @@
 title: 有趣JS题
 date: 2018-03-08 15:57:30
 categories: JavaScript
-tags:
 ---
 
 一些出乎意料的题及面试题的积累

@@ -1,7 +1,7 @@
 ---
 title: HTTPS
 categories: WEB
-comments: false
+date: 2017-07-17 11:30:11
 ---
 
 https 可以理解为 HTTP+TLS，TLS 是传输层加密协议，是 HTTPS 安全的核心，其前身是 SSL。TLS 主要有五部分 : 应用数据层协议，握手协议，报警协议，加密消息确认协议，心跳协议。TLS 协议本身又是由 record 协议传输的。

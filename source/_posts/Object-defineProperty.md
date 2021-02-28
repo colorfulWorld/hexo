@@ -1,7 +1,7 @@
 ---
 title: Object.defineProperty
 categories: JavaScript
-tags:
+date: 2017-11-09 11:28:03
 ---
 
 Object.defineProperty() 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象。Vue 是通过数据劫持来做数据绑定的，其中最核心的方法便是通过 Ojbect.defineProperty() 来实现对属性的劫持，达到监听数据变动的目的。

@@ -1,7 +1,7 @@
 ---
 title: angular 基础
+date: 2017-09-08 11:30:11
 categories: angular
-comments: false
 ---
 
 ## angular 与 vue 的区别

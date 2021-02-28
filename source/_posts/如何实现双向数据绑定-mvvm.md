@@ -1,5 +1,6 @@
 ---
 title: 如何实现双向数据绑定 mvvm
+date: 2017-11-9 16:52:42
 categories: Vue
 ---
 
