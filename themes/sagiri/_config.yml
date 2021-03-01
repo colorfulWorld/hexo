@@ -826,7 +826,7 @@ footer:
 # 配置主题音乐
 audio:
   enable: true
-  link: http://m10.music.126.net/20210301184322/943ec3a1090f6075032926f2608e1ada/ymusic/0f5a/0f5c/025a/807d96ebf0866ce8be6d5054b86883d4.mp3
+  link: https://cdn.jsdelivr.net/gh/colorfulWorld/cdn-bed/music/langlangqintian.mp3
 
 description: 愿这世间不负所爱
 

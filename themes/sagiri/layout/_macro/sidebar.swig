@@ -13,10 +13,6 @@
     {% endif %}
     <div class="sidebar-inner">
 
-      {% if theme.audio %}
-        <audio src="{{theme.audio.link}}"  controls="controls"></audio>
-      {% endif %}
-
       {% set display_toc = is_post and theme.toc.enable or is_page and theme.toc.enable %}
 
       {% if display_toc and toc(page.content).length > 1 %}
@@ -33,6 +29,9 @@
       <section class="site-overview-wrap sidebar-panel{% if not display_toc or toc(page.content).length <= 1 %} sidebar-panel-active{% endif %}">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            {% if theme.audio %}
+                <audio src="{{theme.audio.link}}"  controls="controls" style="width:100%;height:35px;"></audio>
+            {% endif %}
             {% if theme.avatar %}
               <img class="site-author-image" itemprop="image"
                 src="{{ url_for( theme.card.avatar | default(theme.images + '/card.jpg') ) }}"
