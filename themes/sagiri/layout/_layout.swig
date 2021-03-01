@@ -41,7 +41,8 @@
 
     <footer id="footer" class="footer">
       <div class="footer-image">
-        <img src="https://cdn.jsdelivr.net/gh/DIYgod/diygod.me@gh-pages/images/footer.png">
+
+        <img src="https://cdn.jsdelivr.net/gh/colorfulWorld/cdn-bed/images/footer.png" alt="network">
       </div>
       <div class="footer-inner">
         {% include '_partials/footer.swig' %}
