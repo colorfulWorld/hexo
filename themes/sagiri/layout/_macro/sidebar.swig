@@ -13,6 +13,10 @@
     {% endif %}
     <div class="sidebar-inner">
 
+      {% if theme.audio %}
+        <audio src="{{theme.audio.link}}"  controls="controls"></audio>
+      {% endif %}
+
       {% set display_toc = is_post and theme.toc.enable or is_page and theme.toc.enable %}
 
       {% if display_toc and toc(page.content).length > 1 %}
