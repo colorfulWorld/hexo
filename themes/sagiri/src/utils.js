@@ -329,7 +329,7 @@ $(document).ready(function () {
     $('.post-toc').css('width', 'calc(100% + ' + scrollbarWidth + 'px)');
 
     // Initialize Sidebar & TOC Height.
-    updateSidebarHeight(document.body.clientHeight - 164);
+    updateSidebarHeight(document.body.clientHeight - 158);
   }
 
   function updateSidebarHeight (height) {

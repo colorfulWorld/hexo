@@ -796,7 +796,7 @@ card:
   items:
     罗曼·罗兰: 世界上只有一种真正的英雄主义，就是认清了生活的真相后还依然热爱它。
     村上春树: 你要听话，不是所有鱼都会生活在同一片海里。
-    宫崎骏: 人生就是一列开往坟墓的列车，路途上会有很多站，很难有人可以至始至终陪着你走完，当陪你的人要下车时，即使不舍，也该心存感激，然后挥手道别。
+    宫崎骏: 即使不舍，也该心存感激，然后挥手道别。
     道德经: 知白守黑 和光同尘
 
 footer:
@@ -828,7 +828,7 @@ audio:
   enable: true
   link: https://cdn.jsdelivr.net/gh/colorfulWorld/cdn-bed/music/langlangqintian.mp3
 
-description: 愿这世间不负所爱
+description: 愿世间不负所爱
 
 # Theme version
 version: 0.0.74
