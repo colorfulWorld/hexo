@@ -6,9 +6,13 @@
   background-position: center;
   background-repeat: no-repeat;
 
-  +mobile() {
-    height: 260px;
+  @media screen and (max-width: 1600px) {
+    height: 566px;
   }
+  +mobile() {
+    height: 212px;
+  }
+
 }
 
 .site-brand-bg {
