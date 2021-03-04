@@ -111,7 +111,7 @@ alert(arrSorted);
 
 快速排序是处理大数据急最快的排序算法之一。它是一种分而治之的算法，通过递归的方式将数据一次分解为包含较小元素和较大元素的不同子序列。
 
-![img caption](/images/common/kuaipai.png)
+![network](/images/common/kuaipai.png)
 
 ```javascript
 function quickSort(array) {

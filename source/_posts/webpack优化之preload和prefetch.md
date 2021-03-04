@@ -14,13 +14,13 @@ prefetch 的设计初衷是为了让当前页面的关键资源尽早被发现�
 
 当我们使用 webpack 构建页面时，就会在页面中发现有很多使用`link`引入的 JS 资源。
 
-![15659449621.jpg](https://img.hacpai.com/file/2019/08/15659449621-5fea8870.jpg)
+![network](https://img.hacpai.com/file/2019/08/15659449621-5fea8870.jpg)
 
 这段代码告诉浏览器，这段资源将会在未来某个导航或者功能要用到，但是本资源的下载顺序权重比较低。也就是说 prefetch 通常用于加速下一次导航，而不是本次的。
 
 被标记为 prefetch 的资源，将会被浏览器在空闲时间加载。prefetch 指示的是**下一次**导航可能需要的资源。浏览器识别到 Prefetch 时，应该加载该资源（且不执行），等到真正请求相同资源时，就能够得到更快的响应。
 
-[prefetch-MDN 定义](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Link_prefetching_FAQ)
+![network]](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Link_prefetching_FAQ)
 
 # preload
 

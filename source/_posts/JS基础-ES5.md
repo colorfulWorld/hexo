@@ -120,7 +120,7 @@ DOG.prototype.constructor === DOG;
 
 现在，species 属性放在 prototype 对象里，是两个实例对象共享的。只要修改了 prototype 对象，就会同时影响到两个实例对象。
 
-![img caption](/images/prototype/1.png)
+![network](/images/prototype/1.png)
 
 以上就是一个简单的 DOG 类完整的原型链。
 
