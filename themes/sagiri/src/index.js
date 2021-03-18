@@ -2,8 +2,6 @@ window.FastClick = require('fastclick');
 require('lazyload');
 
 window.notie = require('corner-notie');
-window.APlayer = require('aplayer');
-window.DPlayer = require('dplayer');
 
 require('./utils');
 require('./motion');

@@ -25,12 +25,6 @@ $(document).on('pjax:start', function () {
       }
       window.dplayers = [];
     }
-    if (window.aplayers) {
-      for (let i = 0; i < window.aplayers.length; i++) {
-        window.aplayers[i].destroy();
-      }
-      window.aplayers = [];
-    }
 });
 
 $(document).on('pjax:end', function () {
