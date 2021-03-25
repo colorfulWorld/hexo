@@ -15,7 +15,6 @@ webpack 的使用及优化
 
 <!--more-->
 
-
 ## 1、新建项目
 
 新建一个空文件夹，用于创建项目，使用 npm init 命令创建一个 package.json 文件。  
@@ -58,7 +57,7 @@ npm install webpack webpack-cli --save-dev  //这是安装本地项目模块
 
 ```js
 // hello.js
-module.exports = function() {
+module.exports = function () {
   let hello = document.createElement('div')
   hello.innerHTML = 'welcome to China!'
   return hello
@@ -95,8 +94,8 @@ module.exports = {
   entry: path.join(__dirname, '/src/index.js'), // 入口文件
   output: {
     path: path.join(__dirname, '/dist'), //打包后的文件存放的地方
-    filename: 'bundle.js' //打包后输出文件的文件名
-  }
+    filename: 'bundle.js', //打包后输出文件的文件名
+  },
 }
 ```
 
@@ -126,14 +125,14 @@ module.exports = {
   entry: path.join(__dirname, '/src/index.js'), // 入口文件
   output: {
     path: path.join(__dirname, '/dist'), //打包后的文件存放的地方
-    filename: 'bundle.js' //打包后输出文件的文件名
+    filename: 'bundle.js', //打包后输出文件的文件名
   },
   devServer: {
     contentBase: './dist', // 本地服务器所加载文件的目录
     port: '8088', // 设置端口号为8088
     inline: true, // 文件修改后实时刷新
-    historyApiFallback: true //不跳转
-  }
+    historyApiFallback: true, //不跳转
+  },
 }
 ```
 
@@ -167,7 +166,7 @@ package.json 文件修改如下
 - npm run dev 启动本地服务器，webpack-dev-server 就是启动服务器的命令，--open 是用于启动完服务器后自动打开浏览器。
 - npm run build 执行打包命令
 
-此时，我们只要输入 npm run dev 就可以在http://localhost:8088/中查看页面了。
+此时，我们只要输入 npm run dev 就可以在 http://localhost:8088/中查看页面了。
 
 ## 6、配置常用 loader
 
@@ -236,6 +235,9 @@ module: {
 }
 ```
 
+由于 loader 对文件的转换操作很耗时，需要让尽可能少的文件被 loader 处理，可以通过 test、include、exclude 三个配置来命中 loader 要应用规则的文件。为了尽可能少的让文件被 loader 处理，可以通过 include 去命中只有哪些文件被处理
+
+
 ### 处理图片
 
 处理图片资源时，我们常用的两种 loader 是 file-loader 或者 url-loader。
@@ -256,6 +258,35 @@ module: {
   ]
 }
 ```
+
+### cache-loader
+
+一些性能开销较大的 loader 之前添加 cache-loader，将结果缓存在磁盘中，默认保存在 node_modueles/.cache/cache-loader 目录下。
+首先安装依赖
+
+```javascript
+npm install cache-loader -D
+```
+
+`cache-loader `的配置要放在其他的 loader 之前，webpack 的配置如下：
+
+```javascript
+module.exports = {
+  //...
+
+  module: {
+    //我的项目中,babel-loader耗时比较长，所以我给它配置了`cache-loader`
+    rules: [
+      {
+        test: /\.jsx?$/,
+        use: ['cache-loader', 'babel-loader'],
+      },
+    ],
+  },
+}
+```
+若是只想给babel-loader配置cache的话，也可以不使用cache-loader，给babel-loader增加选项CacheDirectory。
+cacheDirectory：默认值为 false。当有设置时，指定的目录将用来缓存 loader 的执行结果。之后的 Webpack 构建，将会尝试读取缓存，来避免在每次执行时，可能产生的、高性能消耗的 Babel 重新编译过程。设置空值或者 true 的话，使用默认缓存目录：node_modules/.cache/babel-loader。开启 babel-loader的缓存和配置 cache-loader，我比对了下，构建时间很接近。
 
 ## 7、配置常用插件
 
@@ -280,9 +311,9 @@ plugins: [
     minify: {
       removeComments: true,
       collapseWhitespace: true,
-      removeAttributeQuotes: true
-    }
-  })
+      removeAttributeQuotes: true,
+    },
+  }),
 ]
 ```
 
@@ -304,10 +335,10 @@ plugins: [
     minify: {
       removeComments: true,
       collapseWhitespace: true,
-      removeAttributeQuotes: true
-    }
+      removeAttributeQuotes: true,
+    },
   }),
-  new CleanWebpackPlugin(['dist'])
+  new CleanWebpackPlugin(['dist']),
 ]
 ```
 
@@ -345,8 +376,8 @@ plugins: [
 ```javascript
 module.exports = {
   plugins: [
-    require('autoprefixer') // 引用autoprefixer模块
-  ]
+    require('autoprefixer'), // 引用autoprefixer模块
+  ],
 }
 ```
 
@@ -389,14 +420,14 @@ module.exports = {
         use: ExtractTextPlugin.extract({
           // 相当于回滚，经postcss-loader和css-loader处理过的css最终再经过style-loader处理
           fallback: 'style-loader',
-          use: ['css-loader', 'postcss-loader']
-        })
-      }
-    ]
+          use: ['css-loader', 'postcss-loader'],
+        }),
+      },
+    ],
   },
   plugins: [
-    new ExtractTextPlugin('css/index.css') // 将css分离到/dist文件夹下的css文件夹中的index.css
-  ]
+    new ExtractTextPlugin('css/index.css'), // 将css分离到/dist文件夹下的css文件夹中的index.css
+  ],
 }
 ```
 
@@ -415,8 +446,8 @@ const glob = require('glob') // 引入glob模块,用于扫描全部html文件中
 
 plugins: [
   new PurifyCssWebpack({
-    paths: glob.sync(path.join(__dirname, 'src/*.html')) // 同步扫描所有html文件中所引用的css
-  })
+    paths: glob.sync(path.join(__dirname, 'src/*.html')), // 同步扫描所有html文件中所引用的css
+  }),
 ]
 ```
 
@@ -439,9 +470,8 @@ plugins: [
 - 首页按需引入文件
 - 优化 webpack 打包时间
 
-### 优化方式
 
-### 1、 按需加载
+### 按需加载
 
 1.1 路由组件按需加载
 
@@ -449,12 +479,14 @@ plugins: [
 const router = [
   {
     path: '/index',
-    component: resolve => require.ensure([], () => resolve(require('@/components/index')))
+    component: (resolve) =>
+      require.ensure([], () => resolve(require('@/components/index'))),
   },
   {
     path: '/about',
-    component: resolve => require.ensure([], () => resolve(require('@/components/about')))
-  }
+    component: (resolve) =>
+      require.ensure([], () => resolve(require('@/components/about'))),
+  },
 ]
 ```
 
@@ -483,7 +515,7 @@ Vue.use(Vuelidate)
 import { Vuelidate } from 'vuelidate'
 ```
 
-#### 2、优化 loader 配置
+### 优化 loader 配置
 
 - 优化正则匹配
 - 通过 cacheDirectory 选项开启缓存
@@ -495,13 +527,13 @@ module: {
     {
       test: /\.js$/,
       loader: 'babel-loader?cacheDirectory',
-      include: [resolve('src')]
-    }
+      include: [resolve('src')],
+    },
   ]
 }
 ```
 
-### 3、优化文件路径——省下搜索文件的时间
+### 优化文件路径——省下搜索文件的时间
 
 - extension 配置之后可以不用在 require 或是 import 的时候加文件扩展名,会依次尝试添加扩展名进行匹配。
 - alias 通过配置别名可以加快 webpack 查找模块的速度。
@@ -516,12 +548,12 @@ module: {
   },
 ```
 
-### 4、生产环境关闭 sourceMap
+### 生产环境关闭 sourceMap
 
 - sourceMap 本质上是一种映射关系，打包出来的 js 文件中的代码可以映射到代码文件的具体位置,这种映射关系会帮助我们直接找到在源代码中的错误。
 - 打包速度减慢，生产文件变大，所以开发环境使用 sourceMap，生产环境则关闭。
 
-### 5、代码压缩
+### 代码压缩
 
 - UglifyJS: vue-cli 默认使用的压缩代码方式，它使用的是单线程压缩代码，打包时间较慢
 - ParallelUglifyPlugin: 开启多个子进程，把对多个文件压缩的工作分别给多个子进程去完成
@@ -533,11 +565,11 @@ plugins: [
   new UglifyJsPlugin({
     uglifyOptions: {
       compress: {
-        warnings: false
-      }
+        warnings: false,
+      },
     },
     sourceMap: true,
-    parallel: true
+    parallel: true,
   }),
 
   new ParallelUglifyPlugin({
@@ -547,24 +579,24 @@ plugins: [
     sourceMap: true,
     uglifyJS: {
       output: {
-        comments: false
+        comments: false,
       },
       compress: {
-        warnings: false
-      }
-    }
-  })
+        warnings: false,
+      },
+    },
+  }),
 ]
 ```
 
 打包速度和打包后的文件大小啊对比
-| 方法                | 文件大小 | 打包速度 |
+| 方法 | 文件大小 | 打包速度 |
 |---------------------|:---------|:---------|
-| 不用插件            | 14.6M    | 32s      |
-| UglifyJsPlugin      | 12.9M    | 33s      |
-| ParallelUglifyPlugi | 7.98M    | 17s      |
+| 不用插件 | 14.6M | 32s |
+| UglifyJsPlugin | 12.9M | 33s |
+| ParallelUglifyPlugi | 7.98M | 17s |
 
-### 6、提取公共代码
+### 提取公共代码
 
 - 相同资源重复被加载，浪费用户流量，增加服务器成本。
 - 每个页面需要加载的资源太大，导致网页首屏加载缓慢，影响用户体验。
@@ -575,17 +607,21 @@ webpack3 使用 CommonsChunkPlugin 的实现：
 plugins: [
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
-    minChunks: function(module, count) {
+    minChunks: function (module, count) {
       console.log(module.resource, `引用次数${count}`)
       //"有正在处理文件" + "这个文件是 .js 后缀" + "这个文件是在 node_modules 中"
-      return module.resource && /\.js$/.test(module.resource) && module.resource.indexOf(path.join(__dirname, './node_modules')) === 0
-    }
+      return (
+        module.resource &&
+        /\.js$/.test(module.resource) &&
+        module.resource.indexOf(path.join(__dirname, './node_modules')) === 0
+      )
+    },
   }),
   new webpack.optimize.CommonsChunkPlugin({
     name: 'common',
     chunks: 'initial',
-    minChunks: 2
-  })
+    minChunks: 2,
+  }),
 ]
 ```
 
@@ -600,20 +636,20 @@ module.exports = {
           priority: 1, //添加权重
           test: /node_modules/, //把这个目录下符合下面几个条件的库抽离出来
           chunks: 'initial', //刚开始就要抽离
-          minChunks: 2 //重复2次使用的时候需要抽离出来
+          minChunks: 2, //重复2次使用的时候需要抽离出来
         },
         common: {
           //公共的模块
           chunks: 'initial',
-          minChunks: 2
-        }
-      }
-    }
-  }
+          minChunks: 2,
+        },
+      },
+    },
+  },
 }
 ```
 
-### 7、CDN 优化
+### CDN 优化
 
 - 随着项目越做越大，依赖的第三方 npm 包越来越多，构建之后的文件也会越来越大。
 - 再加上又是单页应用，这就会导致在网速较慢或者服务器带宽有限的情况出现长时间的白屏。
@@ -622,7 +658,10 @@ module.exports = {
 
 ```html
 <head>
-  <link rel="stylesheet" href="https://cdn.bootcss.com/element-ui/2.0.7/theme-chalk/index.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.bootcss.com/element-ui/2.0.7/theme-chalk/index.css"
+  />
 </head>
 <body>
   <div id="app"></div>
@@ -669,17 +708,17 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'hash', //路由的模式
-  routes
+  routes,
 })
 
 new Vue({
   router,
   el: '#app',
-  render: h => h(App)
+  render: (h) => h(App),
 })
 ```
 
-### 8、使用 HappyPack 多进程解析和处理文件
+### 使用 HappyPack 多进程解析和处理文件
 
 - 由于运行在 Node.js 之上的 Webpack 是单线程模型的，所以 Webpack 需要处理的事情需要一件一件的做，不能多件事一起做。
 - HappyPack 就能让 Webpack 把任务分解给多个子进程去并发的执行，子进程处理完后再把结果发送给主进程。
@@ -697,12 +736,12 @@ module: {
       test: /\.js$/,
       use: ['happypack/loader?id=babel'],
       include: [resolve('src'), resolve('test')],
-      exclude: path.resolve(__dirname, 'node_modules')
+      exclude: path.resolve(__dirname, 'node_modules'),
     },
     {
       test: /\.vue$/,
-      use: ['happypack/loader?id=vue']
-    }
+      use: ['happypack/loader?id=vue'],
+    },
   ]
 }
 ```
@@ -719,20 +758,38 @@ plugins: [
     id: 'babel',
     // 如何处理.js文件，用法和Loader配置中一样
     loaders: ['babel-loader?cacheDirectory'],
-    threadPool: HappyPackThreadPool
+    threadPool: HappyPackThreadPool,
   }),
   new HappyPack({
     id: 'vue', // 用唯一的标识符id，来代表当前的HappyPack是用来处理一类特定的文件
     loaders: [
       {
         loader: 'vue-loader',
-        options: vueLoaderConfig
-      }
+        options: vueLoaderConfig,
+      },
     ],
-    threadPool: HappyPackThreadPool
-  })
+    threadPool: HappyPackThreadPool,
+  }),
 ]
 ```
+
+### 使用 DLLPlugin 提高打包编译速度
+
+[DLLPlugin](https://webpack.docschina.org/plugins/dll-plugin/) 代码一般简单区分为业务代码和第三方库。如果不做处理，每次构建时都需要把所有的代码重新构建一次，耗费大量的时间，在大部分情况下，很多第三方库的代码不会变更（除非是版本升级），这时就可以使用到 dll：将复用性较高的第三方模块打包到动态链接库中，再不升级这些库的情况下，动态库不需要重新打包，每次构建只需要重新打包业务代码。
+
+DllPlugin 是 webpack 内置的插件，不需要额外安装，直接配置 webpack.dll.config.js 文件，Webpack 已经内置了对动态链接库的支持，需要通过 2 个内置的插件接入，它们分别是：
+
+DllPlugin 插件：用于打包出一个个单独的动态链接库文件。
+DllReferencePlugin 插件：用于在主要配置文件中去引入 DllPlugin 插件打包好的动态链接库文件。
+
+相关链接：
+
+- [webpack 使用-详解 DllPlugin](https://segmentfault.com/a/1190000016567986)
+- [webpack 编译速度提升之 DllPlugin](https://juejin.cn/post/6844903635072057358)
+- [4-2 使用 DllPlugin](http://webpack.wuhaolin.cn/4%E4%BC%98%E5%8C%96/4-2%E4%BD%BF%E7%94%A8DllPlugin.html)
+
+
+
 
 ## 总结
 
