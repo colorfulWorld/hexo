@@ -15,12 +15,12 @@ webpack 的使用及优化
 
 <!--more-->
 
-## 1、新建项目
+## 新建项目
 
 新建一个空文件夹，用于创建项目，使用 npm init 命令创建一个 package.json 文件。  
 输入这个命令后，终端会问你一系列诸如项目名称，项目描述，作者等信息，也可以使用 npm init -y 这个命令来一次生成 package.json 文件，这样终端不会询问你问题。
 
-## 2、安装 webpack
+## 安装 webpack
 
 安装 webapck 时把 webpack-cli 也装上是因为在 webpack4.x 版本后 webpack 模块把一些功能分到了 webpack-cli 模块，所以两者都需要安装，安装方法如下：
 
@@ -29,7 +29,7 @@ npm install webpack webpack-cli --global    //这是安装全局webpack及webpac
 npm install webpack webpack-cli --save-dev  //这是安装本地项目模块
 ```
 
-## 3、新建文件
+## 新建文件
 
 在根目录件夹中新建两个文件夹，分别为 src 文件夹和 dist 文件夹，接下来再创建三个文件:此时，项目结构如下
 
@@ -37,7 +37,7 @@ npm install webpack webpack-cli --save-dev  //这是安装本地项目模块
 - hello.js --放在 src 文件夹中；
 - index.js --放在 src 文件夹中；
 
-### 3.1、 index.html 中写下 html 代码，它的作用是为了引入我们打包后的 js 文件：
+###  index.html 中写下 html 代码，它的作用是为了引入我们打包后的 js 文件：
 
 ```html
 <html lang="en">
@@ -53,7 +53,7 @@ npm install webpack webpack-cli --save-dev  //这是安装本地项目模块
 </html>
 ```
 
-### 3.2、在 hello.js 中导出一个模块：
+### 在 hello.js 中导出一个模块：
 
 ```js
 // hello.js
@@ -64,7 +64,7 @@ module.exports = function () {
 }
 ```
 
-### 3.3、在 index.js 中引入这个模块（hello.js）:
+### 在 index.js 中引入这个模块（hello.js）:
 
 ```js
 //index.js
@@ -74,7 +74,7 @@ document.querySelector('#root').appendChild(hello())
 
 上述操作就相当于我们把 hello.js 模块合并到了 index.js 模块，之后我们打包时就只需把 index.js 模块打包成 bundle.js 即可。
 
-### 3.4、进行最简单的 webpack 打包
+### 进行最简单的 webpack 打包
 
 ```javascript
 // 在终端中使用如下命令进行打包：
@@ -83,7 +83,7 @@ webpack src/index.js --output dist/bundle.js
 
 上述就相当于把 src 文件夹下的 index.js 文件打包到 dist 文件下的 bundle.js，这时就生成了 bundle.js 供 index.html 文件引用。现在打开 index.html 就可以看到我们的页面了。
 
-## 4、配置 webpack.config.js
+## 配置 webpack.config.js
 
 上述打包方式太 low 了，我们可以在当前项目的根目录下新建一个配置文件 webpack.config.js 用来配置打包方式。
 webpack.config.js 配置如下
@@ -101,11 +101,11 @@ module.exports = {
 
 有了这个配置文件，我们只需在终端中运行 webpack 命令就可进行打包，这条命令会自动引用 webpack.config.js 文件中的配置选项。
 
-## 5、构建本地服务器
+## 构建本地服务器
 
 现在我们是通过打开本地文件来查看页面的，感觉还是有点 low。例如 vue, react 等脚手架都是在本地服务器运行的。所以我们再做进一步优化。
 
-### 5.1 webpack-dev-server 配置本地服务器
+### webpack-dev-server 配置本地服务器
 
 Webpack 提供了一个可选的本地开发服务器，这个本地服务器基于 node.js 构建，它是一个单独的组件，在 webpack 中进行配置之前需要单独安装它作为项目依赖：npm i webpack-dev-server -D
 
@@ -136,7 +136,7 @@ module.exports = {
 }
 ```
 
-### 5.2、package.json 文件中添加启动和打包命令
+### package.json 文件中添加启动和打包命令
 
 package.json 文件修改如下
 
@@ -168,7 +168,7 @@ package.json 文件修改如下
 
 此时，我们只要输入 npm run dev 就可以在 http://localhost:8088/中查看页面了。
 
-## 6、配置常用 loader
+## 配置常用 loader
 
 loader 可以让 webpack 能够去处理那些非 JavaScript 文件（webpack 自身只理解 JavaScript）。loader 可以将所有类型的文件转换为 webpack 能够处理的有效模块，然后你就可以利用 webpack 的打包能力，对它们进行处理。
 
@@ -215,6 +215,44 @@ module.exports = {
 }
 ```
 
+#### css压缩
+css 代码也可以像Javascript 那样被压缩，以达到提升加速度和代码混淆的作用。目前比较成熟可靠的CSS压缩工具是cssnano，基于postcss。
+
+cssnano能理解CSS代码的含义，而不仅仅是删除空格，例如：
+- margin:10px 20px 10px 20px 被压缩成margin：10px 20px
+- color：#ff0000 被压缩成color:red
+
+通常压缩率能达到60%，cssnano介入到webpack 中很简单，因为css-loader 已经内置了，只需要开启css-loader的minimize选项，相关配置如下：
+```javascript
+const path = require('path');
+const {WebPlugin} = require('web-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.css$/,// 增加对 CSS 文件的支持
+        // 提取出 Chunk 中的 CSS 代码到单独的文件中
+        use: ExtractTextPlugin.extract({
+          // 通过 minimize 选项压缩 CSS 代码
+          use: ['css-loader?minimize']
+        }),
+      },
+    ]
+  },
+  plugins: [
+    // 用 WebPlugin 生成对应的 HTML 文件
+    new WebPlugin({
+      template: './template.html', // HTML 模版文件所在的文件路径
+      filename: 'index.html' // 输出的 HTML 的文件名称
+    }),
+    new ExtractTextPlugin({
+      filename: `[name]_[contenthash:8].css`,// 给输出的 CSS 文件名称加上 Hash 值
+    }),
+  ],
+};
+```
 ### 配置 Babel-loader
 
 Babel 其实是一个编译 JavaScript 的平台，它可以编译代码帮你达到以下目的：
@@ -651,6 +689,8 @@ module.exports = {
 
 ### CDN 优化
 
+CDN 又叫内容分发网络，通过把资源部署到世界各地，用户在访问时按照就近原则从离用户最近的服务器获取资源，从而加速资源的获取速度。
+
 - 随着项目越做越大，依赖的第三方 npm 包越来越多，构建之后的文件也会越来越大。
 - 再加上又是单页应用，这就会导致在网速较慢或者服务器带宽有限的情况出现长时间的白屏。
 
@@ -673,6 +713,8 @@ module.exports = {
   <!-- built files will be auto injected -->
 </body>
 ```
+
+**问题**：开发环境也接入vue.min.js 的cdn 时无法使用chrome 的 Vue.js devtools插件，所以要分环境加载不同的资源。
 
 2、在 webpack.config.js 配置文件
 

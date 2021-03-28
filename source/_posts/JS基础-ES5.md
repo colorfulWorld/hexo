@@ -19,7 +19,7 @@ JS 中有 7 种内置类型，7 种内置类型又分为两大类型：基本类
 
 ```javascript
 typeof 1; // 'number'
-typeof '1'; // 'string'
+typeof "1"; // 'string'
 typeof undefined; // 'undefined'
 typeof true; // 'boolean'
 typeof Symbol(); // 'symbol'
@@ -103,10 +103,10 @@ let con = [].shift.call(arguments);
 function DOG(name) {
   this.name = name;
 }
-DOG.prototype = { species: '犬科' };
+DOG.prototype = { species: "犬科" };
 
-var dogA = new DOG('大毛');
-var dogB = new DOG('二毛');
+var dogA = new DOG("大毛");
+var dogB = new DOG("二毛");
 
 alert(dogA.species);
 // 其实是通过dogA._proto_.species 来访问DOG.prototype.species
@@ -136,12 +136,12 @@ function Person(name, age, job) {
   this.name = name;
   this.age = age;
   this.job = job;
-  this.sayName = function() {
+  this.sayName = function () {
     alert(this.name);
   };
 }
-var person1 = new Person('Zaxlct', 28, 'Software Engineer');
-var person2 = new Person('Mick', 23, 'Doctor');
+var person1 = new Person("Zaxlct", 28, "Software Engineer");
+var person2 = new Person("Mick", 23, "Doctor");
 person1.__proto__ == Person.prototype;
 //person1.__proto__  = person1.constructor.prototype , person1.constructor = Person
 Person.__proto__;
@@ -183,7 +183,7 @@ function Parent(name) {
   this.name = name;
 }
 
-Parent.prototype.say = function() {
+Parent.prototype.say = function () {
   console.log(this.name);
 };
 
@@ -191,7 +191,7 @@ function Child(name) {
   Parent.call(this, name);
 }
 Child.prototype = new Parent();
-let c = new Child('Y');
+let c = new Child("Y");
 c.say();
 ```
 
@@ -214,27 +214,33 @@ c.say();
   <li id="post-6">Item 6</li>
 </ul>
 <script>
-  document.getElementById('parent-list').addEventListener('click', function(e) {
-    // e.target是被点击的元素!
-    // 如果被点击的是li元素
-    if (e.target && e.target.nodeName == 'LI') {
-      // 找到目标，输出ID!
-      console.log('List item ', e.target.id.replace('post-'), ' was clicked!');
-    }
+  document
+    .getElementById("parent-list")
+    .addEventListener("click", function (e) {
+      // e.target是被点击的元素!
+      // 如果被点击的是li元素
+      if (e.target && e.target.nodeName == "LI") {
+        // 找到目标，输出ID!
+        console.log(
+          "List item ",
+          e.target.id.replace("post-"),
+          " was clicked!"
+        );
+      }
 
-    $('li').click(function() {
-      $(this).css('background', '#D4DFE6');
+      $("li").click(function () {
+        $(this).css("background", "#D4DFE6");
+      });
+
+      // jQuery的delegate写法
+      $("#wrap").delegate("li", "click", function (ev) {
+        // this 指向委托的对象 li
+        $(this).css("background", "#D4DFE6");
+
+        // 找到父级 ul#wrap
+        $(ev.delegateTarget).css("border", "2px solid #f00");
+      });
     });
-
-    // jQuery的delegate写法
-    $('#wrap').delegate('li', 'click', function(ev) {
-      // this 指向委托的对象 li
-      $(this).css('background', '#D4DFE6');
-
-      // 找到父级 ul#wrap
-      $(ev.delegateTarget).css('border', '2px solid #f00');
-    });
-  });
 </script>
 ```
 
@@ -243,8 +249,8 @@ c.say();
 `getComputedStyle`是一个可以获取当前元素所有最终使用 css 属性值。返回一个 css 样式声明对象([object CSSStyleDeclaration])，只读。之前偶尔有一次要更改伪类元素 ::after 的样式
 
 ```javascript
-var dom = document.getElementById('test'),
-  style = window.getComputedStyle(dom, ':after');
+var dom = document.getElementById("test"),
+  style = window.getComputedStyle(dom, ":after");
 ```
 
 ### `getComputedStyle`与`style`的区别
@@ -258,7 +264,7 @@ var dom = document.getElementById('test'),
 `getPropertyValue`方法可以获取 CSS 样式申明对象上的属性值（直接属性名称），例如：
 
 ```javascript
-window.getComputedStyle(element, null).getPropertyValue('float');
+window.getComputedStyle(element, null).getPropertyValue("float");
 ```
 
 ## `this`
@@ -275,12 +281,12 @@ window.getComputedStyle(element, null).getPropertyValue('float');
 ```javascript
 var a = {
   name: A,
-  fn: function() {
+  fn: function () {
     console.log(this.name);
-  }
+  },
 };
 a.fn(); //this===a
-a.fn({ name: 'b' }); //this==={name:'b'}
+a.fn({ name: "b" }); //this==={name:'b'}
 var fn1 = a.fn;
 fn1(); //this===window
 ```
@@ -297,7 +303,7 @@ fn1(); //this===window
 
   ```javascript
   let a = {
-    age: 1
+    age: 1,
   };
   let b = Object.assign({}, a);
   a.age = 2;
@@ -307,7 +313,7 @@ fn1(); //this===window
 - 当然也可以通过展开运算符（···）来解决
   ```javascript
   let a = {
-    age: 1
+    age: 1,
   };
   let b = { ...a };
   a.age = 2;
@@ -330,8 +336,8 @@ let obj = {
   a: 1,
   b: {
     c: 2,
-    d: 3
-  }
+    d: 3,
+  },
 };
 obj.c = obj.b;
 obj.e = obj.a;
@@ -344,9 +350,9 @@ console.log(newObj); //会报错
 ```javascript
 let a = {
   age: undefined,
-  sex: Symbol('male'),
-  jobs: function() {},
-  name: 'yck'
+  sex: Symbol("male"),
+  jobs: function () {},
+  name: "yck",
 };
 
 let b = JSON.parse(JSON.stringfy(a));
@@ -358,14 +364,117 @@ console.log(b); //{name:'yck'}
 `Map`作用是生成一个新数组，遍历原数组，将每一个元素拿出来做一些变换然后`append`到新的数组中。
 
 ```javascript
-[1, 2, 3].map(v => v + 1); //=>[2,3,4]
+[1, 2, 3].map((v) => v + 1); //=>[2,3,4]
 ```
 
 `Map`有三个参数，分别是当前索引元素，索引，原数组
 
 ```javascript
-['1', '2', '3'].map(parseInt);
+["1", "2", "3"].map(parseInt);
 //  parseInt('1', 0) -> 1
 //  parseInt('2', 1) -> NaN
 //  parseInt('3', 2) -> NaN
 ```
+
+## NaN
+
+```javascript
+NaN !== NaN; //true
+NaN.valueOf(); //NaN
+NaN.toString(); //'NaN
+NaN < 3; //false
+NaN >= 3; //false
+NaN < NaN; //false
+NaN >= NaN; //false
+```
+
+## 标签语句
+
+相当于定位符，用于跳转到程序的任意位置。标签通常与 break 语句和 continue 语句配合使用，跳出特定的循环。
+
+```javascript
+top: for (var i = 0; i < 3; i++) {
+  for (var j = 0; j < 3; j++) {
+    if (i === 1 && j === 1) break top;
+    console.log("i=" + i + ", j=" + j);
+  }
+}
+```
+
+break 命令后加上 top 标签，满足条件时，直接跳出双层循环。如果 break 语句后面不适用标签，则纸条出内层循环，进入下一次外层循环。
+
+continue 语句也可以配合使用
+
+```javascript
+top: for (var i = 0; i < 3; i++) {
+  for (var j = 0; j < 3; j++) {
+    if (i === 1 && j === 1) continue top;
+    console.log("i=" + i + ", j=" + j);
+  }
+}
+// i=0, j=0
+// i=0, j=1
+// i=0, j=2
+// i=1, j=0
+// i=2, j=0
+// i=2, j=1
+// i=2, j=2
+```
+
+满足条件时，会跳过当前循环，直接进入到下一论外层循环。如果 continue 语句后面不使用标签，则只能进入下一轮内层循环。
+
+## with
+
+with 语句用途是将代码作用于设置为特定对象，使用例子是：
+
+```javascript
+with(location{
+  let qs = search.substring(1)
+  let hostName = hostname
+  let url = href
+})
+```
+
+使用 with 代替频繁使用的 location 对象，这意味着在这个语句内部，每个变量首先会被认为是一个局部变量，如果没有找到该局部变量，则会搜索 location 对象，看它是否是有一个同名属性。如果有，则该苏醒会被求值成 location 对象属性
+
+由于 with 语句影响性能且难以调试其中代码,通常不推荐在代码中使用
+
+## 原始数据类型
+
+ECMScript 变量可以包含两种不同类型的数据：原始值和引用值。原始值就是最简单的数据，引用值是由多个值构成的对象。
+
+**6 种引用值**：Undefined、Null、Boolean、Number、String 和 Symbol
+
+保存原始值的变量是**按值**访问的，因为我们操作的就是存储在变量中的实际值
+
+注意，原始类型的初始化可以只使用原始字面量形式。如果使用的是 new 关键字，则 JavaScript 会创建一个 Object 类型的实例，但其行为类似原始值。下面来看看这两种初始化方式的差异：
+
+```javascript
+let name1 = "Nicholas";
+let name2 = new String("Matt");
+name1.age = 27;
+name2.age = 26;
+console.log(name1.age) //undefined
+console.log(name2.age) // 26
+console.log(typeOf name1) //string
+console.log(typeOf name2) //object
+```
+
+## 引用值
+
+一个值得深思的例子
+
+```javascript
+function setName(obj) {
+  obj.name = "Nicholas";
+  obj = new Object();
+  obj.name = "Greg";
+  console.log(obj)//Greg
+}
+let person = new Object();
+setName(person);
+console.log(person.name);//“Nicholas"
+```
+如果person 是按饮用类型传递的，那么person应该自动将指针改为指向name为”Greg"的对象。可是，当我们再次访问person.name时，它的值是“Nicholas",这表明函数中参数的，原始的引用类型仍然没有改变。
+
+当obj在函数内部被重写时，它变成了一个指向本地对象的指针。而那个本地对象在函数执行结束时就被销毁

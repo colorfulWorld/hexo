@@ -7,21 +7,133 @@ categories: JavaScript
 发现自己对于 javascript 的底层 API 所知甚少，在这里记录一下所遇到的有趣又实在的 API 用法。
 
 ES6 的更新内容主要分为以下几点
+
 - 表达式：声明、解构赋值
 - 内置对象：字符串扩展、数值扩展、对象扩展、数组扩展、函数扩展、正则扩展、Symbol、Set、Map、Proxy、Reflect
 - 语句与运算：Class、Module、lterator
 - 异步编程：Promise、Generator、Async
 
-
 <!--more-->
 
 ## var 与 let 的区别
-使用var 关键字来声明变量，会出现重复声明导致变量被覆盖不会报错的问题；
-在 ES6 中引入了let 来解决var 关键字带来的潜在问题，若是重复声明则会在控制台报错。
+
+使用 var 关键字来声明变量，会出现重复声明导致变量被覆盖不会报错的问题；
+在 ES6 中引入了 let 来解决 var 关键字带来的潜在问题，若是重复声明则会在控制台报错。
 
 ## `Symbol`数据类型
 
 `Symbol`是通过`Symbol`函数生成的，凡是属性名属于`symbol`类型，就都是独一无二的，可以保证不会与其他属性名冲突。
+
+### 使用 Symbol 来作为唯一标志
+
+```javascript
+const PROP_NAME = Symbol(); //解救无意义的赋值
+const PROP_AGE = Symbol();
+
+let obj = {
+  [PROP_NAME]: "一斤代码", //对象key值或是常量使用，原理相同
+};
+obj[PROP_AGE] = 18;
+
+obj[PROP_NAME]; // '一斤代码'
+obj[PROP_AGE]; // 18
+```
+
+### 使用 Symbol 定义类的私有属性
+
+在 JS 中是没有私有变量的，雷伤所有定义的属性或是方法都是公开访问的。因此可能存在污染等情况，而有了 Symbol 以及模块化机制，类的私有属性和方法才能变成可能。
+
+在文件 a.js 中
+
+```javascript
+const PASSWORD = Symbol();
+
+class Login {
+  constructor(username, password) {
+    this.username = username;
+    this[PASSWORD] = password;
+  }
+
+  checkPassword(pwd) {
+    return this[PASSWORD] === pwd;
+  }
+}
+
+export default Login;
+```
+
+在文件 b.js 中
+
+```javascript
+import Login from "./a";
+
+const login = new Login("admin", "123456");
+
+login.checkPassword("admin"); // true
+
+login.PASSWORD; // oh!no!
+login[PASSWORD]; // oh!no!
+login["PASSWORD"]; // oh!no!
+```
+
+由于 Symbol 常量 PASSWORD 被定义在 a.js 所在的模块中，外面的模块获取不到这个 Symbol,也不可能在创建一个一个一样的 Symbol 出来，所以这个 PASSWORD 只能被限制在 a.js 内部使用，达到一个私有化的效果
+
+### 注册和获取全局 Symbol
+
+Symbol 在不同 window 中创建的 Symbol 实例总是唯一的，如果应用涉及到多个 window（ifram），并需要这些 window 使用的是同一个，那就不能使用 Symbol()了（若是微前端里面又是什么样的呢？有时间试试），这时可以使用 Symbol.for()，它来注册或获取一个 window 间全局的 Symbol 实例：
+
+```javascript
+let gs1 = Symbol.for("global_symbol_1"); //注册一个全局Symbol
+let gs2 = Symbol.for("global_symbol_1"); //获取全局Symbol
+
+gs1 === gs2; // true
+```
+
+这时，在多个相关 window 间也是唯一的。
+
+### Symbol.iterator
+在Symbol.iterator 出现后，JS可以定义自己的迭代器
+iterator模式总是用同一种逻辑来遍历集合
+```javascript
+for(Iterator it = c.iterater(); it.hasNext(); ) { ... }
+//这样就在一定程度上解决了不同的数据类型需要不同的遍历方法
+```
+
+```javascript
+let students = {
+  [Symbol.iterator]: function*() {
+    for(var i=0;i<=100;i++) {
+      yield i;
+    }
+  }
+}
+for(var s of students) {
+  console.log(s);
+}
+//这个yield其实最后返回的就是iterator函数
+```
+
+## yield
+
+yield 关键字用来暂停和恢复一个生成器函数.
+
+yield 关键字实际返回一个 IteratorResult 对象，它有两个属性，value 和 done。value 属性是对 yield 表达式求值的结果，而 done 是 false，表示生成器函数尚未完全完成。
+
+```javascript
+function* countAppleSales() {
+  var saleList = [3, 7, 5];
+  for (var i = 0; i < saleList.length; i++) {
+    yield saleList[i];
+  }
+}
+//一旦生成器函数已定义，可以通过一个构造一个迭代器来使用它
+
+var appleStore = countAppleSales(); // Generator { }
+console.log(appleStore.next()); // { value: 3, done: false }
+console.log(appleStore.next()); // { value: 7, done: false }
+console.log(appleStore.next()); // { value: 5, done: false }
+console.log(appleStore.next()); // { value: undefined, done: true }
+```
 
 ## this
 
@@ -48,7 +160,31 @@ console.log(set1.has(6)); // expected output:false
 console.log(Array.from(set1)) // Array [1, 2, 3, 4, NaN, 5]
 ```
 
-## super
+## 类
+
+面向对象编程中的一个核心概念就是类（多态、封装、继承）。可以把事物都抽象成一个个的类来描述他们的信息和行为。
+
+JavaScript 是一个基于对象的语言，而不是面对对象的语言，它是一个基于 prototype 的语言。它的语法中没有像 Java 之类典型面向对象语言中定义一个类的语法，因此在 ES6 中，提供了一个面向对象风格的类定义方式：使用 class 关键字。
+
+```javascript
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  walk() {
+    console.log("I'm walking...");
+  }
+
+  static create(name, age) {
+    //定义静态方法
+    return new Person(name, age);
+  }
+}
+```
+
+### super
 
 super 关键字用于访问和调用一个对象的父对象的函数。( 只能在 class 内部用 )
 
@@ -109,7 +245,7 @@ class Human{}
   }
 }
 
-class computer eatends Human{
+class computer eatends Human{ //使用extend 实现继承另一个类
   constructor(){}
   static pingpong(){
     return super.ping()+'pong'
@@ -125,7 +261,7 @@ Computer.pingpong()
 function Parent(name) {
   this.name = name;
 }
-Parent.prototype.getName = function() {
+Parent.prototype.getName = function () {
   return this.name;
 };
 function Child(name, age) {
@@ -136,10 +272,10 @@ function Child(name, age) {
 Child.prototype = new Parent();
 Child.prototype.constructor = Child;
 
-Child.prototype.getAge = function() {
+Child.prototype.getAge = function () {
   return this.Age;
 };
-var people = new Child('lily', 20);
+var people = new Child("lily", 20);
 console.log(people.getName());
 ```
 
@@ -174,7 +310,7 @@ async function fetchdata(url) {}
 function getaSync(url) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', url);
+    xhr.open("GET", url);
     xhr.onload = () => resolve(xhr.responseText);
     xhr.onerror = () => reject(xhr.statusText);
     xhr.send();
@@ -182,16 +318,16 @@ function getaSync(url) {
 }
 
 async function fetchdata() {
-  var text1 = await getasync('test.txt');
+  var text1 = await getasync("test.txt");
   console.logtex(text1);
-  var text2 = await getasync('test2.text');
+  var text2 = await getasync("test2.text");
   console.log(text2);
-  var text3 = await getasync('text3.text');
+  var text3 = await getasync("text3.text");
   console.log(text3);
-  return 'Finished';
+  return "Finished";
 }
 
-fetchdata().then(msg => {
+fetchdata().then((msg) => {
   console.log(msg); //“test.txt”，“test2.txt”，“test3.txt”
 });
 ```
@@ -203,7 +339,7 @@ fetchdata().then(msg => {
 ES6 解构并非一个新的功能，而是一个新的复制语法，可以快速解压缩对象属性和数组中的值，并将它们分配给各个变量。
 
 ```javascript
-var profile = { name: 'georage', age: 39, hobby: 'Tennis' };
+var profile = { name: "georage", age: 39, hobby: "Tennis" };
 var { name, hobby } = profile;
 console.log(name); //'georage'
 console.log(hobby); //'Tennis'
@@ -214,7 +350,7 @@ console.log(hobby); //'Tennis'
 使用别名，你可以使用与你正在提取值的对象属性不同的变量名：
 
 ```javascript
-var profile = { name: 'georage', age: 39, hobby: 'Tennis' };
+var profile = { name: "georage", age: 39, hobby: "Tennis" };
 var { name: n, hobby: h } = profile;
 console.log(n); //'georage'
 console.log(h); //'Tennis'
@@ -251,7 +387,7 @@ console.log(modified)
 数组的解构与对象上的工作方式类似，除了左边的花括号使用**方括号**代替：
 
 ```javascript
-var soccerteam = ['George', 'Dennis', 'Sandy'];
+var soccerteam = ["George", "Dennis", "Sandy"];
 var [a, b] = soccerteam;
 console.log(a); // "George"
 console.log(b); // "Dennis"
@@ -290,7 +426,7 @@ console.log(c);//s
 字符串的结构赋值会以单个字符串的方式进行赋值。
 
 ```javascript
-let { length } = 'yes';
+let { length } = "yes";
 console.log(length); //3
 ```
 
@@ -306,6 +442,39 @@ function test({ a = 10, b }) {
 test(obj);
 ```
 
+## Spread 操作符
+
+spread(...)操作符也称作展开操作符，作用是讲可迭代的对象进行展开
+
+```javascript
+var fruits = ["apple", "orange", "peach"];
+var shoppingList = ["t-shirt", ...fruits, "egg"];
+
+// shoppingList的值：["t-shirt", "apple", "organe", "peach", "egg"]
+```
+
+Spread 操作符可以展开 Iterable 的对象，这样的话，除了数组之外，所有实现了 Symbol.iterator 的对象，如：Set, Map 和 Generator 等等，都可以使用 Spread 操作符。
+
+````javascript
+var map = new Map();
+map.set("a", 1);
+map.set("b", 2);
+var arr1 = [...map];  //[["a", 1], ["b", 2]]
+
+var set = new Set();
+set.add(1);
+set.add(2);
+set.add(1);
+set.add(3);
+var arr2 = [...set];  //[1, 2, 3]
+
+function *myGen() {
+  yield "hello";
+  yield "world";
+}
+var arr2 = [...myGen()]; //["hello", "world"]
+
+
 ## 默认和剩余参数
 
 ### 默认参数
@@ -318,7 +487,7 @@ function getarea(w, h) {
   var h = h || 15;
   return w * h;
 }
-```
+````
 
 有了 ES6 对默认参数的支持后
 
@@ -336,9 +505,9 @@ ES6 中的 Rest Parameters 使得将函数参数转换成数组的操作变得�
 ```javascript
 function addit(...theNumber) {
   //get the sum of the array elements
-  return theNumber.reduce( (prevnum.curnum)=>prevnu+curnum,0)
+  return theNumber.reduce((prevnum.curnum) => prevnu + curnum, 0);
 }
-addit(1,2,3,4)//10
+addit(1, 2, 3, 4); //10
 ```
 
 通过在命名参数前添加 3 个点。在该位置和之后输入到函数中的参数将自动转换为数组。
@@ -397,10 +566,10 @@ next 方法的作用是分阶段执行 Generator 函数。每次调用 next 方�
 
 ```javascript
 function* genFn() {
-  console.log('begin');
-  var value = yield 'a';
+  console.log("begin");
+  var value = yield "a";
   console.log(value); // 'B'
-  return 'end';
+  return "end";
 }
 
 var gen = genFn();
@@ -408,7 +577,7 @@ console.log(typeof gen); // 'object'
 var g1 = gen.next();
 g1.value; // 'a'
 g1.done; // false
-var g2 = gen.next('B');
+var g2 = gen.next("B");
 g2.value; // 'end'
 g2.done; // true
 ```
@@ -418,21 +587,22 @@ g2.done; // true
 ### 字符串内容测试
 
 ```javascript
-'abcdef'.includes('c'); //true
-'abcdef'.includes('ye'); //false
-'abcdef'.startsWith('a'); //true
-'abcdef'.endswidth('f'); //true
+"abcdef".includes("c"); //true
+"abcdef".includes("ye"); //false
+"abcdef".startsWith("a"); //true
+"abcdef".endswidth("f"); //true
 //includes(), startsWith(), endsWith() 都支持第二个参数，
 //类型为数字类型，意为从第 n 个字符开始，endsWith()的第二个参数有点不一样
-'abcdef'.includes('c', 4); //false 从第5个字符开始查找是否有 'c' 这个字符
-'abcdef'.startsWith('d', 3); //true 从第4个字符开始查找是否是以 'd' 字符为开头
-'abcdef'.endsWith('d', 4); //true 前面的4个字符里，是否以 'd' 字符为结尾
+"abcdef".includes("c", 4); //false 从第5个字符开始查找是否有 'c' 这个字符
+"abcdef".startsWith("d", 3); //true 从第4个字符开始查找是否是以 'd' 字符为开头
+"abcdef".endsWith("d", 4); //true 前面的4个字符里，是否以 'd' 字符为结尾
 ```
 
 **字符串重复输出：**
+这个方法接受一个整数参数，表示要将字符串复制多少次，然后返回拼接所有副本后的结果
 
 ```javascript
-'a'.repeat(5); //aaaaa 重复输出5遍
+"a".repeat(5); //aaaaa 重复输出5遍
 ```
 
 ## 模板字符串(``)
@@ -448,7 +618,7 @@ function authorize(user, action) {
 在这个示例中，`${user.name}`,`${action}`被称为模板占位符，javascript 将把 user.name 和 action 的值插入到最终生成的字符串中。
 
 ```javascript
-$('#warning').html(`
+$("#warning").html(`
   <h1>小心！>/h1>
   <p>未经授权打冰球可能受罚
   将近${maxPenalty}分钟。</p>
@@ -461,19 +631,19 @@ $('#warning').html(`
 
 ```javascript
 //es5
-$('#result').append(
-  'There are <b>' +
+$("#result").append(
+  "There are <b>" +
     basket.count +
-    '</b> ' +
-    'items in your basket, ' +
-    '<em>' +
+    "</b> " +
+    "items in your basket, " +
+    "<em>" +
     basket.onSale +
-    '</em> are on sale!'
+    "</em> are on sale!"
 );
 //es6
 //在es6中，内容模板，可以定义在 `` 包起来的字符串中，其中的内容会保持原有格式
 //另外可以在字符串中直接使用模板语言进行变量填充，优雅而简洁
-$('#result').append(`
+$("#result").append(`
   There are <b>${basket.count}</b> items
    in your basket, <em>${basket.onSale}</em>
   are on sale!
@@ -484,7 +654,7 @@ $('#result').append(`
 
 ```javascript
 //for ...of 格式为 es6 中的 Iterator 迭代器的输出方式
-for (let c of 'abc') {
+for (let c of "abc") {
   console.log(c);
 }
 //a
@@ -497,10 +667,19 @@ for (let c of 'abc') {
 ```javascript
 //参数1：[number] 目标字符串长度
 //参数2：[string] 进行补全的字符串
-'12345'.padStart(7, '0'); //0012345 - 字符串不足7位，在头部补充不足长度的目标字符串
-'12345'.padEnd(7, '0'); //1234500 - 在尾部进行字符串补全
+"12345".padStart(7, "0"); //0012345 - 字符串不足7位，在头部补充不足长度的目标字符串
+"12345".padEnd(7, "0"); //1234500 - 在尾部进行字符串补全
 ```
 
+### 字符串迭代与结构
+
+```javascript
+let message = "abc";
+let stringIterator = message[Symbol.iterator]();
+stringIterator.next(); //{value:a,done:false}
+stringIterator.next(); //{value:b,done:false}
+```
+或是用for of
 ## 数组扩展
 
 ### Array.from()
@@ -555,7 +734,7 @@ console.log(a);//[1, 3, 10]
 
 ```javascript
 //直接使用变量/常量的名称个为对象属性的名称
-let a = 'abc';
+let a = "abc";
 let b = { a }; //{a: 'abc'}
 
 function f(x, y) {
@@ -569,13 +748,13 @@ function f(x, y) {
 let o = {
   f() {
     return 1;
-  }
+  },
 };
 //等效于
 let o = {
-  f: function() {
+  f: function () {
     return 1;
-  }
+  },
 };
 ```
 
@@ -643,12 +822,24 @@ if (someobj && Object.keys(someobj).length);
 
 ### Map
 
-Map 的用法和普通对象基本一致，先看一下它能用非法字符串或者数字作为 key 的特性。
+Map 的用法和普通对象基本一致，但是主要差异是，Map实例会维护键值对的插入顺序，因此可以根据插入顺序执行迭代操作。
+
+对象和映射之间存在着显著的内存和性能问题：
+
+- 在给定固定大小的内存时，Map大约可以比Object多存储50% 的键/值对。
+- Map在所有的浏览器中一般会比Object的插入速度快
+- 从大型Object和Map中查找键/值对，则Object有时候速度会更快。在把Object当成数组使用的情况下（比如使用连续整数作为属性），浏览器引擎可以进行优化，在内存中使用更高效的布局。对于这两个类型而言，查找书读不会随着键/值对数量增加而现行增加，如果代码设计大量查找操作，那么某些情况下可能选Object更好
+- Object的delete性能很差，在现在很多浏览器依然如此，Map 的delete操作都比插入和查找更快，如果代码涉及大量删除操作，那么毫无以为应该选择map
+
+(思考：vue中的data数据使用Map是什么样的呢？)
+
+
+先看一下它能用非法字符串或者数字作为 key 的特性。
 
 ```javascript
 const map = Map();
-const obj = { p: 'hellow' };
-map.set(obj, 'ok'); //ok
+const obj = { p: "hellow" };
+map.set(obj, "ok"); //ok
 console.log(obj); //{ p: 'hellow' }
 map.get(obj); //ok
 map.has(obj); //true
@@ -668,3 +859,26 @@ map.has(obj); //false
 - values():返回键值的遍历器
 - entries():返回所有成员的遍历器
 - forEach():遍历 Map 的所有成员
+
+### 定型数组
+所谓定型数组，就是将任何数字转换成一个包含数字比特的数组，随后就可以通过JS数组进一步处理
+
+在JavaScript中，数字类型变量都是以64位浮点型数据格式存储；比如新建一个只需要8比特的整数，也需要为其开辟64位存储空间，浪费资源，效率也低。而CanvasFloatArray需要的是Float32Array
+
+所有与定型数组有关的操作和对象都集中在这8个数据类型上，但是在使用他们之前，需要穿件一个数组缓冲区存储这些数据
+
+数据缓冲区是所有定型数组的根基，它是一段可以包含特定数量字节的内存地址。
+
+## isInteger 与安全整数
+
+isInteger 用于判断一个数值是否为整数。
+
+```javascript
+console.log(Number.isInteger(1)); //  true
+console.log(Number.isInteger(1.0)); //true
+console.log(Nmber.isInteger(1.01)); //false
+```
+
+为了鉴别整数是否在安全范围科研使用 Number.isSafeInteger()方法
+
+
