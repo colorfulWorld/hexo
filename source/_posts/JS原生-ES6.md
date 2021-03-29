@@ -117,7 +117,7 @@ for (var s of students) {
 
 ## yield
 
-yield 关键字用来暂停和恢复一个生成器函数.yield关键字只能在生成器函数内部使用，用在其他地方会抛出错误。类似函数的return关键字，yield关键字必须直接位于生成器函数定义中，出现在嵌套的非生成器函数中会抛出语法错误
+yield 关键字用来暂停和恢复一个生成器函数.yield 关键字只能在生成器函数内部使用，用在其他地方会抛出错误。类似函数的 return 关键字，yield 关键字必须直接位于生成器函数定义中，出现在嵌套的非生成器函数中会抛出语法错误
 
 yield 关键字实际返回一个 IteratorResult 对象，它有两个属性，value 和 done。value 属性是对 yield 表达式求值的结果，而 done 是 false，表示生成器函数尚未完全完成。
 
@@ -891,10 +891,29 @@ console.log(generatorObject2.next()) //{done:false,value:'foo'}
 console.log(generatorObject2.next()) //{done:false,value:'bar'}
 console.log(generatorObject1.next()) //{done:false,value:'bar'}
 ```
-**也可以用for of 对generatorObject1进行迭代，那这个可以结合promise 使用吗？是可以的，就是用yield 实现了await**。async 和 await，比起星号和 yield，语义更清楚了。async 表示函数里有异步操作，await 表示紧跟在后面的表达式需要等待结果。co 函数库约定，yield 命令后面只能是 Thunk 函数或 Promise 对象，而 async 函数的 await 命令后面，可以跟 Promise 对象和原始类型的值（数值、字符串和布尔值，但这时等同于同步操作）。
 
-### 使用yield* 实现递归算法
+**也可以用 for of 对 generatorObject1 进行迭代，那这个可以结合 promise 使用吗？是可以的，就是用 yield 实现了 await**。async 和 await，比起星号和 yield，语义更清楚了。async 表示函数里有异步操作，await 表示紧跟在后面的表达式需要等待结果。co 函数库约定，yield 命令后面只能是 Thunk 函数或 Promise 对象，而 async 函数的 await 命令后面，可以跟 Promise 对象和原始类型的值（数值、字符串和布尔值，但这时等同于同步操作）。
 
-yield*最有用的地方是实现递归操作，此时生成器可以产生自身：
+### 使用 yield\* 实现递归算法
+
+yield\* 表达式迭代操作数，并产生它返回的每个值
+
+yield\* 表达式本身的值是当迭代器关闭时返回的值（即 done 为 true）时
+
+yield\*最有用的地方是实现递归操作，此时生成器可以产生自身：
+
 ```javascript
+function* nTimes(n) {
+  if (n > 0) {
+    yield* nTimes(n - 1)
+    yield n - 1
+  }
+}
+
+for (const x of nTimes(3)) {
+  console.log(x)
+}
+//0
+//1
+//2
 ```

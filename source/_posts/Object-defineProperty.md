@@ -8,7 +8,20 @@ Object.defineProperty() 方法会直接在一个对象上定义一个新属性�
 
 <!--more-->
 
-## Object.defineProperty(object, propertyname, descriptor) 为对象定义属性
+对象的属性分两种：数据属性和访问属性
+
+## 数据属性
+
+数据属性包含一个保存数据值的位置。数据属性有 4 个特性描述它们的行为
+
+- Configurable：表示属性是否可以通过 delete 删除并重新定义，是否可以修改它的特性，以及是否可以把它改为访问属性，默认为 true
+- Enumerable：表示是否可以通过 for-in 循环返回，默认为 true
+- Writable：是否可以被修改，默认为 true
+- Value：包含属性实际的值，默认值为 undefined
+
+要修改属性的默认特性，就必须使用 Object.defineProperty()方法
+
+### Object.defineProperty(object, propertyname, descriptor) 为对象定义属性
 
 在 js 中我们可以通过下面几种方法定义属性 :
 
@@ -19,11 +32,16 @@ someOne.name = 'cover';
 someOne['name'] = 'cover';
 // or use (3) defineProperty
 Object.defineProperty(someOne, 'name', {
+  writable:false
   value: 'cover'
 });
+someOne['name'] = 'bbbb';
+console.log(someOne['name'])//cover
 ```
 
-### descriptor
+若是用来封装自定义 API 是非常有用的
+
+#### descriptor
 
 其中 descriptor 的参数值得我们关注下 , 该属性可设置的值有：value 、 writable、configurable 、 enumerable、set 和 get。
 
@@ -36,14 +54,14 @@ Object.defineProperty(someOne, 'name', {
 该属性是否可写，如果设置成 false，则任何对该属性改写的操作都无效（但不会报错），对于像前面例子中直接在对象上定义的属性，这个属性该特性默认值为为 true。
 
 ```javascript
-var someOne = {};
+var someOne = {}
 Object.defineProperty(someOne, 'name', {
   value: 'coverguo', //由于设定了writable属性为false 导致这个量不可以修改 ，任何修改豆浆无效化
-  writable: false
-});
-console.log(someOne.name); // 输出 coverguo
-someOne.name = 'linkzhu';
-console.log(someOne.name); // 输出coverguo
+  writable: false,
+})
+console.log(someOne.name) // 输出 coverguo
+someOne.name = 'linkzhu'
+console.log(someOne.name) // 输出coverguo
 ```
 
 #### 【 configurable】
@@ -57,19 +75,19 @@ console.log(someOne.name); // 输出coverguo
 是否能在 for-in 循环中遍历出来或在 Object.keys 中列举出来。对于像前面例子中直接在对象上定义的属性，这个属性该特性默认值为为 true。
 
 ```javascript
-var a = {};
+var a = {}
 Object.defineProperty(a, 'b', {
   value: 3445,
-  enumerable: true
-});
-console.log(Object.keys(a)); // 打印["b"]
+  enumerable: true,
+})
+console.log(Object.keys(a)) // 打印["b"]
 //改为false
-var a = {};
+var a = {}
 Object.defineProperty(a, 'b', {
   value: 3445,
-  enumerable: false //注意咯这里改了
-});
-console.log(Object.keys(a)); // 打印[]
+  enumerable: false, //注意咯这里改了
+})
+console.log(Object.keys(a)) // 打印[]
 ```
 
 #### 注意：
@@ -78,19 +96,32 @@ console.log(Object.keys(a)); // 打印[]
 
 ```javascript
 //调用Object.defineProperty()方法时，如果不指定
-var someOne = {};
-someOne.name = 'coverguo';
-console.log(Object.getOwnPropertyDescriptor(someOne, 'name'));
+var someOne = {}
+someOne.name = 'coverguo'
+console.log(Object.getOwnPropertyDescriptor(someOne, 'name'))
 //输出 Object {value: "coverguo", writable: true, enumerable: true, configurable: true}
 
 //直接在对象上定义的属性，这个特性默认值为为 true
-var otherOne = {};
+var otherOne = {}
 Object.defineProperty(otherOne, 'name', {
-  value: 'coverguo'
-});
-console.log(Object.getOwnPropertyDescriptor(otherOne, 'name'));
+  value: 'coverguo',
+})
+console.log(Object.getOwnPropertyDescriptor(otherOne, 'name'))
 //输出 Object {value: "coverguo", writable: false, enumerable: false, configurable: false}
 ```
+
+## 访问器属性
+
+访问器属性不包含数据值。相反他们包含一个获取 getter 函数和一个设置 setter 函数，不过这两个函数不是必需的。在读取访问器属性时，会调用获取函数，这个函数的责任就是返回一个有效的值。
+
+在写入访问器属性时，会调用设置函数并传入新值，这个函数必须决定对数据做出什么修改，访问器属性有 4 个特性描述它们的行为。
+
+- Configurable：表示属性是否可以通过 delete 删除并重新定义，是否可以修改它的特性，以及是否可以把它改为数据属性，默认为 true
+- Enumerable：表示属性是否可以通过 for-in 循环返回，默认为 true
+- Get：获取函数，在读取属性时调用，默认为 undefined
+- Set：设置函数，在写入属性时调用，默认为 undefined
+
+访问器属性是不能直接定义的，不许使用 Object.defineProperty()
 
 #### 【 get】和【set 】
 

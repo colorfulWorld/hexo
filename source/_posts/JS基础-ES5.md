@@ -18,35 +18,35 @@ JS 中有 7 种内置类型，7 种内置类型又分为两大类型：基本类
 `typeof` 对于基本类型。除了`null`都可以显示正确的类型
 
 ```javascript
-typeof 1; // 'number'
-typeof "1"; // 'string'
-typeof undefined; // 'undefined'
-typeof true; // 'boolean'
-typeof Symbol(); // 'symbol'
-typeof b; // b 没有声明，但是还会显示 undefined
+typeof 1 // 'number'
+typeof '1' // 'string'
+typeof undefined // 'undefined'
+typeof true // 'boolean'
+typeof Symbol() // 'symbol'
+typeof b // b 没有声明，但是还会显示 undefined
 
 //typeof 对于对象，除了函数都会显示 object
 
-typeof []; // 'object'
-typeof {}; // 'object'
-typeof console.log; // 'function'
+typeof [] // 'object'
+typeof {} // 'object'
+typeof console.log // 'function'
 
-typeof null; // 'object'
+typeof null // 'object'
 ```
 
 PS：为什么会出现这种情况呢？因为在 JS 的最初版本中，使用的是 32 位系统，为了性能考虑使用低位存储了变量的类型信息，000 开头代表是对象，然而 null 表示为全零，所以将它错误的判断为 object 。虽然现在的内部类型判断代码已经改变了，但是对于这个 Bug 却是一直流传下来
 
 ```javascript
-let a;
+let a
 // 我们也可以这样判断 undefined
-a === undefined;
+a === undefined
 // 但是 undefined 不是保留字，能够在低版本浏览器被赋值
-let undefined = 1;
+let undefined = 1
 // 这样判断就会出错
 // 所以可以用下面的方式来判断，并且代码量更少
 // 因为 void 后面随便跟上一个组成表达式
 // 返回就是 undefined
-a === void 0;
+a === void 0
 ```
 
 ## 对象
@@ -71,8 +71,8 @@ var obj=new MyClass(); new 运算符创建并初始化一个**新对象** 用 ne
 #### new 的过程以及是实现 new
 
 ```javascript
-let obj = {};
-let con = [].shift.call(arguments);
+let obj = {}
+let con = [].shift.call(arguments)
 ```
 
 #### object.creat()
@@ -101,20 +101,20 @@ let con = [].shift.call(arguments);
 
 ```javascript
 function DOG(name) {
-  this.name = name;
+  this.name = name
 }
-DOG.prototype = { species: "犬科" };
+DOG.prototype = { species: '犬科' }
 
-var dogA = new DOG("大毛");
-var dogB = new DOG("二毛");
+var dogA = new DOG('大毛')
+var dogB = new DOG('二毛')
 
-alert(dogA.species);
+alert(dogA.species)
 // 其实是通过dogA._proto_.species 来访问DOG.prototype.species
-alert(dogB.species);
+alert(dogB.species)
 // 犬科
-DOG.prototype;
+DOG.prototype
 //{species:''犬科',constructor:fDOG(name),_proto_:Object}
-DOG.prototype.constructor === DOG;
+DOG.prototype.constructor === DOG
 //true
 ```
 
@@ -133,24 +133,24 @@ DOG.prototype.constructor === DOG;
 
 ```javascript
 function Person(name, age, job) {
-  this.name = name;
-  this.age = age;
-  this.job = job;
+  this.name = name
+  this.age = age
+  this.job = job
   this.sayName = function () {
-    alert(this.name);
-  };
+    alert(this.name)
+  }
 }
-var person1 = new Person("Zaxlct", 28, "Software Engineer");
-var person2 = new Person("Mick", 23, "Doctor");
-person1.__proto__ == Person.prototype;
+var person1 = new Person('Zaxlct', 28, 'Software Engineer')
+var person2 = new Person('Mick', 23, 'Doctor')
+person1.__proto__ == Person.prototype
 //person1.__proto__  = person1.constructor.prototype , person1.constructor = Person
-Person.__proto__;
+Person.__proto__
 //Person.constructor = Function => Person.__proto__  = Function.prototype
-Person.prototype.__proto__;
+Person.prototype.__proto__
 // Person.prototype 是一个普通对象（原型对象），普通函数的构造函数是Object => Person.prototype.__proto__ =  Object.prototype
-Object.__proto__;
+Object.__proto__
 //普通对象 同上
-Object.prototype.__proto__;
+Object.prototype.__proto__
 //对象也有proto属性，但它比较特殊，为null,因为null处于原型链的顶端
 ```
 
@@ -180,19 +180,19 @@ javascript 对象具有 “ 自有属性 ” 也有一些属性是从原型对�
 
 ```javascript
 function Parent(name) {
-  this.name = name;
+  this.name = name
 }
 
 Parent.prototype.say = function () {
-  console.log(this.name);
-};
+  console.log(this.name)
+}
 
 function Child(name) {
-  Parent.call(this, name);
+  Parent.call(this, name)
 }
-Child.prototype = new Parent();
-let c = new Child("Y");
-c.say();
+Child.prototype = new Parent()
+let c = new Child('Y')
+c.say()
 ```
 
 寄生函数继承：利用 call 继承父类上的属性，用一个干净的函数的原型去等于父类原型，再用子类的原型的等于干净函数的实例。
@@ -215,32 +215,28 @@ c.say();
 </ul>
 <script>
   document
-    .getElementById("parent-list")
-    .addEventListener("click", function (e) {
+    .getElementById('parent-list')
+    .addEventListener('click', function (e) {
       // e.target是被点击的元素!
       // 如果被点击的是li元素
-      if (e.target && e.target.nodeName == "LI") {
+      if (e.target && e.target.nodeName == 'LI') {
         // 找到目标，输出ID!
-        console.log(
-          "List item ",
-          e.target.id.replace("post-"),
-          " was clicked!"
-        );
+        console.log('List item ', e.target.id.replace('post-'), ' was clicked!')
       }
 
-      $("li").click(function () {
-        $(this).css("background", "#D4DFE6");
-      });
+      $('li').click(function () {
+        $(this).css('background', '#D4DFE6')
+      })
 
       // jQuery的delegate写法
-      $("#wrap").delegate("li", "click", function (ev) {
+      $('#wrap').delegate('li', 'click', function (ev) {
         // this 指向委托的对象 li
-        $(this).css("background", "#D4DFE6");
+        $(this).css('background', '#D4DFE6')
 
         // 找到父级 ul#wrap
-        $(ev.delegateTarget).css("border", "2px solid #f00");
-      });
-    });
+        $(ev.delegateTarget).css('border', '2px solid #f00')
+      })
+    })
 </script>
 ```
 
@@ -249,8 +245,8 @@ c.say();
 `getComputedStyle`是一个可以获取当前元素所有最终使用 css 属性值。返回一个 css 样式声明对象([object CSSStyleDeclaration])，只读。之前偶尔有一次要更改伪类元素 ::after 的样式
 
 ```javascript
-var dom = document.getElementById("test"),
-  style = window.getComputedStyle(dom, ":after");
+var dom = document.getElementById('test'),
+  style = window.getComputedStyle(dom, ':after')
 ```
 
 ### `getComputedStyle`与`style`的区别
@@ -264,7 +260,7 @@ var dom = document.getElementById("test"),
 `getPropertyValue`方法可以获取 CSS 样式申明对象上的属性值（直接属性名称），例如：
 
 ```javascript
-window.getComputedStyle(element, null).getPropertyValue("float");
+window.getComputedStyle(element, null).getPropertyValue('float')
 ```
 
 ## `this`
@@ -282,13 +278,13 @@ window.getComputedStyle(element, null).getPropertyValue("float");
 var a = {
   name: A,
   fn: function () {
-    console.log(this.name);
+    console.log(this.name)
   },
-};
-a.fn(); //this===a
-a.fn({ name: "b" }); //this==={name:'b'}
-var fn1 = a.fn;
-fn1(); //this===window
+}
+a.fn() //this===a
+a.fn({ name: 'b' }) //this==={name:'b'}
+var fn1 = a.fn
+fn1() //this===window
 ```
 
 ---
@@ -304,20 +300,20 @@ fn1(); //this===window
   ```javascript
   let a = {
     age: 1,
-  };
-  let b = Object.assign({}, a);
-  a.age = 2;
-  console.log(b.age);
+  }
+  let b = Object.assign({}, a)
+  a.age = 2
+  console.log(b.age)
   ```
 
 - 当然也可以通过展开运算符（···）来解决
   ```javascript
   let a = {
     age: 1,
-  };
-  let b = { ...a };
-  a.age = 2;
-  console.log(b.age); //1
+  }
+  let b = { ...a }
+  a.age = 2
+  console.log(b.age) //1
   ```
 
 ### 深拷贝
@@ -338,25 +334,25 @@ let obj = {
     c: 2,
     d: 3,
   },
-};
-obj.c = obj.b;
-obj.e = obj.a;
-obj.b.c = obj.c;
-obj.b.e = obj.b.c;
-let newObj = JSON.parse(JSON.stringfy(obj));
-console.log(newObj); //会报错
+}
+obj.c = obj.b
+obj.e = obj.a
+obj.b.c = obj.c
+obj.b.e = obj.b.c
+let newObj = JSON.parse(JSON.stringfy(obj))
+console.log(newObj) //会报错
 ```
 
 ```javascript
 let a = {
   age: undefined,
-  sex: Symbol("male"),
+  sex: Symbol('male'),
   jobs: function () {},
-  name: "yck",
-};
+  name: 'yck',
+}
 
-let b = JSON.parse(JSON.stringfy(a));
-console.log(b); //{name:'yck'}
+let b = JSON.parse(JSON.stringfy(a))
+console.log(b) //{name:'yck'}
 ```
 
 ## `Map`、`FlatMap`、`Reduce`
@@ -364,13 +360,13 @@ console.log(b); //{name:'yck'}
 `Map`作用是生成一个新数组，遍历原数组，将每一个元素拿出来做一些变换然后`append`到新的数组中。
 
 ```javascript
-[1, 2, 3].map((v) => v + 1); //=>[2,3,4]
+;[1, 2, 3].map((v) => v + 1) //=>[2,3,4]
 ```
 
 `Map`有三个参数，分别是当前索引元素，索引，原数组
 
 ```javascript
-["1", "2", "3"].map(parseInt);
+;['1', '2', '3'].map(parseInt)
 //  parseInt('1', 0) -> 1
 //  parseInt('2', 1) -> NaN
 //  parseInt('3', 2) -> NaN
@@ -379,13 +375,13 @@ console.log(b); //{name:'yck'}
 ## NaN
 
 ```javascript
-NaN !== NaN; //true
-NaN.valueOf(); //NaN
-NaN.toString(); //'NaN
-NaN < 3; //false
-NaN >= 3; //false
-NaN < NaN; //false
-NaN >= NaN; //false
+NaN !== NaN //true
+NaN.valueOf() //NaN
+NaN.toString() //'NaN
+NaN < 3 //false
+NaN >= 3 //false
+NaN < NaN //false
+NaN >= NaN //false
 ```
 
 ## 标签语句
@@ -395,8 +391,8 @@ NaN >= NaN; //false
 ```javascript
 top: for (var i = 0; i < 3; i++) {
   for (var j = 0; j < 3; j++) {
-    if (i === 1 && j === 1) break top;
-    console.log("i=" + i + ", j=" + j);
+    if (i === 1 && j === 1) break top
+    console.log('i=' + i + ', j=' + j)
   }
 }
 ```
@@ -408,8 +404,8 @@ continue 语句也可以配合使用
 ```javascript
 top: for (var i = 0; i < 3; i++) {
   for (var j = 0; j < 3; j++) {
-    if (i === 1 && j === 1) continue top;
-    console.log("i=" + i + ", j=" + j);
+    if (i === 1 && j === 1) continue top
+    console.log('i=' + i + ', j=' + j)
   }
 }
 // i=0, j=0
@@ -443,7 +439,7 @@ with(location{
 
 ECMScript 变量可以包含两种不同类型的数据：原始值和引用值。原始值就是最简单的数据，引用值是由多个值构成的对象。
 
-**6 种引用值**：Undefined、Null、Boolean、Number、String 和 Symbol
+**6 种引用值**：Undefined、Null、Boolean、Number、String 和 Symbol，typeOf 操作符最适合用来判断是否是原始类型，但是如果值是对象或是 null，那么 typeof 返回 Object
 
 保存原始值的变量是**按值**访问的，因为我们操作的就是存储在变量中的实际值
 
@@ -466,15 +462,16 @@ console.log(typeOf name2) //object
 
 ```javascript
 function setName(obj) {
-  obj.name = "Nicholas";
-  obj = new Object();
-  obj.name = "Greg";
-  console.log(obj)//Greg
+  obj.name = 'Nicholas'
+  obj = new Object()
+  obj.name = 'Greg'
+  console.log(obj) //Greg
 }
-let person = new Object();
-setName(person);
-console.log(person.name);//“Nicholas"
+let person = new Object()
+setName(person)
+console.log(person.name) //“Nicholas"
 ```
-如果person 是按饮用类型传递的，那么person应该自动将指针改为指向name为”Greg"的对象。可是，当我们再次访问person.name时，它的值是“Nicholas",这表明函数中参数的，原始的引用类型仍然没有改变。
 
-当obj在函数内部被重写时，它变成了一个指向本地对象的指针。而那个本地对象在函数执行结束时就被销毁
+如果 person 是按饮用类型传递的，那么 person 应该自动将指针改为指向 name 为”Greg"的对象。可是，当我们再次访问 person.name 时，它的值是“Nicholas",这表明函数中参数的，原始的引用类型仍然没有改变。
+
+当 obj 在函数内部被重写时，它变成了一个指向本地对象的指针。而那个本地对象在函数执行结束时就被销毁
