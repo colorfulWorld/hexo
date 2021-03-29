@@ -1,7 +1,7 @@
 ---
 title: Jenkins对前端应用做自动化构建
 date: 2019-12-03 16:58:31
-categories: JavaScrpt
+categories: 工具
 ---
 # Jenkins是什么
 Jenkins是一个开源软件项目，是基于Java开发的一种持续集成工具，用于监控持续重复的工作，旨在提供一个开放易用的软件平台，使软件的持续集成变成可能，最初的创建者川口清子（Kohsuke Kawaguchi）。他独自写了大部分代码
