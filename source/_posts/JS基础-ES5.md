@@ -75,7 +75,6 @@ let obj = {}
 let con = [].shift.call(arguments)
 ```
 
-#### object.creat()
 
 ## 原型
 
@@ -89,7 +88,7 @@ let con = [].shift.call(arguments)
 
 - constructor ：原型对象中的属性，指向该原型对象的构造函数
 
-- _proto_：实例中的属性，指向 new 这个实例的构造函数的原型对象，对象可以通过`_proto_`来寻找不属于该对象的属性，`_proto_`将对象连接起来组成原型链
+- _proto_：实例中的属性，指向 new 这个实例的构造函数的原型对象，对象可以通过`_proto_`来寻找不属于该对象的属性，`_proto_`将对象连接起来组成原型链。所有引用类型的_proto_属性值均指向它的构造函数的prototype的属性值。当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去他的_proto_（即它的构造函数的prototype）中寻找
 
 ### prototype 属性的引入
 

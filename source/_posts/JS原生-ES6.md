@@ -345,13 +345,18 @@ var jsondata = {
   details: {
     data: {
       created: '2017/09/19',
-      modified: '2017/09/20'
+      modified: '2017/09/20',
     },
-    catrgory: 'js'
+    catrgory: 'js',
   },
-  url: '/baidu/'
-};
-var {title,details:{data:{created.modified}}} = jsondata
+  url: '/baidu/',
+}
+var {
+  title,
+  details: {
+    data: { created, modified },
+  },
+} = jsondata
 console.log(title)
 console.log(created)
 console.log(modified)
@@ -412,9 +417,11 @@ console.log(length) //3
 ```javascript
 let arr = [1, 2]
 let obj = { a: 1, b: 2 }
-function test({ a = 10, b }) {
-  console.log(a)
-  console.log(b)
+function test({ a = 10, b, c = 10 }) {
+  console.log(arguments) //{ a: 1, b: 2 }
+  console.log(a) //1
+  console.log(b) //2
+  console.log(c) //10
 }
 test(obj)
 ```
@@ -709,6 +716,21 @@ console.log(a);//[1, 3, 10]
 
 ## 对象扩展
 
+### 可计算属性
+
+```javascript
+let nameKey = 'name'
+let ageKey = '27'
+let jobKey = 'job'
+let person = {
+  [nameKey]: 'matt',
+  [ageKey]: 27,
+  [jobKey]: 'software engineer',
+}
+```
+
+可变 key 是在申明时进行值赋值，而不是地址赋值，就算使用对象作为 key 值，key 值在之后也不是可变的
+
 ### 属性的简洁表示
 
 ```javascript
@@ -917,3 +939,13 @@ for (const x of nTimes(3)) {
 //1
 //2
 ```
+
+## 箭头函数
+
+**箭头函数不能作为构造函数**：
+
+箭头函数没有自己的this,arguments,super或new.target。箭头函数表达式更实用于那些需要匿名函数的地方，并且它不能用作构造函数，和new一起用会抛出错误，箭头函数没有prototype属性。
+
+箭头函数是有_proto_属性的，所以箭头函数本身是存在原型链的，他也是有自己的构造函数的，但是因为没有prototype 属性，他的实例_proto_没法指向，所以箭头函数也就无法作为构造函数。
+
+同时箭头函数由于没有this指针，通过call()和apply方法调用一个函数时，只能传递参数，不能绑定this。
