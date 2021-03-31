@@ -53,6 +53,17 @@ a === void 0
 
 创建对象可以通过对象直接量，关键字 new 和 object.creat() 函数来创建对象。每一个对象都有与知相关的原型，类和可扩展性。可分为普通对象和函数对象。凡是通过 new function() 创建的都是函数对象。其他都是普通对象。
 
+### instanceof
+
+instanceof 可以正确的判断对象类型，因为内部机制是通过对象的原型链中是不是能找到类型的 prototype
+
+```javascript
+console.log([] instanceof Arrage) //true
+console.log({} instanceof Object) //true
+console.log(function () {} instanceof Function) //true
+console.log(1 instanceof NUmber) //true
+```
+
 ### 对象直接量
 
 对象直接量是类似于 var a = {x:0,y:0} 的映射表。对象直接量是一个表达式，这个表达式的每次运算都创建并初始化一个新的对象。每次计算对象直接量的时候。也会计算它的每个属性值，**也就是说在一个循环体内使用了对象直接量，他将会创建很对新对象，并且每次创建的对象的属性值也有可能不同。**
@@ -75,7 +86,6 @@ let obj = {}
 let con = [].shift.call(arguments)
 ```
 
-
 ## 原型
 
 原型：每一个对象都从原型继承属性。**每个对象都有 _proto_ 属性 , 每个对象都有原对象，但只有函数对象才有 prototype 属性**, 但是除却 function.prototype,function.prototype 也是函数对象，但是没有 prototype。可以使用 p.isPrototype(o) 来检查 p 是否是 o 的原型。
@@ -88,7 +98,7 @@ let con = [].shift.call(arguments)
 
 - constructor ：原型对象中的属性，指向该原型对象的构造函数
 
-- _proto_：实例中的属性，指向 new 这个实例的构造函数的原型对象，对象可以通过`_proto_`来寻找不属于该对象的属性，`_proto_`将对象连接起来组成原型链。所有引用类型的_proto_属性值均指向它的构造函数的prototype的属性值。当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去他的_proto_（即它的构造函数的prototype）中寻找
+- _proto_：实例中的属性，指向 new 这个实例的构造函数的原型对象，对象可以通过`_proto_`来寻找不属于该对象的属性，`_proto_`将对象连接起来组成原型链。所有引用类型的*proto*属性值均指向它的构造函数的 prototype 的属性值。当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去他的*proto*（即它的构造函数的 prototype）中寻找
 
 ### prototype 属性的引入
 
@@ -157,7 +167,7 @@ JS 在创建对象（不论是普通对象还是函数对象）的时候，都�
 
 ### 原型链图
 
-褐色的线为原型链 ![img caption](/images/prototype/2.png)
+褐色的线为原型链 ![network](/images/prototype/2.png)
 
 够造函数、原型和实例的关系：
 
@@ -168,6 +178,10 @@ JS 在创建对象（不论是普通对象还是函数对象）的时候，都�
 ** 所有函数的默认原型都是 Object 的实例**
 
 ### 继承
+
+很多面向对象语言都支持两种继承：接口继承和实现继承。前者只继承方法签名，后者继承实际的方法。接口继承在 ECMScript 中是不可能的，因为函数没有签名。实现继承是 ECMScript 唯一支持的集成方法，而这主要是通过原型链实现。
+
+其基本思想就是通过原型继承多个引用类型的属性和方法
 
 常用继承：组合继承，寄生组合继承
 

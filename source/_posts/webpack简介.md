@@ -1,19 +1,13 @@
 ---
-title: webpack项目配置
+title: webpack简介
 date: 2018-01-31 17:15:07
 categories: webpack
 ---
 
-webpack 做的就是分析代码，转换代码，编译代码，输出代码。webpack 本身是一个 node 的模块，所以 webpack.config.js 是一一 commonjs 形式书写的
+
+ webpack 做的就是分析代码，转换代码，编译代码，输出代码。webpack 本身是一个 node 的模块，所以 webpack.config.js 是一一 commonjs 形式书写的
 
 <!--more-->
-
-webpack 是模块化管理工具，使用 webpack 可以对模块进行压缩，预处理，按需打包，按需加载等。
-Browsersify、webpack 一开始的目的就是打包 commonJS 模块。
-
-webpack 是一个现代 Javascript 应用程序的模块打包器，当 webpack 处理应用程序时，它会递归的构建一个依赖关系图，其中包含应用程序需要的每个模块，然后将这些模块打包成少量的 bundle- 通常只有一个，有浏览器加载。
-
-
 
 ## webpack 的特征
 
@@ -97,7 +91,7 @@ module.exports = {
 
 ```
 
-## publicPath
+### publicPath
 
 webpack 提供一个非常有用的配置，该配置能帮助你为项目中的所有资源指定一个基础路径，它被称为公共路径(publicPath)。
 其实这里说的所有资源的基础路径是指项目中引用 css，js，img 等资源时候的一个基础路径，这个基础路径要配合具体资源中指定的路径使用，所以其实打包后资源的访问路径可以用如下公式表示
@@ -112,7 +106,7 @@ webpack 提供一个非常有用的配置，该配置能帮助你为项目中的
 
 对于 url-loader 中的 outputPath，单独配置或者写在 name 里面，对于真实的目录结构来说，效果是一样的。但是在生成这个 cdn 路径上来说，效果是有区别的。最终的访问路径都是：publicPath+name。跟 outputPath 没有关系，所以，请注意路径配置。
 
-## mainFields
+### mainFields
 
 有一些第三方模块会针对不同环境提供几分代码。 例如分别提供采用 ES5 和 ES6 的 2 份代码，这 2 份代码的位置写在 package.json 文件里，Webpack 会根据 mainFields 的配置去决定优先采用那份代码，mainFields 默认如下：
 
@@ -130,14 +124,14 @@ mainFields: ['jsnext:main', 'browser', 'main']
 
 思考：这个可以用来配 vue 的 cdn 路径吗？dev 开发时 min.js 是无法调试的
 
-## babel 与 polyfill 的关系和区别
+### babel 与 polyfill 的关系和区别
 
 ### babel
 
 是一个广发使用的 ES6 的转码器，可以将 ES6 代码转为 ES5 代码。注意：babel 默认只转换新的 javascript 语法，而不转换新的 api
 @babel-preset-env 就整合了这些语法转义插件
 ```javascript
-Using plugins:
+//Using plugins:
 transform-template-literals {}
 transform-literals {}
 transform-function-name {}
@@ -166,7 +160,7 @@ yarn build 时发现文件体积大了很多，因为上面的代码表示将@ba
 }
 ```
 
-## 使用自动刷新
+### 使用自动刷新
 
 DecServer 刷新原理：
 往要开发的网页中注入代理客户端代码，通过代理客户端去刷新整个页面。使用webSocket链接，双工通信
@@ -203,5 +197,18 @@ webpack-dev-server好像是只监听webpack.config.js中entry入口下文件（�
 
 告诉 dev-server 监听 [devServer.contentBase]（＃devservercontentbase）选项提供的文件。 默认情况下禁用。 启用后，文件更改将触发整个页面重新加载。
 
+## webpack 的整个打包流程
+
+1、读取webpack的配置参数
+2、启动webpack，创建compiler对象并开始解析项目
+3、从入口文件（entry）开始解析，并且找到其导入的依赖模块，递归遍历分析，形成依赖关系树
+4、对不同的文件类型的依赖模块文件使用对应的loader进行编译，最终转为javascript文件
+5、整个过程中webpack会通过发布订阅模式，向外抛出一些hooks，而webpack的插件即可通过监听这些关键的节点，执行插件任务进而达到敢于输出结果的目的
+
+
+
+
+
 ## 站外资料链接
 [深入浅出webpack](http://webpack.wuhaolin.cn/)
+
