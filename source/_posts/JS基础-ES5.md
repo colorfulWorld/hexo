@@ -210,6 +210,36 @@ c.say()
 
 寄生函数继承：利用 call 继承父类上的属性，用一个干净的函数的原型去等于父类原型，再用子类的原型的等于干净函数的实例。
 
+### 原型链继承
+
+```javascript
+function Parent() {
+  this.name = 'Parent1'
+  this.arr = [1, 2, 3, 4, 5]
+}
+
+Parent.prototype.say = function () {
+  console.log(this.name)
+}
+
+function Child() {
+  this.m = [1, 2, 3]
+  this.type = 'Child1'
+}
+
+Child.prototype = new Parent()
+
+var s1 = new Child()
+var s2 = new Child()
+s1.m.push(4) //[1,2,3,4]
+s2.m.push(6) //[1,2,3,6]
+s1.arr.push(6)
+console.log(s1.arr) //[1,2,3,4,5,6]
+console.log(s2.arr) //[1,2,3,4,5,6]
+//他们俩是公用的
+console.log(s1.__proto__ === s2.__proto__) //true
+```
+
 ## 事件委托
 
 利用事件委托技术能让你对特定的每个节点添加事件监听器；相反，事件监听器是被添加到他们的父元素上的。事件监听器会分析从子元素冒泡上来的事件，找到是哪一个子元素的事件。
