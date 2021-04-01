@@ -944,7 +944,7 @@ for (const x of nTimes(3)) {
 
 **箭头函数不能作为构造函数**：
 
-箭头函数没有自己的this,arguments,super或new.target。箭头函数表达式更实用于那些需要匿名函数的地方，并且它不能用作构造函数，和new一起用会抛出错误，箭头函数没有prototype属性。
+ 箭头函数没有自己的this,arguments,super或new.target。箭头函数表达式更实用于那些需要匿名函数的地方，并且它不能用作构造函数，和new一起用会抛出错误，箭头函数没有prototype属性。
 
 箭头函数是有_proto_属性的，所以箭头函数本身是存在原型链的，他也是有自己的构造函数的，但是因为没有prototype 属性，他的实例_proto_没法指向，所以箭头函数也就无法作为构造函数。
 
