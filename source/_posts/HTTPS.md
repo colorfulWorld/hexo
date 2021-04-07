@@ -1,6 +1,6 @@
 ---
 title: HTTPS
-categories: WEB
+categories: Web
 date: 2017-07-17 11:30:11
 ---
 
@@ -83,7 +83,7 @@ HTTP2 是 IETF 2015 年 2 月份通过的 HTTP 下一代协议，它以 SPDY 为
 
 1. SPDY 和 HTTP2 目前的实现默认使用 HTTPS 协议。
 
-2. SPDY 和 HTTP2 都支持现有的 HTTP 语义和 API，对 WEB 应用几乎是透明的。
+2. SPDY 和 HTTP2 都支持现有的 HTTP 语义和 API，对 Web 应用几乎是透明的。
 
 Google 宣布 chrome 浏览器 2016 年将放弃 SPDY 协议，全面支持 HTTP2，但是目前国内部分浏览器厂商进度非常慢，不仅不支持 HTTP2，连 SPDY 都没有支持过。
 

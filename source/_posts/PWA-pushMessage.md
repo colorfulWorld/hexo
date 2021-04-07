@@ -1,6 +1,6 @@
 ---
 title: PWA-pushMessage
-categories: WEB
+categories: Web
 date: 2017-07-21 11:28:03
 ---
 
@@ -34,7 +34,7 @@ PushManager 注册好之后，那么要做的就是浏览器和服务器的绑�
 * 在订阅之前先获取用户授权，\*\* 使用 Notification.requestPermission。当用户允许或者拒绝授权之后，后续都不会重复询问。
 * 如果不选择 1，在正式订阅时，浏览器也会自动弹出。对于开发者而言不需要显示调用。
 * <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/notification">Notifications API</a> 的通知接口用于向用户配置和显示桌面通知。
-* <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Push_API">push API</a> 允许 web 应用程序接受从服务器推送到它们的消息的能力，无论 WEB 应用程序是否在用户代理的前台，或者甚至当前加载。这样。开发人员就可以向选择启用的用户投放异步通知和更新，从而更及时的吸引新内容。
+* <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Push_API">push API</a> 允许 web 应用程序接受从服务器推送到它们的消息的能力，无论 Web 应用程序是否在用户代理的前台，或者甚至当前加载。这样。开发人员就可以向选择启用的用户投放异步通知和更新，从而更及时的吸引新内容。
 
 ## 订阅消息的具体实现
 

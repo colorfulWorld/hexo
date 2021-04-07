@@ -1,7 +1,7 @@
 ---
 title: call、applay、 bind
 date: 2019-04-13 17:36:56
-categories: 原生JS
+categories: JavaScript
 ---
 
 - 都是用来改变函数的 this 对象的指向的。
