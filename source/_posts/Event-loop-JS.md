@@ -4,7 +4,8 @@ date: 2018-04-28 11:19:52
 categories: JavaScript
 ---
 
-[主线程从任务队列中读取事件，这个过程是循环不断的，所以整个种运行机制又称为Event Loop(事件循环)](https://www.ruanyifeng.com/blog/2014/10/event-loop.html)
+[主线程从任务队列中读取事件，这个过程是循环不断的，所以整个种运行机制又称为 Event Loop(事件循环)](https://www.ruanyifeng.com/blog/2014/10/event-loop.html)
+
 <!--more-->
 
 JS 是一门非阻塞单线程语言。
@@ -12,12 +13,11 @@ JS 是一门非阻塞单线程语言。
 JS 在执行过程中会产生执行环境，这些执行环境会被顺序的加入到执行栈中。如果遇到异步的代码，会被挂起并加入搭配 Task（有多种 Task）队列中。一旦执行栈为空，Event Loop 就会从 Task 队列中拿出需要执行的代码放入到执行栈中执行。
 
 运行机制如下：
+
 1. 所有同步任务都在主线程上执行，形成一个执行栈（execution context stack)
 2. 主线程之外，还存在一个“任务队列（task quue）”。只要异步任务有了运行结果，就在任务队列中放置一个结果
 3. 一旦执行栈中的所有同步任务执行完毕，系统就会读取任务队列，那些对应的异步任务，结束等待状态，进入执行栈开始执行
 4. 主线程不断重复上面的第三步
-
-
 
 ```javascript
 console.log('script start')
@@ -46,6 +46,8 @@ JS 中有两类任务队列：宏任务队列(macro task) 和 微任务队列(mi
 ## Promise 哪些 API 涉及了微任务？
 
 Promise 中只有涉及到状态变更后才需要被执行的回调才算是微任务，比如说 then、catch、finally,其他所有的代码执行都是宏任务（同步执行）
+
+### 1
 
 ```javascript
 console.log('script start');
@@ -82,6 +84,8 @@ p 2
 setTimeout
 ```
 
+### 2
+
 ```javascript
 console.log('script start')
 
@@ -104,20 +108,22 @@ console.log('script end')
 // script start => Promise => script end => promise1 => promise2 => setTimeout
 ```
 
-```javascript
+### 3
 
+```javascript
 Promise.resolve()
   .then(() => {
-    console.log("then1");
+    console.log('then1')
     Promise.resolve().then(() => {
-      console.log("then1-1");
-    });
+      console.log('then1-1')
+    })
   })
   .then(() => {
-    console.log("then2");
-  });
-
+    console.log('then2')
+  })
 ```
+
+### 4
 
 ```javascript
 let p = Promise.resolve()
@@ -136,6 +142,8 @@ p.then(() => {
 })
 ```
 
+### 5
+
 ```javascript
 let p = Promise.resolve()
   .then(() => {
@@ -152,6 +160,8 @@ p.then(() => {
   console.log('then3')
 })
 ```
+
+### 6
 
 ```javascript
 Promise.resolve()
@@ -177,24 +187,58 @@ Promise.resolve()
   })
 ```
 
-## Node.js的Event Loop
+### 7
+
+```javascript
+promise2 = new Promise() 
+promise2
+  .then(() => { //then new Promise=>a 
+    console.log(1111)
+    Promise.resolve() 
+      .then(() => { //then new promise b
+        console.log('1111-1')
+      })
+      .then(() => { // then new promise e
+        console.log('1111-2')
+      })
+  })
+  .then(() => { // then new promise c
+    console.log(2222)
+  })
+
+promise2
+  .then(() => { //同一个promise a
+    console.log(3333)
+  })
+  .then(() => { // then new promise d
+    console.log(44444)
+  })
+//1111
+//3333
+//1111-1
+//2222
+//44444
+//1111-2
+```
+
+## Node.js 的 Event Loop
 
 ```javascript
 console.log(1)
-setTimeout(function(){
+setTimeout(function () {
   console.log(2)
-  new Promise(function(resolve,reject){
+  new Promise(function (resolve, reject) {
     console.log('promise')
-    resolve();
-  }).then(res=>{
+    resolve()
+  }).then((res) => {
     console.log('promise.then')
   })
 })
-setTimeout(function(){
+setTimeout(function () {
   console.log(4)
 })
 console.log(5)
 //1 5 2 promise 4 promise.then
 ```
 
-浏览器中的Event Loop 和node 的Event Loop 有所不同，node在处理一个执行队列的时候不管怎样都会先执行完当前队列，然后再清空微任务队列，再去执行下一个队列。
+浏览器中的 Event Loop 和 node 的 Event Loop 有所不同，node 在处理一个执行队列的时候不管怎样都会先执行完当前队列，然后再清空微任务队列，再去执行下一个队列。
