@@ -10,7 +10,7 @@ ES6 的更新内容主要分为以下几点
 
 - 表达式：声明、解构赋值
 - 内置对象：字符串扩展、数值扩展、对象扩展、数组扩展、函数扩展、正则扩展、Symbol、Set、Map、Proxy、Reflect
-- 语句与运算：Class、Module、lterator
+- 语句与运算：Class、Module、lterator(迭代)
 - 异步编程：Promise、Generator、Async
 
 <!--more-->
@@ -137,11 +137,15 @@ console.log(appleStore.next()) // { value: 5, done: false }
 console.log(appleStore.next()) // { value: undefined, done: true }
 ```
 
-## 类
+## 类 class
 
 面向对象编程中的一个核心概念就是类（多态、封装、继承）。可以把事物都抽象成一个个的类来描述他们的信息和行为。
 
 JavaScript 是一个基于对象的语言，而不是面对对象的语言，它是一个基于 prototype 的语言。它的语法中没有像 Java 之类典型面向对象语言中定义一个类的语法，因此在 ES6 中，提供了一个面向对象风格的类定义方式：使用 class 关键字。
+
+类里面所有的方法都定义在类的 prototype 上面
+
+**注意：类必须使用 new 调用，否则会报错。这是它和普通函数的一个主要区别，后者不用 new 也可以执行**
 
 ```javascript
 class Person {
@@ -161,6 +165,45 @@ class Person {
 }
 ```
 
+### constructor
+
+- 是类的默认方法，通过 new 命令生成对象实例时，自动调用该方法，一个类必须有 constructor 方法，如果没有显示定义，一个空的 constructor 方法会被默认添加
+- 执行这个 constructor 方法默认返回实例对象（this）
+### 类的 prototype 属性
+
+类的所有方法都定义在类的 prototype 属性上面
+
+```javascript
+class Point {
+  constructor() {}
+  toString() {}
+}
+
+//等同于
+Point.prototype = {
+  constructor(){},
+  toString()
+}
+```
+
+### class 的静态方法
+
+如果在一个方法前，加上 static 关键字，就表示该方法不会被实例继承，而是直接通过类来调用，就是称为“静态方法”
+
+**注意：如果静态方法包含 this 关键字，这个 this 指向的是类，而不是实例**
+
+```javascript
+class Foo {
+  static classMethod() {
+    return 'hello'
+  }
+}
+
+Foo.classMethod() // 'hello'
+
+var foo = new Foo()
+foo.classMethod()
+```
 ### super
 
 super 关键字用于访问和调用一个对象的父对象的函数。( 只能在 class 内部用 )
@@ -944,8 +987,8 @@ for (const x of nTimes(3)) {
 
 **箭头函数不能作为构造函数**：
 
- 箭头函数没有自己的this,arguments,super或new.target。箭头函数表达式更实用于那些需要匿名函数的地方，并且它不能用作构造函数，和new一起用会抛出错误，箭头函数没有prototype属性。
+箭头函数没有自己的 this,arguments,super 或 new.target。箭头函数表达式更实用于那些需要匿名函数的地方，并且它不能用作构造函数，和 new 一起用会抛出错误，箭头函数没有 prototype 属性。
 
-箭头函数是有_proto_属性的，所以箭头函数本身是存在原型链的，他也是有自己的构造函数的，但是因为没有prototype 属性，他的实例_proto_没法指向，所以箭头函数也就无法作为构造函数。
+箭头函数是有*proto*属性的，所以箭头函数本身是存在原型链的，他也是有自己的构造函数的，但是因为没有 prototype 属性，他的实例*proto*没法指向，所以箭头函数也就无法作为构造函数。
 
-同时箭头函数由于没有this指针，通过call()和apply方法调用一个函数时，只能传递参数，不能绑定this。
+同时箭头函数由于没有 this 指针，通过 call()和 apply 方法调用一个函数时，只能传递参数，不能绑定 this。
