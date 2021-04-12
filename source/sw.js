@@ -152,7 +152,7 @@ routing.registerRoute(
  */
 routing.registerRoute(
     // Cache image files
-    /.*\.(?:png|jpg|jpeg|svg|gif|webp)/,
+    /.*\.(?:png|jpg|jpeg|svg|gif|webp|mp3)/,
     new StaleWhileRevalidate()
 );
 

@@ -826,7 +826,7 @@ footer:
 # 配置主题音乐
 audio:
   enable: true
-  link: https://cdn.jsdelivr.net/gh/colorfulWorld/cdn-bed/music/langlangqintian.mp3
+  link: https://cdn.jsdelivr.net/gh/colorfulWorld/cdn-bed@1.3/music/langlangqintian.mp3
 
 description: 不负所爱
 
