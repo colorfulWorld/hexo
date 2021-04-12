@@ -60,7 +60,7 @@
 <div class="site-brand-wrapper">
   <div class="site-brand-bg">
     <picture>
-      <img loading="lazy" src="https://cdn.jsdelivr.net/gh/colorfulWorld/cdn-bed/images/githubpage-bg.jpg">
+      <img loading="lazy" src="https://cdn.jsdelivr.net/gh/colorfulWorld/cdn-bed@1.3/images/githubpage-bg.jpg">
     </picture>
   </div>
   <div class="site-meta {% if theme.custom_logo.enabled %}custom-logo{% endif %}">
