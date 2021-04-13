@@ -86,11 +86,12 @@ theme: sagiri
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
+  name: colorfulWorld
+  email: colorfulworld.yu@gmail.com
   repo:
     github: https://github.com/colorfulWorld/colorfulWorld.github.io.git
   branch: master
 
-  
 search:
   path: search.xml
   field: post

@@ -37,7 +37,7 @@ npm install webpack webpack-cli --save-dev  //这是安装本地项目模块
 - hello.js --放在 src 文件夹中；
 - index.js --放在 src 文件夹中；
 
-###  index.html 中写下 html 代码，它的作用是为了引入我们打包后的 js 文件：
+### index.html 中写下 html 代码，它的作用是为了引入我们打包后的 js 文件：
 
 ```html
 <html lang="en">
@@ -94,8 +94,8 @@ module.exports = {
   entry: path.join(__dirname, '/src/index.js'), // 入口文件
   output: {
     path: path.join(__dirname, '/dist'), //打包后的文件存放的地方
-    filename: 'bundle.js', //打包后输出文件的文件名
-  },
+    filename: 'bundle.js' //打包后输出文件的文件名
+  }
 }
 ```
 
@@ -125,14 +125,14 @@ module.exports = {
   entry: path.join(__dirname, '/src/index.js'), // 入口文件
   output: {
     path: path.join(__dirname, '/dist'), //打包后的文件存放的地方
-    filename: 'bundle.js', //打包后输出文件的文件名
+    filename: 'bundle.js' //打包后输出文件的文件名
   },
   devServer: {
     contentBase: './dist', // 本地服务器所加载文件的目录
     port: '8088', // 设置端口号为8088
     inline: true, // 文件修改后实时刷新
-    historyApiFallback: true, //不跳转
-  },
+    historyApiFallback: true //不跳转
+  }
 }
 ```
 
@@ -215,30 +215,33 @@ module.exports = {
 }
 ```
 
-#### css压缩
-css 代码也可以像Javascript 那样被压缩，以达到提升加速度和代码混淆的作用。目前比较成熟可靠的CSS压缩工具是cssnano，基于postcss。
+#### css 压缩
 
-cssnano能理解CSS代码的含义，而不仅仅是删除空格，例如：
-- margin:10px 20px 10px 20px 被压缩成margin：10px 20px
-- color：#ff0000 被压缩成color:red
+css 代码也可以像 Javascript 那样被压缩，以达到提升加速度和代码混淆的作用。目前比较成熟可靠的 CSS 压缩工具是 cssnano，基于 postcss。
 
-通常压缩率能达到60%，cssnano介入到webpack 中很简单，因为css-loader 已经内置了，只需要开启css-loader的minimize选项，相关配置如下：
+cssnano 能理解 CSS 代码的含义，而不仅仅是删除空格，例如：
+
+- margin:10px 20px 10px 20px 被压缩成 margin：10px 20px
+- color：#ff0000 被压缩成 color:red
+
+通常压缩率能达到 60%，cssnano 介入到 webpack 中很简单，因为 css-loader 已经内置了，只需要开启 css-loader 的 minimize 选项，相关配置如下：
+
 ```javascript
-const path = require('path');
-const {WebPlugin} = require('web-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path')
+const { WebPlugin } = require('web-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   module: {
     rules: [
       {
-        test: /\.css$/,// 增加对 CSS 文件的支持
+        test: /\.css$/, // 增加对 CSS 文件的支持
         // 提取出 Chunk 中的 CSS 代码到单独的文件中
         use: ExtractTextPlugin.extract({
           // 通过 minimize 选项压缩 CSS 代码
           use: ['css-loader?minimize']
-        }),
-      },
+        })
+      }
     ]
   },
   plugins: [
@@ -248,11 +251,12 @@ module.exports = {
       filename: 'index.html' // 输出的 HTML 的文件名称
     }),
     new ExtractTextPlugin({
-      filename: `[name]_[contenthash:8].css`,// 给输出的 CSS 文件名称加上 Hash 值
-    }),
-  ],
-};
+      filename: `[name]_[contenthash:8].css` // 给输出的 CSS 文件名称加上 Hash 值
+    })
+  ]
+}
 ```
+
 ### 配置 Babel-loader
 
 Babel 其实是一个编译 JavaScript 的平台，它可以编译代码帮你达到以下目的：
@@ -274,7 +278,6 @@ module: {
 ```
 
 由于 loader 对文件的转换操作很耗时，需要让尽可能少的文件被 loader 处理，可以通过 test、include、exclude 三个配置来命中 loader 要应用规则的文件。为了尽可能少的让文件被 loader 处理，可以通过 include 去命中只有哪些文件被处理
-
 
 ### 处理图片
 
@@ -317,14 +320,15 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/,
-        use: ['cache-loader', 'babel-loader'],
-      },
-    ],
-  },
+        use: ['cache-loader', 'babel-loader']
+      }
+    ]
+  }
 }
 ```
-若是只想给babel-loader配置cache的话，也可以不使用cache-loader，给babel-loader增加选项CacheDirectory。
-cacheDirectory：默认值为 false。当有设置时，指定的目录将用来缓存 loader 的执行结果。之后的 Webpack 构建，将会尝试读取缓存，来避免在每次执行时，可能产生的、高性能消耗的 Babel 重新编译过程。设置空值或者 true 的话，使用默认缓存目录：node_modules/.cache/babel-loader。开启 babel-loader的缓存和配置 cache-loader，我比对了下，构建时间很接近。
+
+若是只想给 babel-loader 配置 cache 的话，也可以不使用 cache-loader，给 babel-loader 增加选项 CacheDirectory。
+cacheDirectory：默认值为 false。当有设置时，指定的目录将用来缓存 loader 的执行结果。之后的 Webpack 构建，将会尝试读取缓存，来避免在每次执行时，可能产生的、高性能消耗的 Babel 重新编译过程。设置空值或者 true 的话，使用默认缓存目录：node_modules/.cache/babel-loader。开启 babel-loader 的缓存和配置 cache-loader，我比对了下，构建时间很接近。
 
 ## 7、配置常用插件
 
@@ -349,9 +353,9 @@ plugins: [
     minify: {
       removeComments: true,
       collapseWhitespace: true,
-      removeAttributeQuotes: true,
-    },
-  }),
+      removeAttributeQuotes: true
+    }
+  })
 ]
 ```
 
@@ -373,10 +377,10 @@ plugins: [
     minify: {
       removeComments: true,
       collapseWhitespace: true,
-      removeAttributeQuotes: true,
-    },
+      removeAttributeQuotes: true
+    }
   }),
-  new CleanWebpackPlugin(['dist']),
+  new CleanWebpackPlugin(['dist'])
 ]
 ```
 
@@ -414,8 +418,8 @@ plugins: [
 ```javascript
 module.exports = {
   plugins: [
-    require('autoprefixer'), // 引用autoprefixer模块
-  ],
+    require('autoprefixer') // 引用autoprefixer模块
+  ]
 }
 ```
 
@@ -458,14 +462,14 @@ module.exports = {
         use: ExtractTextPlugin.extract({
           // 相当于回滚，经postcss-loader和css-loader处理过的css最终再经过style-loader处理
           fallback: 'style-loader',
-          use: ['css-loader', 'postcss-loader'],
-        }),
-      },
-    ],
+          use: ['css-loader', 'postcss-loader']
+        })
+      }
+    ]
   },
   plugins: [
-    new ExtractTextPlugin('css/index.css'), // 将css分离到/dist文件夹下的css文件夹中的index.css
-  ],
+    new ExtractTextPlugin('css/index.css') // 将css分离到/dist文件夹下的css文件夹中的index.css
+  ]
 }
 ```
 
@@ -484,8 +488,8 @@ const glob = require('glob') // 引入glob模块,用于扫描全部html文件中
 
 plugins: [
   new PurifyCssWebpack({
-    paths: glob.sync(path.join(__dirname, 'src/*.html')), // 同步扫描所有html文件中所引用的css
-  }),
+    paths: glob.sync(path.join(__dirname, 'src/*.html')) // 同步扫描所有html文件中所引用的css
+  })
 ]
 ```
 
@@ -508,7 +512,6 @@ plugins: [
 - 首页按需引入文件
 - 优化 webpack 打包时间
 
-
 ### 按需加载
 
 1.1 路由组件按需加载
@@ -518,13 +521,13 @@ const router = [
   {
     path: '/index',
     component: (resolve) =>
-      require.ensure([], () => resolve(require('@/components/index'))),
+      require.ensure([], () => resolve(require('@/components/index')))
   },
   {
     path: '/about',
     component: (resolve) =>
-      require.ensure([], () => resolve(require('@/components/about'))),
-  },
+      require.ensure([], () => resolve(require('@/components/about')))
+  }
 ]
 ```
 
@@ -565,8 +568,8 @@ module: {
     {
       test: /\.js$/,
       loader: 'babel-loader?cacheDirectory',
-      include: [resolve('src')],
-    },
+      include: [resolve('src')]
+    }
   ]
 }
 ```
@@ -603,11 +606,11 @@ plugins: [
   new UglifyJsPlugin({
     uglifyOptions: {
       compress: {
-        warnings: false,
-      },
+        warnings: false
+      }
     },
     sourceMap: true,
-    parallel: true,
+    parallel: true
   }),
 
   new ParallelUglifyPlugin({
@@ -617,13 +620,13 @@ plugins: [
     sourceMap: true,
     uglifyJS: {
       output: {
-        comments: false,
+        comments: false
       },
       compress: {
-        warnings: false,
-      },
-    },
-  }),
+        warnings: false
+      }
+    }
+  })
 ]
 ```
 
@@ -653,37 +656,50 @@ plugins: [
         /\.js$/.test(module.resource) &&
         module.resource.indexOf(path.join(__dirname, './node_modules')) === 0
       )
-    },
+    }
   }),
   new webpack.optimize.CommonsChunkPlugin({
     name: 'common',
     chunks: 'initial',
-    minChunks: 2,
-  }),
+    minChunks: 2
+  })
 ]
 ```
 
-webpack4 使用 splitChunks 的实现：
+#### webpack4 使用 splitChunks 的实现：
 
 ```javascript
 module.exports = {
   optimization: {
     splitChunks: {
-      cacheGroups: {
-        vendor: {
-          priority: 1, //添加权重
-          test: /node_modules/, //把这个目录下符合下面几个条件的库抽离出来
-          chunks: 'initial', //刚开始就要抽离
-          minChunks: 2, //重复2次使用的时候需要抽离出来
+       chunks: 'all',
+      ccacheGroups: {
+        vendors: {
+          name: 'chunk-vendors',
+          test: /[\\/]node_modules[\\/]/,
+          priority: 10,
+          chunks: 'initial'
         },
-        common: {
-          //公共的模块
-          chunks: 'initial',
+        iview: {
+          name: 'chunk-iview',
+          priority: 20,
+          test: /[\\/]node_modules[\\/]_?iview(.*)/
+        },
+        echarts: {
+          name: 'chunk-echarts',
+          priority: 20,
+          test: /[\\/]node_modules[\\/]_?echarts(.*)/
+        },
+        commons: {
+          name: 'chunk-commons',
           minChunks: 2,
-        },
-      },
-    },
-  },
+          priority: 5,
+          chunks: 'initial',
+          reuseExistingChunk: true
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -714,7 +730,7 @@ CDN 又叫内容分发网络，通过把资源部署到世界各地，用户在�
 </body>
 ```
 
-**问题**：开发环境也接入vue.min.js 的cdn 时无法使用chrome 的 Vue.js devtools插件，所以要分环境加载不同的资源。
+**问题**：开发环境也接入 vue.min.js 的 cdn 时无法使用 chrome 的 Vue.js devtools 插件，所以要分环境加载不同的资源。
 
 2、在 webpack.config.js 配置文件
 
@@ -750,13 +766,13 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'hash', //路由的模式
-  routes,
+  routes
 })
 
 new Vue({
   router,
   el: '#app',
-  render: (h) => h(App),
+  render: (h) => h(App)
 })
 ```
 
@@ -778,12 +794,12 @@ module: {
       test: /\.js$/,
       use: ['happypack/loader?id=babel'],
       include: [resolve('src'), resolve('test')],
-      exclude: path.resolve(__dirname, 'node_modules'),
+      exclude: path.resolve(__dirname, 'node_modules')
     },
     {
       test: /\.vue$/,
-      use: ['happypack/loader?id=vue'],
-    },
+      use: ['happypack/loader?id=vue']
+    }
   ]
 }
 ```
@@ -800,18 +816,18 @@ plugins: [
     id: 'babel',
     // 如何处理.js文件，用法和Loader配置中一样
     loaders: ['babel-loader?cacheDirectory'],
-    threadPool: HappyPackThreadPool,
+    threadPool: HappyPackThreadPool
   }),
   new HappyPack({
     id: 'vue', // 用唯一的标识符id，来代表当前的HappyPack是用来处理一类特定的文件
     loaders: [
       {
         loader: 'vue-loader',
-        options: vueLoaderConfig,
-      },
+        options: vueLoaderConfig
+      }
     ],
-    threadPool: HappyPackThreadPool,
-  }),
+    threadPool: HappyPackThreadPool
+  })
 ]
 ```
 
@@ -830,8 +846,97 @@ DllReferencePlugin 插件：用于在主要配置文件中去引入 DllPlugin �
 - [webpack 编译速度提升之 DllPlugin](https://juejin.cn/post/6844903635072057358)
 - [4-2 使用 DllPlugin](http://webpack.wuhaolin.cn/4%E4%BC%98%E5%8C%96/4-2%E4%BD%BF%E7%94%A8DllPlugin.html)
 
+### tree shaking
 
+通过 tree-shaking，将没有使用的模块摇掉，这样来达到删除无用代码的目的。
+思路： 基于 ES6 提供的模块系统对代码进行静态分析,并将代码中的死代码（dead code）移除的一种技术。因此，利用 Tree Shaking 技术可以很方便地实现我们代码上的优化，减少代码体积。
 
+摇树删除代码的原理：
+webpack 基于 ES6 提供的模块系统，对代码的依赖树进行静态分析，把 import & export 标记为 3 类：
+
+- 所有 import 标记为/_ harmony import _/
+- 被使用过的 export 标记为/harmony export([type])/，其中[type]和 webpack 内部有关，可能是 binding，immutable 等；
+- 没有被使用的 export 标记为/_ unused harmony export [FuncName] _/，其中[FuncName]为 export 的方法名，之后使用 Uglifyjs（或者其他类似的工具）进行代码精简，把没用的都删除。
+
+为何基于 es6 模块实现（ES6 module 特点：）：
+
+- 只能作为模块顶层的语句出现
+- import 的模块名只能是字符串常量
+- import binding 是 immutable 的
+
+条件：
+
+1. 首先源码必须遵循 ES6 的模块规范 (import & export)，如果是 CommonJS 规范 (require) 则无法使用。
+2. 编写的模块代码不能有副作用，如果在代码内部改变了外部的变量则不会被移除。
+
+配置方法：
+在 package.json 里添加一个属性：
+
+```javascript
+{
+    // sideEffects如果设为false，webpack就会认为所有没用到的函数都是没副作用的，即删了也没关系。
+    "sideEffects": false,
+    // 设置黑名单，用于防止误删代码
+    "sideEffects": [
+        // 数组里列出黑名单，禁止shaking下列代码
+        "@babel/polly-fill",
+        "*.less",
+        // 其它有副作用的模块
+        "./src/some-side-effectful-file.js"
+    ],
+}
+```
+
+tree-shaking 摇掉代码中未使用的代码 在生产模式下自动开启
+
+tree-shaking 并不是 webpack 中的某一个配置选项，是一组功能搭配使用后的优化效果，会在生产模式下自动启动
+
+```javascript
+// 在开发模式下，设置 usedExports: true ，打包时只会标记出哪些模块没有被使用，不会删除，因为可能会影响 source-map的标记位置的准确性。
+{
+    mode: 'develpoment',
+    optimization: {
+        // 优化导出的模块
+        usedExports: true
+    },
+}
+// 在生产模式下默认开启 usedExports: true ，打包压缩时就会将没用到的代码移除
+{
+    mode: 'production',
+    //  这个属性的作用就是集中配置webpack内部的优化功能
+    optimizition: {
+        // 只导出外部使用的模块成员 负责标记枯树叶
+        usedExports: true,
+        minimize: true, // 自动压缩代码 负责摇掉枯树叶
+        /**
+         * webpack打包默认会将一个模块单独打包到一个闭包中
+         * webpack3中新增的API 将所有模块都放在一个函数中 ，尽可能将所有模块合并在一起，
+         * 提升效率，减少体积  达到作用域提升的效果
+         */
+        concatenateModules: true,
+    },
+
+}
+```
+
+使用摇树的注意事项：
+
+- 使用 ES6 模块语法编写代码
+- 工具类函数尽量以单独的形式输出，不要集中成一个对象或者类
+- 声明 sideEffects
+- 自己在重构代码时也要注意副作用
+
+tree-shaking & babel 使用 babel-loader 处理 js 代码会导致 tree-shaking 失效的原因：
+treeshaking 使用的前提必须是 ES module 组织的代码，也就是说交给 ESMOdule 处理的代码必须是 ESM。当我们使用 babel-loader 处理 js 代码之后就有可能将 ESM 转换 成 commonjs 规范（preset-env 插件工作的时候就会将 esm => coommonjs）
+
+解决办法：
+收到配置 preset-env 的 modules： false,确保不会开启自动转换的插件(在最新版本的 babel-loader 中自动帮我们关闭了转换成 commonjs 规范的功能)
+
+```javascripts
+presets: [
+    ['@babel/preset-env', {module: 'commonjs'}]
+]
+```
 
 ## 总结
 

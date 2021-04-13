@@ -1,48 +1,65 @@
-importScripts('https://cdn.jsdelivr.net/npm/workbox-cdn@5.1.3/workbox/workbox-sw.js');
+importScripts(
+  'https://cdn.jsdelivr.net/npm/workbox-cdn@5.1.3/workbox/workbox-sw.js'
+)
 
 workbox.setConfig({
-    modulePathPrefix: 'https://cdn.jsdelivr.net/npm/workbox-cdn@5.1.3/workbox/'
-});
+  modulePathPrefix: 'https://cdn.jsdelivr.net/npm/workbox-cdn@5.1.3/workbox/'
+})
 
-const { core, precaching, routing, strategies, expiration, cacheableResponse, backgroundSync } = workbox;
-const { CacheFirst, NetworkFirst, NetworkOnly, StaleWhileRevalidate } = strategies;
-const { ExpirationPlugin } = expiration;
-const { CacheableResponsePlugin } = cacheableResponse;
+const {
+  core,
+  precaching,
+  routing,
+  strategies,
+  expiration,
+  cacheableResponse,
+  backgroundSync
+} = workbox
+const {
+  CacheFirst,
+  NetworkFirst,
+  NetworkOnly,
+  StaleWhileRevalidate
+} = strategies
+const { ExpirationPlugin } = expiration
+const { CacheableResponsePlugin } = cacheableResponse
 
 const cacheSuffixVersion = '-200629',
-    // precacheCacheName = core.cacheNames.precache,
-    // runtimeCacheName = core.cacheNames.runtime,
-    maxEntries = 100;
+  // precacheCacheName = core.cacheNames.precache,
+  // runtimeCacheName = core.cacheNames.runtime,
+  maxEntries = 100
 
 self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        caches.keys().then((keys) => {
-            return Promise.all(keys.map((key) => {
-                if (!key.includes(cacheSuffixVersion)) return caches.delete(key);
-            }));
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (!key.includes(cacheSuffixVersion)) return caches.delete(key)
         })
-    );
-});
-
+      )
+    })
+  )
+})
 
 core.setCacheNameDetails({
-    prefix: 'colorfulWorld',
-    suffix: cacheSuffixVersion
-});
+  prefix: 'colorfulWorld',
+  suffix: cacheSuffixVersion
+})
 
-core.skipWaiting();
-core.clientsClaim();
-precaching.cleanupOutdatedCaches();
+core.skipWaiting()
+core.clientsClaim()
+precaching.cleanupOutdatedCaches()
 
 /*
  * Precache
  * - Static Assets
  */
-precaching.precacheAndRoute(
-    [
-        { url: 'https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js', revision: null },
-    ],
-);
+precaching.precacheAndRoute([
+  {
+    url: 'https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js',
+    revision: null
+  }
+])
 
 /*
  * Cache File From jsDelivr
@@ -55,21 +72,21 @@ precaching.precacheAndRoute(
 
 // cdn.jsdelivr.net - cors enabled
 routing.registerRoute(
-    /.*cdn\.jsdelivr\.net/,
-    new CacheFirst({
-        cacheName: 'static-immutable' + cacheSuffixVersion,
-        fetchOptions: {
-            mode: 'cors',
-            credentials: 'omit'
-        },
-        plugins: [
-            new ExpirationPlugin({
-                maxAgeSeconds: 30 * 24 * 60 * 60,
-                purgeOnQuotaError: true
-            })
-        ]
-    })
-);
+  /.*cdn\.jsdelivr\.net/,
+  new CacheFirst({
+    cacheName: 'static-immutable' + cacheSuffixVersion,
+    fetchOptions: {
+      mode: 'cors',
+      credentials: 'omit'
+    },
+    plugins: [
+      new ExpirationPlugin({
+        maxAgeSeconds: 30 * 24 * 60 * 60,
+        purgeOnQuotaError: true
+      })
+    ]
+  })
+)
 
 /*
  * Google Analytics Async - No Cache
@@ -87,7 +104,6 @@ routing.registerRoute(
 //         ]
 //     })
 // );
-
 
 /*
  * API - No Cache
@@ -151,10 +167,10 @@ routing.registerRoute(
  * cacheName: img-cache
  */
 routing.registerRoute(
-    // Cache image files
-    /.*\.(?:png|jpg|jpeg|svg|gif|webp|mp3)/,
-    new StaleWhileRevalidate()
-);
+  // Cache image files
+  /.*\.(?:png|jpg|jpeg|svg|gif|webp|mp3)/,
+  new StaleWhileRevalidate()
+)
 
 /*
  * Static Assets
@@ -162,27 +178,24 @@ routing.registerRoute(
  * cacheName: static-assets-cache
  */
 routing.registerRoute(
-    // Cache CSS files
-    /.*\.(css|js)/,
-    // Use cache but update in the background ASAP
-    new StaleWhileRevalidate()
-);
+  // Cache CSS files
+  /.*\.(css|js)/,
+  // Use cache but update in the background ASAP
+  new StaleWhileRevalidate()
+)
 
 /*
  * sw.js - Revalidate every time
  * staleWhileRevalidate
  */
-routing.registerRoute(
-    '/js/sw.js',
-    new StaleWhileRevalidate()
-);
+routing.registerRoute('/js/sw.js', new StaleWhileRevalidate())
 
 /*
  * Default - Serve as it is
  * networkFirst
  */
 routing.setDefaultHandler(
-    new NetworkFirst({
-        networkTimeoutSeconds: 3
-    })
-);
+  new NetworkFirst({
+    networkTimeoutSeconds: 3
+  })
+)
