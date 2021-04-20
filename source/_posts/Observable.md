@@ -10,8 +10,8 @@ categories: rx.js
 
 Observable 只是一个普通函数，要想让他有所作为，就需要跟 observer 一起使用；而这个 observer（后面我们会介绍）只是一个带有 next、error 、 complete 的简单对象而已。最后，还需要通过 subscribe 订阅来 **启动** Observable；否则它是不会有任何反应；而订阅也会返回一个可用于取消操作（在 RxJS 里叫 unsubscribe）。
 
-* Observer Pattern - ( 观察者模式 / 发布订阅模式 )
-* Iterator Pattern - ( 迭代器模式 )
+- Observer Pattern - ( 观察者模式 / 发布订阅模式 )
+- Iterator Pattern - ( 迭代器模式 )
 
 这两种模式是 Observable 的基础。
 
@@ -21,8 +21,8 @@ Observable 只是一个普通函数，要想让他有所作为，就需要跟 ob
 
 Observables 与 Observer 之间的订阅发布关系 ( 观察者模式 ) 如下：
 
-* 订阅：Observer 通过 Observable 提供的 subscribe() 方法订阅 Observable。
-* 发布：Observable 通过回调 next 方法向 Observer 发布事件。
+- 订阅：Observer 通过 Observable 提供的 subscribe() 方法订阅 Observable。
+- 发布：Observable 通过回调 next 方法向 Observer 发布事件。
 
 当 Observable 设置观察者后，而连接并获取原始数据的这个过程叫生产者，可能是 DOM 中的 click 事件、input 事件、或者更加复杂的 HTTP 通信。
 
@@ -32,7 +32,7 @@ import { Observable, Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-home',
-  template: `<input type="text"> `
+  template: `<input type="text" /> `
 })
 export class HomeComponent {
   ngOnInit() {
@@ -41,8 +41,9 @@ export class HomeComponent {
     // 第二个参数 input 是事件名，对于input元素有一个 oninput 事件用于接受用户输入
     const input$ = Observable.fromEvent(node, 'input')
     input$.subscribe({
-      next: (event: any) => console.log(`You just typed ${event.target.value}!`),
-      error: err => console.log(`Oops... ${err}`),
+      next: (event: any) =>
+        console.log(`You just typed ${event.target.value}!`),
+      error: (err) => console.log(`Oops... ${err}`),
       complete: () => console.log(`Complete!`)
     })
   }
@@ -51,7 +52,7 @@ export class HomeComponent {
 
 **Observable.fromEvent() 会返回一个 Observable，并且监听 input 事件，当事件被触发后会发送一个 Event 给对应的 observer 观察者。**
 
-## 一、observer
+## observer
 
 **subscribe 订阅就是接收一个 observer 方法。**
 
@@ -67,32 +68,32 @@ Observable 的生产的值允许经过一序列格式化或操作，最终得到
 
 ---
 
-## 二、operator
+## operator
 
 Observable 可以链式写法，这意味着我们可以这样：
 
 ```javascript
 Observable.fromEvent(node, 'input')
   .map((event: any) => event.target.value)
-  .filter(value => value.length >= 2)
-  .subscribe(value => {
+  .filter((value) => value.length >= 2)
+  .subscribe((value) => {
     console.log(value)
   })
 ```
 
 下面是顺序步骤：
 
-* 假设用户输入：a
-* Observable 对触发 oninput 事件作出反应，将值以参数的形式传递给 observer 的 next()。
-* map() 根据 event.target.value 的内容返回一个新的 Observable，并调用 next() 传递给下一个 observer。
-* filter() 如果值长度 >=2 的话，则返回一个新的 Observable，并调用 next() 传递给下一个 observer。
-* 最后，将结果传递给 subscribe 订阅块。
+- 假设用户输入：a
+- Observable 对触发 oninput 事件作出反应，将值以参数的形式传递给 observer 的 next()。
+- map() 根据 event.target.value 的内容返回一个新的 Observable，并调用 next() 传递给下一个 observer。
+- filter() 如果值长度 >=2 的话，则返回一个新的 Observable，并调用 next() 传递给下一个 observer。
+- 最后，将结果传递给 subscribe 订阅块。
 
-#### 取消订阅
+### 取消订阅
 
 Observable 当有数据产生时才会推送给订阅者，所以它可能会无限次向订阅者推送数据。正因为如此，在 Angular 里面创建组件的时候务必要取消订阅操作，以避免内存泄漏，要知道在 SPA 世界里懂得擦屁股是一件必须的事。
 
-##### unsubscribe
+### unsubscribe
 
 前面示例讲过，调用 subscribe() 后，会返回一个 Subscription 可用于取消操作 unsubscribe()。最合理的方式在 ngOnDestroy 调用它。
 
@@ -102,7 +103,7 @@ Observable 当有数据产生时才会推送给订阅者，所以它可能会无
     }
 ```
 
-##### takeWhile
+### takeWhile
 
 如果组件有很多订阅者的话，则需要将这些订阅者存储在数组中，并组件被销毁时再逐个取消订阅。但，我们有更好的办法：
 
@@ -196,30 +197,30 @@ export class HomeComponent {
 
 ## 结论
 
-#### 创建数据流：
+### 创建数据流：
 
-* 单值：of, empty, never
-* 多值：from
-* 定时：interval, timer
-* 从事件创建：fromEvent
-* 从 Promise 创建：fromPromise
-* 自定义创建：create
+- 单值：of, empty, never
+- 多值：from
+- 定时：interval, timer
+- 从事件创建：fromEvent
+- 从 Promise 创建：fromPromise
+- 自定义创建：create
 
-#### 转换操作：
+### 转换操作：
 
-* 改变数据形态：map, mapTo, pluck
-* 过滤一些值：filter, skip, first, last, take
-* 时间轴上的操作：delay, timeout, throttle, debounce, audit, bufferTime
-* 累加：reduce, scan
-* 异常处理：throw, catch, retry, finally
-* 条件执行：takeUntil, delayWhen, retryWhen, subscribeOn, ObserveOn
-* 转接：switch
+- 改变数据形态：map, mapTo, pluck
+- 过滤一些值：filter, skip, first, last, take
+- 时间轴上的操作：delay, timeout, throttle, debounce, audit, bufferTime
+- 累加：reduce, scan
+- 异常处理：throw, catch, retry, finally
+- 条件执行：takeUntil, delayWhen, retryWhen, subscribeOn, ObserveOn
+- 转接：switch
 
-#### 组合数据流：
+### 组合数据流：
 
-* concat ，保持原来的序列顺序连接两个数据流
-* merge，合并序列
-* race，预设条件为其中一个数据流完成
-* forkJoin，预设条件为所有数据流都完成
-* zip，取各来源数据流最后一个值合并为对象
-* combineLatest，取各来源数据流最后一个值合并为数组另，最好使用 $ 结尾的命名方式来表示 Observable，例：input$ 。
+- concat ，保持原来的序列顺序连接两个数据流
+- merge，合并序列
+- race，预设条件为其中一个数据流完成
+- forkJoin，预设条件为所有数据流都完成
+- zip，取各来源数据流最后一个值合并为对象
+- combineLatest，取各来源数据流最后一个值合并为数组另，最好使用 $ 结尾的命名方式来表示 Observable，例：input$ 。

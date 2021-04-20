@@ -72,7 +72,7 @@ precaching.precacheAndRoute([
 
 // cdn.jsdelivr.net - cors enabled
 routing.registerRoute(
-  /.*cdn\.jsdelivr\.net/,
+  /(.*cdn\.jsdelivr\.net)(.*[^mp3]$)/,
   new CacheFirst({
     cacheName: 'static-immutable' + cacheSuffixVersion,
     fetchOptions: {
@@ -168,7 +168,7 @@ routing.registerRoute(
  */
 routing.registerRoute(
   // Cache image files
-  /.*\.(?:png|jpg|jpeg|svg|gif|webp|mp3)/,
+  /.*\.(?:png|jpg|jpeg|svg|gif|webp)/,
   new StaleWhileRevalidate()
 )
 
