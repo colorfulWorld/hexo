@@ -8,11 +8,11 @@ Vue API 中的小知识点运用与总结
 
 <!--more-->
 
-# 状态共享
+## 状态共享
 
 随着组件的细化，就会遇到多组件状态共享的情况，Vuex 当然可以解决这些问题，但是如果应用不够大，为避免代码繁琐冗余，最好不要使用它。我们可以通过使用 Observable API 应对一些简单的跨组件数据状态共享的情况。
 
-## Observable
+### Observable
 
 让一个对象可响应。Vue 内部会用它来处理 data 函数返回的对象。可以实现简单的 store 管理。
 
@@ -85,13 +85,18 @@ test 组件
 </script>
 ```
 
-# 长列表性能优化
+## 长列表性能优化
 
 vue 是通过 object.defineProperty 对数据进行劫持，来实现视图响应数据的变化，然而有些时候我们的组件就是纯粹的展示，不需要 vue 劫持我们的数据，在大量数据展示的情况下，这能够很明显的减少组件初始化的时间，**我们可以通过`object.freeze`方法来冻结一个对象，一旦被冻结的对象就再也不能被修改了**。
 
-```html
-export default { data: () => ({ user: {} }), async created() { const users =
-await axios.get("api/users"); this.users = Object.freeze(users); } };
+```javascript
+export default {
+  data: () => ({ user: {} }),
+  async created() {
+    const users = await axios.get('api/users')
+    this.users = Object.freeze(users)
+  }
+}
 ```
 
 这里仅仅是冻结了 user 的值，引用不会被冻结，当我们需要 reactive 数据的时候，我们可以重新给 users 赋值。
@@ -103,7 +108,7 @@ a() { //改变值不会触发视图响应 this.users[0] = newValue;
 //改变引用依然会触发视图响应 this.users = newValue; } } };
 ```
 
-# 函数式组件
+## 函数式组件
 
 App.vue
 
@@ -141,7 +146,7 @@ List.vue
 </template>
 ```
 
-# 监听组件的生命周期
+## 监听组件的生命周期
 
 比如有父组件 Parent 和子组件 Child，如果父组件监听到子组件挂载 mounted 就做一些逻辑处理，常规写法可能如下：
 
@@ -152,13 +157,13 @@ List.vue
 // Child.vue mounted() { this.$emit("mounted"); }
 ```
 
-# 混入
+## 混入
 
 分发 Vue 组件中的可复用功能
 当我们开发应用时，经常会遇到一些功能和逻辑，需要在不同的组件间多次使用，比如同样的方法逻辑，两个组件都要用到，但我们又不想也不应该完全复制两遍，这个时候就该用 mixins 了。
 这意味着，如果我创建了一个组件，它有 X 个不同的方法、周期逻辑、本地的状态等，我想复用它们，我就可以创建个 mixins，让其他的组件扩展这个 mixins，就可以在这些新的组件里使用原本它们没有的方法了
 
-# 前端路由和后端路由
+## 前端路由和后端路由
 
 对于路由这快的认知有一个盲点，好像都没有考虑过一直以来 jquery 等应用的页面的路由是怎么样的，webpack 管理的多页应用的路由又是怎么样实现的。
 
@@ -172,7 +177,7 @@ List.vue
 
 ### 前端路由实现
 
-#### 1、Pjax(PushState+Ajax)
+#### Pjax(PushState+Ajax)
 
 原理：利用 ajax 请求替代了 a 标签的默认跳转，然后利用 html5 中的 API 修改了 url。
 
@@ -197,9 +202,11 @@ window.history.pushSate(null, null, 'name/orange')
 
 使用浏览器的前进后退键时，会重新发出请求，没有合理的利用缓存。
 
-# react/vue 列表组件中的 key 值。其作用是什么。
+## vue 列表组件中的 key 的作用
 
-在没有绑定 key 的情况下，并且在遍历模板简单的情况下（只读模式），会导致虚拟新旧节点对比更快，节点也会被复用，这种复用就是就地复用。
+[官网解释](https://vuejs.bootcss.com/api/#%E7%89%B9%E6%AE%8A-attribute)
+
+在没有绑定 key 的情况下，并且在遍历模板简单的情况下（只读模式），会导致虚拟新旧节点对比更快，节点也会被复用，这种复用就是就地复用。但是现在 key 是必须要绑定的啊
 
 ```html
 <div id="app">
@@ -229,7 +236,7 @@ window.history.pushSate(null, null, 'name/orange')
 
 改变 dataList 数据，进行数据位置替换，对比改变后的数据
 
-# 组件内导航之 beforeRouteUpdate 的使用
+## 组件内导航之 beforeRouteUpdate 的使用
 
 使用场景：
 
@@ -242,4 +249,44 @@ beforeRouteUpdate (to, from, next) {
     // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
     // 可以访问组件实例 `this`
   },
+```
+
+## $forceUpdate()
+
+迫使 Vue 实例重新 render 渲染虚拟 DOM，注意不是重新加载组件。结合 vue 生命周期，调用$forceUpdata 后只会触发 beforeUpdata 和 updata 这两个钩子函数，不会触发其他钩子函数。它仅仅影响实例本身和插入插槽内容的子组件，而不是所有子组件。暂时不知道使用场景，组件复用重新渲染有 key
+
+## $beforeDestroy
+
+当发生 A->B 路由跳转时，在 A 页面的$beforeDestroy 钩子函数并不在 B 页面的 beforeCreate 前面
+
+## v-pre
+
+用法：跳过这个元素和它的子元素的编译过程，可以用来显示原始 Mustache 标签，跳过大量指令的节点会加快编译
+
+```html
+<div id="demo">
+  <span v-pre>{{message}}</span>
+  <span>{{message}}</span>
+</div>
+<script type="text/javascript">
+  var app = new Vue({
+    el: '#demo',
+    data: {
+      message: 'hello vue'
+    }
+  })
+</script>
+```
+
+以上代码，第一个 span 里的内容不会被编译，显示为`{{message}}`
+
+## v-cloak 指令
+
+在 vue 渲染完制定的整个 DOM 后才进行显示，它必须和 css 样式一起使用
+
+在 vue 渲染完指定的整个 DOM 后才进行显示。它必须和 CSS 样式一起使用。
+
+```html
+[v-cloak]{ display:none; }
+<div v-cloak>{{message}}</div>
 ```
