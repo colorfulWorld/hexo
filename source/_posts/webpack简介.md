@@ -4,8 +4,7 @@ date: 2018-01-31 17:15:07
 categories: webpack
 ---
 
-
- webpack 做的就是分析代码，转换代码，编译代码，输出代码。webpack 本身是一个 node 的模块，所以 webpack.config.js 是一一 commonjs 形式书写的
+webpack 做的就是分析代码，转换代码，编译代码，输出代码。webpack 本身是一个 node 的模块，所以 webpack.config.js 是一一 commonjs 形式书写的
 
 <!--more-->
 
@@ -130,6 +129,7 @@ mainFields: ['jsnext:main', 'browser', 'main']
 
 是一个广发使用的 ES6 的转码器，可以将 ES6 代码转为 ES5 代码。注意：babel 默认只转换新的 javascript 语法，而不转换新的 api
 @babel-preset-env 就整合了这些语法转义插件
+
 ```javascript
 //Using plugins:
 transform-template-literals {}
@@ -151,9 +151,11 @@ module.exports = {
   entry: ['@babel-polyfill', './src/index.js']
 }
 ```
-yarn build 时发现文件体积大了很多，因为上面的代码表示将@babel-polyfill的代码也打包进去，如何进行按需编译呢？在JS中import @babel-polyfill
+
+yarn build 时发现文件体积大了很多，因为上面的代码表示将@babel-polyfill 的代码也打包进去，如何进行按需编译呢？在 JS 中 import @babel-polyfill
 
 修改.babelrc
+
 ```javascript
 {
   "presets": [["@babel/preset-env", { "useBuiltIns": "usage" }]]
@@ -163,26 +165,26 @@ yarn build 时发现文件体积大了很多，因为上面的代码表示将@ba
 ### 使用自动刷新
 
 DecServer 刷新原理：
-往要开发的网页中注入代理客户端代码，通过代理客户端去刷新整个页面。使用webSocket链接，双工通信
+往要开发的网页中注入代理客户端代码，通过代理客户端去刷新整个页面。使用 webSocket 链接，双工通信
 
-webapck要完全启用HMR需要使用webpack.HotModuleReplacementPlugin。如果webpack或webpack-dev-server 通过命令添加--hot选项启动，这个插件会自动添加，所以不需要添加HotModuleReplacementPlugin到webpack.config.js中。
+webapck 要完全启用 HMR 需要使用 webpack.HotModuleReplacementPlugin。如果 webpack 或 webpack-dev-server 通过命令添加--hot 选项启动，这个插件会自动添加，所以不需要添加 HotModuleReplacementPlugin 到 webpack.config.js 中。
 
-但是，经实际使用 webpack-dev-server 时发现，在webpack.config.js中仅仅配置了devServer.hot:true，而未添加这个插件的状态下，仍然实现了HMR。
+但是，经实际使用 webpack-dev-server 时发现，在 webpack.config.js 中仅仅配置了 devServer.hot:true，而未添加这个插件的状态下，仍然实现了 HMR。
 
-项目启动之后，会进行首次构建打包，控制台中会输出征哥的构建过程，可以观察到一个hash值，每一次代码修改后，保存时都会在控制台上看到hash值更新。
+项目启动之后，会进行首次构建打包，控制台中会输出整个的构建过程，可以观察到一个 hash 值，每一次代码修改后，保存时都会在控制台上看到 hash 值更新。
 
 ### webpack watch
 
 在项目启动之后，Webpack 会通过 Compiler 类的 Run 方法开启编译构建过程，编译完成后，调用 Watch 方法监听文件变更，当文件发生变化，重新编译，编译完成之后继续监听。
 
-可以看出所谓模块热替换指的是页面在尽量不经过刷新的情况下将页面所引用的js或css等模块进行热替换。这里之所以说是尽量不经过刷新页面是因为webpack在热替换检查失败的情况会刷新整个页面。
+可以看出所谓模块热替换指的是页面在尽量不经过刷新的情况下将页面所引用的 js 或 css 等模块进行热替换。这里之所以说是尽量不经过刷新页面是因为 webpack 在热替换检查失败的情况会刷新整个页面。
 
 **问题：**
-webpack-dev-server好像是只监听webpack.config.js中entry入口下文件（如js、css等等）的变动，只有这些文件的变动才会触发实时编译打包与页面刷新，而对于不在entry入口下的html文件，却不进行监听与页面自动刷新。
+webpack-dev-server 好像是只监听 webpack.config.js 中 entry 入口下文件（如 js、css 等等）的变动，只有这些文件的变动才会触发实时编译打包与页面刷新，而对于不在 entry 入口下的 html 文件，却不进行监听与页面自动刷新。
 
 **解决方法：**
 
- 添加参数 watchContentBase: true，目录contentBase目录下的html文件变化也可监听并刷新
+添加参数 watchContentBase: true，目录 contentBase 目录下的 html 文件变化也可监听并刷新
 
 ```javascript
   devServer: {
@@ -199,17 +201,12 @@ webpack-dev-server好像是只监听webpack.config.js中entry入口下文件（�
 
 ## webpack 的整个打包流程
 
-1、读取webpack的配置参数
-2、启动webpack，创建compiler对象并开始解析项目
+1、读取 webpack 的配置参数
+2、启动 webpack，创建 compiler 对象并开始解析项目
 3、从入口文件（entry）开始解析，并且找到其导入的依赖模块，递归遍历分析，形成依赖关系树
-4、对不同的文件类型的依赖模块文件使用对应的loader进行编译，最终转为javascript文件
-5、整个过程中webpack会通过发布订阅模式，向外抛出一些hooks，而webpack的插件即可通过监听这些关键的节点，执行插件任务进而达到敢于输出结果的目的
-
-
-
-
-
+4、对不同的文件类型的依赖模块文件使用对应的 loader 进行编译，最终转为 javascript 文件
+5、整个过程中 webpack 会通过发布订阅模式，向外抛出一些 hooks，而 webpack 的插件即可通过监听这些关键的节点，执行插件任务进而达到敢于输出结果的目的
 
 ## 站外资料链接
-[深入浅出webpack](http://webpack.wuhaolin.cn/)
 
+[深入浅出 webpack](http://webpack.wuhaolin.cn/)

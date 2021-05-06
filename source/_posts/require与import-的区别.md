@@ -176,15 +176,13 @@ ES6 的模块不是对象，import 命令会被 JavaScript 引擎静态分析，
 
 - 编译时加载：ES6 模块不是对象，而是通过 export 命令显示指令输出的代码，import 时采用静态命令的形式，既在 import 时可以指定加载摸个输出值，而不是加载整个模块，这种加载称为编译加载
 
-CommonJS 加载的是一个对象（既 module.exports 属性），该对象只会在脚本运行玩才会生成，而 ES6 模块不是对象，他的对外接口只是一种静态定义，在代码金泰解析阶段就会生成
-
 [参考](https://juejin.cn/post/6844903576309858318)
 
-## 遵循的模块化规范不一样
+### 遵循的模块化规范不一样
 
 模块化规范：即为 JavaScript 提供一种模块化编写、模块依赖和模块运行的方案。最初的 JavaScript 没有模块化规范，所以很多都是全局变量。
 
-## require 和 import/export 形式不一样
+### require 和 import/export 形式不一样
 
 require/exports 的用法只有以下 3 种简单的写法。
 
@@ -211,16 +209,9 @@ export {readFile, read}
 export * from 'fs'
 ```
 
-## 一些不同点
+### 其他
 
-- import 静态编译，import 的地址不能通过计算
-
-- require 就可以，例如 const url = "a" + "b";
-
-- Import url 直接报错了
-
-- require(url)不会报错
-
-- 所以 require 都会用在动态加载的时候
-
-- 从规范与实现定义来讲，require 是动态加载，import 是静态加载，从底层的运行来讲，require 是在程序运行时去解析而 import 是在编译 的时候去做解析请求包，require 是请求整个包对象而 import 是只请求模块中需要的请求的部分。**现在 import 应该还只算是 ES6 的语法规范，babel 打包的还是 require**
+- CommonJS 加载的是一个对象（既 module.exports 属性），该对象只会在脚本运行玩才会生成，而 ES6 模块不是对象，他的对外接口只是一种静态定义，在代码静态解析阶段就会生成
+- CommonJS 支持动态引入（require(${path}/xx.js)），后者目前不支持，但是已有提案
+- CommonJS 是同步导入，因为用于服务端，文件都在本地，同步导入及时卡住主线程影响也不大，而 ES6 是异步导入，因为用于浏览器，需要下载文件，如果也同步导入会对渲染有很大的影响
+- **从规范与实现定义来讲，require 是动态加载，import 是静态加载**，从底层的运行来讲，require 是在程序运行时去解析而 import 是在编译 的时候去做解析请求包，require 是请求整个包对象而 import 是只请求模块中需要的请求的部分。**现在 import 应该还只算是 ES6 的语法规范，babel 打包的还是 require**

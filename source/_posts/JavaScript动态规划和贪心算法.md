@@ -12,7 +12,7 @@ categories: JavaScript
 
 # 动态规划
 
-动态规划为什么会被认为是递归相反的技术呢，是因为递归是从顶部开始将问题分解，通过解决掉所有小问题的方式，来解决征哥问题，动态规划是从底部开始解决问题，将所有小问题解决掉，然后合并成整个大的问题。
+动态规划为什么会被认为是递归相反的技术呢，是因为递归是从顶部开始将问题分解，通过解决掉所有小问题的方式，来解决整个问题，动态规划是从底部开始解决问题，将所有小问题解决掉，然后合并成整个大的问题。
 
 递归算法写法简单但是效率并不高。
 
@@ -26,13 +26,13 @@ categories: JavaScript
 
 ```javascript
 function fibo(n) {
-    if (n <= 0) {
-        return 0;
-    }
-    if (n === 1) {
-        return 1;
-    }
-    return fibo(n - 1) + fibo(n - 2);
+  if (n <= 0) {
+    return 0
+  }
+  if (n === 1) {
+    return 1
+  }
+  return fibo(n - 1) + fibo(n - 2)
 }
 ```
 
@@ -42,15 +42,15 @@ function fibo(n) {
 
 ```javascript
 function fibo(n) {
-    if (n <= 0) return 0;
-    if (n <= 1) return 1;
-    var a = 0,
-        b = 1;
-    for (var i = 2; i <= n; i++) {
-        b = a + b;
-        a = b - a;
-    }
-    return b;
+  if (n <= 0) return 0
+  if (n <= 1) return 1
+  var a = 0,
+    b = 1
+  for (var i = 2; i <= n; i++) {
+    b = a + b
+    a = b - a
+  }
+  return b
 }
 ```
 
@@ -62,52 +62,48 @@ function fibo(n) {
 
 ```javascript
 function maxSubString(str1, str2) {
-    if (!str1 || !str2) return "";
-    var len1 = str1.length,
-        len2 = str2.length;
-    var maxSubStr = "";
-    for (var i = 0; i < len1; i++) {
-        for (var j = 0; j < len2; j++) {
-            var tempStr = "",
-                k = 0;
-            while (
-                i + k < len1 &&
-                j + k < len2 &&
-                str1[i + k] === str2[j + k]
-            ) {
-                tempStr += str1[i + k];
-                k++;
-            }
-            if (tempStr.length > maxSubStr.length) {
-                maxSubStr = tempStr;
-            }
-        }
+  if (!str1 || !str2) return ''
+  var len1 = str1.length,
+    len2 = str2.length
+  var maxSubStr = ''
+  for (var i = 0; i < len1; i++) {
+    for (var j = 0; j < len2; j++) {
+      var tempStr = '',
+        k = 0
+      while (i + k < len1 && j + k < len2 && str1[i + k] === str2[j + k]) {
+        tempStr += str1[i + k]
+        k++
+      }
+      if (tempStr.length > maxSubStr.length) {
+        maxSubStr = tempStr
+      }
     }
-    return maxSubStr;
+  }
+  return maxSubStr
 }
 ```
 
 而且上面不考虑多个一样长的情况吗？
 
 ```javascript
-function findSubStr(str1, str2){
-    if (str1.length > str2.length) {
-      var temp = str1;
-      str1 = str2;
-      str2 = temp;
-    }
-    var len1 = str1.length,
-      len2 = str2.length;
-    for (var j = len1; j > 0; j--) {
-      for (var i = 0; i < len1 - j; i++) {
-        var current = str1.substr(i, j);
-        if (str2.indexOf(current) >= 0) {
-          return current;
-        }
+function findSubStr(str1, str2) {
+  if (str1.length > str2.length) {
+    var temp = str1
+    str1 = str2
+    str2 = temp
+  }
+  var len1 = str1.length,
+    len2 = str2.length
+  for (var j = len1; j > 0; j--) {
+    for (var i = 0; i < len1 - j; i++) {
+      var current = str1.substr(i, j)
+      if (str2.indexOf(current) >= 0) {
+        return current
       }
     }
-    return "";
   }
-  console.log(findSubStr("aaa3333", "baa333cc")); // aa333
-  console.log(findSubStr("aaaX3333--", "baa333ccX3333333x")) // X3333
+  return ''
+}
+console.log(findSubStr('aaa3333', 'baa333cc')) // aa333
+console.log(findSubStr('aaaX3333--', 'baa333ccX3333333x')) // X3333
 ```
