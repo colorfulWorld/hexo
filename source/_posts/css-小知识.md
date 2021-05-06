@@ -311,12 +311,29 @@ $fileInput.on('change', function (e) {
 
 使用`animation-play-state`可以实现动画暂停
 
-```html
-.play-state { width: 100px; height: 100px; margin: 40px; text-align: center;
-line-height: 94px; border: 3px solid #e1efde; border-radius: 50%; animation:
-play-state 3s linear infinite; cursor: pointer; } .play-state:hover {
-animation-play-state: paused; } @keyframes play-state { 0% { margin-left: 0; }
-100% { margin-left: 200px } }
+```css
+.play-state {
+  width: 100px;
+  height: 100px;
+  margin: 40px;
+  text-align: center;
+  line-height: 94px;
+  border: 3px solid #e1efde;
+  border-radius: 50%;
+  animation: play-state 3s linear infinite;
+  cursor: pointer;
+}
+.play-state:hover {
+  animation-play-state: paused;
+}
+@keyframes play-state {
+  0% {
+    margin-left: 0;
+  }
+  100% {
+    margin-left: 200px;
+  }
+}
 ```
 
 ## 重绘和回流

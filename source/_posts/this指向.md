@@ -4,13 +4,15 @@ date: 2018-01-23 11:39:32
 categories: JavaScript
 ---
 
-[链接](http://mp.weixin.qq.com/s/2PnWD8bIFgEJxYONoPZs6w)
+[文献参考链接](http://mp.weixin.qq.com/s/2PnWD8bIFgEJxYONoPZs6w)
 
-1. js 函数中 this 指向并不是在函数定义的时候确定的，而是在函数调用的时候确定的，所以函数的调用方式决定 this 的 指向。this 永远指向最后调用它的那个对象。
+1. js 函数中 this 指向并不是在函数定义的时候确定的，而是在函数调用的时候确定的，所以函数的调用方式决定 this 的 指向。**this 永远指向最后调用它的那个对象**。
 2. 普通的函数有 3 种调用方式：直接调用，方法调用和 new 调用。除此之外还有通过 bind() 将函数绑定到对象之后再调用，通过 call()、apply() 进行调用等。es6 引入箭头函数之后，其 this 指向又有所不同。
 3. this 既不是指向函数自身也不指向函数作用域，this 实际上是在函数被调用是发生绑定的，它的指向完全取决于函数在哪里调用。
 
 <!--more-->
+
+## 用代码解释：this 永远指向最后调用它的那个对象
 
 ```javascript
 var a = {
