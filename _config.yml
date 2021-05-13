@@ -89,7 +89,8 @@ deploy:
   name: colorfulWorld
   email: colorfulworld.yu@gmail.com
   repo:
-    github: https://github.com/colorfulWorld/colorfulWorld.github.io.git
+    git@github.com:colorfulWorld/colorfulWorld.github.io.git
+    # github: https://github.com/colorfulWorld/colorfulWorld.github.io.git
   branch: master
 
 search:
@@ -97,7 +98,6 @@ search:
   field: post
   format: html
   limit: 10000
-
 # js_minifier:
 #   enable: false
 
