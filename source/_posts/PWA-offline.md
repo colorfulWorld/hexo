@@ -17,6 +17,12 @@ categories: Web
 
 ## service Worker 有以下功能和特性
 
+service Worker 是 Chorme 团队提出和力推的一个 WEB Api，用于给 web 应用日工高级的可持续的后台处理能力。
+
+service Worke 最主要的特点是：在页面中注册成功后，运行与浏览器后台，不受页面刷新的影响（此功能对于执行后台同步和提供推送通知很重要），可以监听和拦截作用于范围内所有页面的 HTTP 请求
+
+类似一个服务器与浏览器之间的中间人角色，如果网站中注册了 service worker 那么它可以拦截当前网站的所有请求，进行判断（需要编写相应的判断程序），如果需要向服务器发起请求的就转给服务器，如果可以直接使用缓存的就直接返回缓存不再给服务器，从而大大挺高浏览器体验。
+
 - 一个独立的 worker 线程，独立于当前网页进程，有自己独立的 worker context。
 - 一旦被 install，就永远存在，除非被 uninstall
 - 需要的时候可以直接唤醒，不需要的时候自动睡眠（有效利用资源，此处有坑）
@@ -27,14 +33,14 @@ categories: Web
 - 出于安全的考虑，必须在 HTTPS 环境下才能工作
 - 异步实现，内部大都是通过 Promise 实现
 
-## service Worker 前提条件
+### service Worker 前提条件
 
 - 要求 HTTPS 的环境
 - 缓存机制是依赖 cache API 实现的 (cacheStorage)
 - 依赖 HTML5 fetchAPI
 - 依赖 Promise
 
-## 注册
+### 注册
 
 ```javascript
 if ('serviceWorker' in navigator) {
@@ -58,7 +64,7 @@ scope 的意义在于如果 sw.js 在/a/b/sw.js 下，那么 scope 默认是/a/b
 
 现在 Service Worker 已经被注册好了，接下来是在 Service Worker 生命周期中触发实现对应的事件处理程序了。
 
-## 事件处理程序
+### 事件处理程序
 
 生命周期：installing installed activating activated,这个状态变化的过程就是 service worker 生命周期的反应。
 
@@ -170,13 +176,55 @@ self.addEventListener('fetch', function (e) {
 
 #### Service Worker 生命周期 （也许翻译的不好，尽量去看原文）
 
-- installing: 这一阶段标志着开始注册。它想要允许设置 worker-specific 的资源,例如离线模式的 caches.
+- **installing**: 这一阶段标志着开始注册。它想要允许设置 worker-specific 的资源,例如离线模式的 caches.
   - 用 **event.waitUntil()** 通过一个 promise 去延长安装 service worker 阶段直到 e.waitUntil()里的代码执行完毕。如果所有资源安装成功缓存则安装成功，否则安装失败，则无法激活 service worker。
   - 用 **self.skipWaiting()** self 是当前 context 的 global 变量。强制当前处于 waiting 状态的脚本进入 activate 状态。
-- installed:service worker 已经完成了它的安装，在等待其他 service Workers 线程被关闭。
-- activating: 这时没有被其他 workers 控制的客户端。这个阶段允许 workers 去完成安装并且清理其他 worker 以及关联缓存的就缓存资源，等待新的 service worker 线程被激活。
-- activated:现在可以处理方法事件。
-- message: service worker 运行于独立 context 中，无法直接访问当前页面主线程的 DOM 信息，但是通过 postMessageAPI ,可以实现他们之间的消息传递，这样主线程就可以接受 service worker 的指令操作 DOM。
+- **installed**:service worker 已经完成了它的安装，在等待其他 service Workers 线程被关闭。
+- **activating**: 这时没有被其他 workers 控制的客户端。这个阶段允许 workers 去完成安装并且清理其他 worker 以及关联缓存的就缓存资源，等待新的 service worker 线程被激活。
+- **activated**:现在可以处理方法事件。
+- **message**: service worker 运行于独立 context 中，无法直接访问当前页面主线程的 DOM 信息，但是通过 postMessageAPI ,可以实现他们之间的消息传递，这样主线程就可以接受 service worker 的指令操作 DOM。
+
+### 定期后台同步
+
+service Worker 与其他服务工作者 在一个单独的线程上运行，所以即使关闭页面，它们也可以执行其代码，此功能对于执行后台同步和提供推送通知很重要
+
+后台同步的目的是解决这个问题，一旦链接重新建立，自动发送数据
+
+```JS
+// app.js
+navigator.serviceWorker.ready.then((registration) => {
+  return registration.sync.register('sync-save-document');
+});
+```
+
+```JS
+//service-worker.js
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'sync-save-document') {
+    event.waitUntil(saveDocument());
+  }
+});
+```
+
+saveDocument 是一个返回 Promise，如果被拒接(例如网络问题)，同步将自动重试。
+
+要注意的一件事是，同步标记必须是唯一的。 例如，如果我要安排 5 个“message”类型的后台同步，则只有最后一个会通过。 因此，在这种情况下，每个标签都应具有唯一的标识符。
+
+#### 后台同步
+
+用户离开页面后，后台同步通常用于同步数据
+
+例如，在手机上编辑文档后，我们写完会点击保存并离开页面，如果在编辑文档期间链接断开，我们必须等待链接回复才能保存文档
+
+#### 定期后台同步
+
+定期后台同步解决与正常那个后台同步不同的问题。该 API 可用于在后台更新数据，而不必等待用户
+
+有了这项技术，用户可以在没有互联网链接的情况下阅读最新的新闻文章
+
+为了防止滥用这个功能，同步的频率取决于浏览器为每个网站设置的站点参与度分数。如果经常打开一个页面，这个频率最多可以达到 12 小时
+
+不放此目的一个要求的是，该网站以作为移动端上的一个 PWA 安装并被天假到主屏幕
 
 ## manifest.json
 
@@ -227,17 +275,59 @@ pwa 添加至桌面的功能实现依赖于 manifest.json。
 
 然后重新打开页面，这个时候渲染的页面依旧是的，但是 sw.js 被安装和激活。之后关闭页面后再次打开才可以看到更新过后的页面。所以最好是将一些不经常更改的静态文件发到缓存中，提高用户体验。
 
+### 如何更新一个 service Worker
+
+更新你 service worker 的 JavaScript 文件
+
+1. 当用户浏览你的网站时，浏览器尝试在后台重新下载 service worker 的脚本文件。经过对比，只要服务器上的文件和本地文件有一个字节不同，这个文件就认为是新的。
+2. 之后更新后的 service worker 启动并触发 install 事件。
+3. 此时，当前页面生效的依然是老版本的 service worker，新的 service worker 会进入 “waiting” 状态。
+4. 当页面关闭之后，老的 service worker 会被干掉，新的 servicer worker 接管页面
+5. 一旦新的 service worker 生效后会触发 activate 事件。
+
+之前我们使用的缓存可以叫 my-site-cache-v1 ，我们想把这个拆封到多个缓存，一份给页面使用，一份给博客文章使用。这意味着，install 步骤里，我们要创建两个缓存： pages-cache-v1 和 blog-posts-cache-v1。在 activite 步骤里，我们需要删除旧的 my-site-cache-v1。
+
+下面的代码会遍历所有的缓存，并删除掉不在 cacheWhitelist 数组（我们定义的缓存白名单）中的缓存。
+
+```JS
+self.addEventListener('activate', function(event) {
+
+  var cacheWhitelist = ['pages-cache-v1', 'blog-posts-cache-v1'];
+
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
+```
+
 ### 设置 Cache-Control
 
 静态文件，类似于图片和视频等不会经常改变的资源，做长时间缓存是没有很大的问题，可以在 HTTP 头里设置 `Cache-Control`来缓存文件使其缓存时间为一年：`Cache-Control: max-age=31536000`
 
 页面，css 和 script 文件会经常变化，所以应该设置一个很短的缓存时间比如 24 小时，并在联网时与服务区端文件进行验证 `Cache-Control: must-revalidate, max-age=86400`
 
+### 为什么首次注册之后的首次刷新没有拦截到网络请求
+
+而在首次注册、安装、激活之后，Service Worker 已经拿到了当前页面的控制权了，但为什么首次刷新却没有拦截到网络请求呢？主要是因为在 Service Worker 的注册是一个异步的过程，在激活完成后当前页面的请求都已经发送完成，因为时机太晚，此时是拦截不到任何请求的，只能等待下次访问再进行。
+
+而第二次刷新页面，由于当前站点的 Service Worker 是处于激活状态，所以不会再次新建 worker 工作线程并执行 Service Worker。也就是说激活状态的 Service Worker 在一个站点只会存在一个 worker 工作线程，除非 Service Worker 文件发生了变化（手动 unregister Service Worker 也会注销掉 worker 工作线程），触发了浏览器更新，才会重新开启生命周期。而由于 Service Worker 工作线程的离线特性，只要处于激活状态，在后续的任何访问中，都会通过 fetch 事件监听器拦截当前页面的网络请求，并执行 fetch 事件回调。
+
 ## 参考
 
+1. [Service Worker 生命周期](hhttps://developers.google.com/web/fundamentals/primers/service-workers/lifecycle?hl=zh-cn)
+1. [PWA 应用实战](https://lavas-project.github.io/pwa-book/)
 1. [发现刷新两次，数据才更新](https://blog.csdn.net/zmx_FZ/article/details/106206890)
-2. [浏览器缓存、CacheStorage、Web Worker 与 Service Worke](https://github.com/youngwind/blog/issues/113)
-3. [谨慎处理 Service Worker 的更新](https://juejin.cn/post/6844903792522035208)
-4. [ServiceWorkerRegistration.update](https://developer.mozilla.org/zh-CN/docs/Web/API/ServiceWorkerRegistration/update)
-5. [Service Worker 更新机制](https://harttle.land/2017/04/10/service-worker-update.html)
-6. [借助 Service Worker 和 cacheStorage 缓存及离线开发](https://www.zhangxinxu.com/wordpress/2017/07/service-worker-cachestorage-offline-develop/)
+1. [浏览器缓存、CacheStorage、Web Worker 与 Service Worke](https://github.com/youngwind/blog/issues/113)
+1. [谨慎处理 Service Worker 的更新](https://juejin.cn/post/6844903792522035208)
+1. [ServiceWorkerRegistration.update](https://developer.mozilla.org/zh-CN/docs/Web/API/ServiceWorkerRegistration/update)
+1. [Service Worker 更新机制](https://harttle.land/2017/04/10/service-worker-update.html)
+1. [借助 Service Worker 和 cacheStorage 缓存及离线开发](https://www.zhangxinxu.com/wordpress/2017/07/service-worker-cachestorage-offline-develop/)
+1. [Service Workers - JavaScript API 简介](https://segmentfault.com/a/1190000027080988)
