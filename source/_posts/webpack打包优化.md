@@ -206,6 +206,7 @@ module.exports = {
       {
         test: /\.css$/, // 正则匹配以.css结尾的文件
         use: ['style-loader', 'css-loader']
+      },
       {
         test: /\.(scss|sass)$/, // 正则匹配以.scss和.sass结尾的文件
         use: ['style-loader', 'css-loader', 'sass-loader']
@@ -309,7 +310,7 @@ module: {
 npm install cache-loader -D
 ```
 
-`cache-loader `的配置要放在其他的 loader 之前，webpack 的配置如下：
+`cache-loader`的配置要放在其他的 loader 之前，webpack 的配置如下：
 
 ```javascript
 module.exports = {
@@ -328,13 +329,15 @@ module.exports = {
 ```
 
 若是只想给 babel-loader 配置 cache 的话，也可以不使用 cache-loader，给 babel-loader 增加选项 CacheDirectory。
-cacheDirectory：默认值为 false。当有设置时，指定的目录将用来缓存 loader 的执行结果。之后的 Webpack 构建，将会尝试读取缓存，来避免在每次执行时，可能产生的、高性能消耗的 Babel 重新编译过程。设置空值或者 true 的话，使用默认缓存目录：node_modules/.cache/babel-loader。开启 babel-loader 的缓存和配置 cache-loader，我比对了下，构建时间很接近。
+cacheDirectory：默认值为 false。当有设置时，指定的目录将用来缓存 loader 的执行结果。之后的 Webpack 构建，将会尝试读取缓存，来避免在每次执行时，可能产生的、高性能消耗的 Babel 重新编译过程。设置空值或者 true 的话，使用默认缓存目录：
 
-## 7、配置常用插件
+node_modules/.cache/babel-loader。开启 babel-loader 的缓存和配置 cache-loader，我比对了下，构建时间很接近。
+
+## 配置常用插件
 
 loader 被用于转换某些类型的模块，而插件则可以用于执行范围更广的任务。插件的范围包括，从打包优化和压缩，一直到重新定义环境中的变量。插件接口功能极其强大，可以用来处理各种各样的任务。
 
-### 7.1、自动生成 html 文件(HtmlWebpackPlugin)
+### 自动生成 html 文件(HtmlWebpackPlugin)
 
 现在我们都是使用一开始建好的 index.html 文件，然后手动引入 bundle.js，如果以后我们引入不止一个 js 文件，那就得更改 index.html 中的 js 文件名，所以能不能自动生成 index.html 且自动引用打包后的 js 呢？  
 HtmlWebpackPlugin 插件就是用来解决这个问题的：
@@ -361,7 +364,7 @@ plugins: [
 
 此时我们使用 npm run build 进行打包，你会发现，dist 文件夹和 html 文件都会自动生成。
 
-### 7.2、清理/dist 文件夹(CleanWebpackPlugin)
+### 清理/dist 文件夹(CleanWebpackPlugin)
 
 在每次构建前清理/dist 文件夹，生产最新的打包文件，这时候就用到 CleanWebpackPlugin 插件了。
 
@@ -384,7 +387,7 @@ plugins: [
 ]
 ```
 
-### 7.3、热更新(HotModuleReplacementPlugin)
+### 热更新(HotModuleReplacementPlugin)
 
 我们要在修改代码后自动更新页面，这就需要 HotModuleReplacementPlugin（HMR）插件
 
@@ -408,7 +411,7 @@ plugins: [
 ]
 ```
 
-### 7.4、增加 css 前缀
+### 增加 css 前缀
 
 平时我们写 css 时，一些属性需要手动加上前缀，比如-webkit-border-radius: 10px;，在 webpack 中我们可以让他自动加上
 
@@ -427,7 +430,6 @@ module.exports = {
 
 ```javascript
 module.exports = {
-   ...
   module: {
     rules: [
       {
@@ -438,14 +440,12 @@ module.exports = {
           { loader: 'postcss-loader' } // 使用postcss-loader
         ]
       }
-       ...
     ]
   }
-   ...
 }
 ```
 
-### 7.5、css 分离 ExtractTextPlugin
+### css 分离 ExtractTextPlugin
 
 将 css 成生文件，而非内联。该插件的主要是为了抽离 css 样式,防止将样式打包在 js 中引起页面样式加载错乱的现象。
 
@@ -475,7 +475,7 @@ module.exports = {
 
 此时运行 npm run build 后会发现/dist 文件夹内多出了/css 文件夹及 index.css 文件。
 
-### 7.6、消除冗余 css
+### 消除冗余 css
 
 有时候我们 css 写得多了，可能会不自觉的写重复了一些样式，这就造成了多余的代码，以下方法可以优化
 
@@ -497,8 +497,6 @@ plugins: [
 
 #### 下面将讲述 webpack 的优化方法。以下的例子是由 vue-cli 脚手架搭建的项目，跟上述例子无关。
 
-————————————————————————————————————————————
-
 ## webpack 打包优化
 
 ### 为什么要优化打包？
@@ -514,7 +512,7 @@ plugins: [
 
 ### 按需加载
 
-1.1 路由组件按需加载
+路由组件按需加载
 
 ```javascript
 const router = [
@@ -586,7 +584,7 @@ module: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
     }
-  },
+  }
 ```
 
 ### 生产环境关闭 sourceMap
@@ -672,7 +670,7 @@ plugins: [
 module.exports = {
   optimization: {
     splitChunks: {
-       chunks: 'all',
+      chunks: 'all',
       ccacheGroups: {
         vendors: {
           name: 'chunk-vendors',
@@ -854,9 +852,9 @@ DllReferencePlugin 插件：用于在主要配置文件中去引入 DllPlugin �
 摇树删除代码的原理：
 webpack 基于 ES6 提供的模块系统，对代码的依赖树进行静态分析，把 import & export 标记为 3 类：
 
-- 所有 import 标记为/_ harmony import _/
-- 被使用过的 export 标记为/harmony export([type])/，其中[type]和 webpack 内部有关，可能是 binding，immutable 等；
-- 没有被使用的 export 标记为/_ unused harmony export [FuncName] _/，其中[FuncName]为 export 的方法名，之后使用 Uglifyjs（或者其他类似的工具）进行代码精简，把没用的都删除。
+- 所有 import 标记为`_ harmony import _`
+- 被使用过的 export 标记为`harmony export([type])`，其中[type]和 webpack 内部有关，可能是 binding，immutable 等；
+- 没有被使用的 export 标记为`_ unused harmony export [FuncName] _`，其中[FuncName]为 export 的方法名，之后使用 Uglifyjs（或者其他类似的工具）进行代码精简，把没用的都删除。
 
 为何基于 es6 模块实现（ES6 module 特点：）：
 
@@ -883,7 +881,7 @@ webpack 基于 ES6 提供的模块系统，对代码的依赖树进行静态分�
         "*.less",
         // 其它有副作用的模块
         "./src/some-side-effectful-file.js"
-    ],
+    ]
 }
 ```
 
