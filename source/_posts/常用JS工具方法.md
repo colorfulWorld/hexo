@@ -8,6 +8,24 @@ categories: JavaScript
 
 <!--more-->
 
+## 常用 H5 适配方案
+
+```JS
+    ;(function (n) {
+        var e = n.document,
+          t = e.documentElement,
+          i = 720,
+          d = i / 100,
+          o = 'orientationchange' in n ? 'orientationchange' : 'resize',
+          a = function () {
+            var n = t.clientWidth || 320
+            n > 720 && (n = 720)
+            t.style.fontSize = n / d + 'px'
+          }
+        e.addEventListener && (n.addEventListener(o, a, !1), e.addEventListener('DOMContentLoaded', a, !1))
+      })(window)
+```
+
 ## isStatic：检测数据是不是除了 symbol 外的原始数据
 
 ```javascript
@@ -513,4 +531,8 @@ document.addEventListener('keydown', function (event) {
     return (event.returnValue = false)
   })
 })
+```
+
+```
+
 ```
